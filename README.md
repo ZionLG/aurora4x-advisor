@@ -15,6 +15,7 @@ The project architecture has been fully designed with comprehensive documentatio
 All documentation is organized in the `/docs` directory:
 
 ### Architecture Documentation
+
 - **[ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)** - Complete system architecture
 - **[FILE_WATCHER_SYSTEM.md](docs/architecture/FILE_WATCHER_SYSTEM.md)** - Automatic save detection
 - **[IMPLEMENTATION_ROADMAP.md](docs/architecture/IMPLEMENTATION_ROADMAP.md)** - 25-day implementation plan
@@ -24,12 +25,14 @@ All documentation is organized in the `/docs` directory:
 - **[UI_COMPONENTS.md](docs/architecture/UI_COMPONENTS.md)** - User interface design
 
 ### Database Documentation
+
 - **[DATABASE_ANALYSIS.md](docs/database/DATABASE_ANALYSIS.md)** - Complete Aurora DB analysis with SQL queries
 - **[DB_DRIVETHROUGH_GUIDE.md](docs/database/DB_DRIVETHROUGH_GUIDE.md)** - Step-by-step database exploration guide
 - **[INSTALLATION_REFERENCE.md](docs/database/INSTALLATION_REFERENCE.md)** - All 43 installation types
 - **[AuroraDB.db](docs/database/AuroraDB.db)** - Example database for testing
 
 ### Quick References
+
 - **[IDEOLOGY_REFERENCE.md](IDEOLOGY_REFERENCE.md)** - Quick reference for ideology stats
 - **[QUICK_START.md](QUICK_START.md)** - Developer quick start guide
 - **[src/shared/types.ts](src/shared/types.ts)** - TypeScript type definitions
@@ -48,6 +51,7 @@ Aurora 4X Advisor acts as your second-in-command, analyzing your Aurora 4X game 
 ### 🎭 Dynamic Advisor Personas
 
 Choose from 8 distinct advisor archetypes, each with unique tone and style:
+
 - **Staunch Nationalist** - Patriotic, strength-focused, proud
 - **Technocrat Administrator** - Logical, data-driven, efficiency-focused
 - **Communist Commissar** - Revolutionary, collective-focused, ideological
@@ -60,6 +64,7 @@ Choose from 8 distinct advisor archetypes, each with unique tone and style:
 ### 🧬 Ideology System
 
 Each persona is shaped by Aurora 4X's racial characteristics (official definitions):
+
 - **Xenophobia (1-100)** - Fear of other races or governments
 - **Diplomacy (1-100)** - Ability to persuade other races (offsets Xenophobia)
 - **Militancy (1-100)** - Likelihood to choose military force to achieve goals
@@ -73,6 +78,7 @@ These stats influence how advisors interpret situations and frame their advice. 
 ### 📊 Comprehensive Observation System
 
 Detects situations across multiple categories:
+
 - **Resources**: Fuel shortages, mineral deficits, wealth problems
 - **Research**: Idle labs, tech opportunities, research priorities
 - **Military**: Fleet maintenance, readiness, fuel status
@@ -83,6 +89,7 @@ Detects situations across multiple categories:
 ### 📈 Phase-Based Guidance
 
 Adapts advice to your empire's development stage:
+
 - **Setup**: Initial colony, first designs, basic mechanics
 - **Early Expansion**: First colonies, survey fleets, basic military
 - **Mid-Game**: Multiple colonies, fleet building, tech advancement
@@ -98,6 +105,7 @@ Adapts advice to your empire's development stage:
 ## 🏗️ Technical Architecture
 
 ### Technology Stack
+
 - **Desktop Framework**: Electron 39.2.7
 - **UI Framework**: React 19.2.3
 - **Language**: TypeScript 5.9.3
@@ -150,6 +158,7 @@ UI Display (React components)
 ## 🚀 Getting Started (Development)
 
 ### Prerequisites
+
 - Node.js 18+ (with pnpm)
 - Aurora 4X save file for testing
 - Code editor (VS Code recommended)
@@ -206,6 +215,7 @@ Follow the **[Implementation Roadmap](docs/IMPLEMENTATION_ROADMAP.md)** which br
 ## 📖 Usage (Once Implemented)
 
 ### First Time Setup
+
 1. **Copy** the `aurora4x-advisor` folder into your Aurora 4X installation directory
 2. **Launch** the Aurora 4X Advisor
 3. **Follow** the setup wizard:
@@ -215,6 +225,7 @@ Follow the **[Implementation Roadmap](docs/IMPLEMENTATION_ROADMAP.md)** which br
 4. **Start playing** Aurora 4X - the advisor watches for saves automatically
 
 ### Daily Use
+
 1. **Play** Aurora 4X as normal
 2. **Save** your game in Aurora
 3. **Advisor detects** the save automatically and creates a snapshot

@@ -5,7 +5,7 @@ import type {
   IdeologyProfile,
   ValidationResult,
   PersonalityMatch
-} from '../main/advisor'
+} from '../shared/types'
 
 interface AdvisorAPI {
   getAllArchetypeIds: () => Promise<ArchetypeId[]>
