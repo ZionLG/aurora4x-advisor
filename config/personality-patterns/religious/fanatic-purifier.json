@@ -1,0 +1,15 @@
+{
+  "id": "religious-fanatic-purifier",
+  "archetype": "religious-zealot",
+  "name": "Fanatic Purifier",
+  "keywords": ["purifier", "genocidal", "fanatic", "xenophobe", "exterminator", "zealous"],
+  "description": "The galaxy must be cleansed of xeno filth. All alien life is an abomination against divine will. No communication, no negotiation, no mercy - only total extermination. Expansion exists solely to find and purge heretical alien races. Faith demands the complete purification of the cosmos.",
+  "matcher": {
+    "xenophobia": { "min": 90, "weight": 3 },
+    "militancy": { "min": 85, "weight": 3 },
+    "determination": { "min": 90, "weight": 3 },
+    "expansionism": { "min": 75, "weight": 2 },
+    "diplomacy": { "max": 15, "weight": 2 },
+    "trade": { "max": 20, "weight": 1 }
+  }
+}

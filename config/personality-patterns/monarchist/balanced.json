@@ -1,0 +1,12 @@
+{
+  "id": "monarchist-balanced",
+  "archetype": "monarchist-advisor",
+  "name": "Balanced Monarchist Advisor",
+  "keywords": ["balanced", "traditional", "noble", "refined"],
+  "description": "Traditional royal advisor balancing crown authority with practical governance. Maintains noble traditions while adapting to circumstances.",
+  "matcher": {
+    "determination": { "min": 45, "max": 65, "weight": 2 },
+    "diplomacy": { "min": 45, "max": 65, "weight": 2 },
+    "xenophobia": { "min": 40, "max": 60, "weight": 1 }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "nationalist-balanced",
+  "archetype": "staunch-nationalist",
+  "name": "Balanced Nationalist",
+  "keywords": ["balanced", "moderate", "pragmatic", "patriotic"],
+  "description": "Measured patriotism with practical approach to governance. Values national interest while remaining flexible in methods.",
+  "matcher": {
+    "xenophobia": { "min": 40, "max": 60, "weight": 2 },
+    "militancy": { "min": 40, "max": 60, "weight": 2 },
+    "expansionism": { "min": 40, "max": 60, "weight": 1 }
+  }
+}

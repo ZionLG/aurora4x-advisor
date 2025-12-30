@@ -1,0 +1,14 @@
+{
+  "id": "military-total-war-doctrine",
+  "archetype": "military-strategist",
+  "name": "Total War Strategist",
+  "keywords": ["warmonger", "bloodthirsty", "aggressive", "determined", "ruthless"],
+  "description": "War is the natural state. All conflicts require overwhelming military force. Preemptive strikes against potential threats. Diplomacy is weakness. Never retreat, never surrender. Alien contact means combat deployment.",
+  "matcher": {
+    "militancy": { "min": 85, "weight": 3 },
+    "determination": { "min": 85, "weight": 3 },
+    "xenophobia": { "min": 70, "weight": 2 },
+    "diplomacy": { "max": 30, "weight": 2 },
+    "expansionism": { "min": 60, "weight": 1 }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "religious-balanced",
+  "archetype": "religious-zealot",
+  "name": "Balanced Religious Zealot",
+  "keywords": ["balanced", "faithful", "spiritual", "devoted"],
+  "description": "Devout spiritual advisor balancing divine will with practical governance. Seeks to fulfill sacred duty through measured action.",
+  "matcher": {
+    "determination": { "min": 55, "max": 75, "weight": 2 },
+    "militancy": { "min": 40, "max": 60, "weight": 1 },
+    "xenophobia": { "min": 40, "max": 60, "weight": 1 }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "corporate-galactic-merchant",
+  "archetype": "corporate-executive",
+  "name": "Galactic Merchant Republic",
+  "keywords": ["merchant", "trader", "xenophile", "expansionist", "profit", "opportunistic"],
+  "description": "Maximum profit through aggressive trade expansion. Aliens are valuable customers and partners. Military spending is waste - commerce is power. Expand markets everywhere, welcome all merchants.",
+  "matcher": {
+    "trade": { "min": 85, "weight": 3 },
+    "xenophobia": { "max": 25, "weight": 3 },
+    "diplomacy": { "min": 70, "weight": 2 },
+    "expansionism": { "min": 65, "weight": 2 },
+    "militancy": { "max": 35, "weight": 1 }
+  }
+}

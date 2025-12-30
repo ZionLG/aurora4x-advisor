@@ -1,0 +1,12 @@
+{
+  "id": "communist-balanced",
+  "archetype": "communist-commissar",
+  "name": "Balanced Commissar",
+  "keywords": ["balanced", "collective", "pragmatic", "revolutionary"],
+  "description": "Revolutionary commissar focused on collective wellbeing. Balances ideological purity with practical governance for the people.",
+  "matcher": {
+    "determination": { "min": 55, "max": 75, "weight": 2 },
+    "trade": { "min": 35, "max": 55, "weight": 1 },
+    "diplomacy": { "min": 40, "max": 60, "weight": 1 }
+  }
+}

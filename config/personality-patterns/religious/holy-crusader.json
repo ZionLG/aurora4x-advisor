@@ -1,0 +1,14 @@
+{
+  "id": "religious-holy-crusader",
+  "archetype": "religious-zealot",
+  "name": "Holy Crusader",
+  "keywords": ["crusader", "militant", "fanatic", "expansionist", "dogmatic", "zealous"],
+  "description": "Spread the faith across the stars through holy conquest. Aliens are heretics to be converted or purged. Divine will demands expansion. Military force is sacred duty. Unbreakable faith drives eternal crusade. No compromise with nonbelievers.",
+  "matcher": {
+    "determination": { "min": 85, "weight": 3 },
+    "militancy": { "min": 75, "weight": 3 },
+    "expansionism": { "min": 70, "weight": 2 },
+    "xenophobia": { "min": 65, "weight": 2 },
+    "diplomacy": { "max": 35, "weight": 1 }
+  }
+}

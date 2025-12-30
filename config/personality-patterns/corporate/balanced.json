@@ -1,0 +1,12 @@
+{
+  "id": "corporate-balanced",
+  "archetype": "corporate-executive",
+  "name": "Balanced Corporate Executive",
+  "keywords": ["balanced", "pragmatic", "business", "opportunistic"],
+  "description": "Profit-oriented executive balancing trade opportunities with risk management. Seeks competitive advantage through strategic partnerships.",
+  "matcher": {
+    "trade": { "min": 50, "max": 70, "weight": 2 },
+    "diplomacy": { "min": 45, "max": 65, "weight": 2 },
+    "xenophobia": { "min": 30, "max": 50, "weight": 1 }
+  }
+}
