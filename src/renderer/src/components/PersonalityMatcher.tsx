@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
-import { Slider } from './ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Badge } from './ui/badge'
+import { Input } from './ui/input'
 import { ModeToggle } from './mode-toggle'
 
 // Infer types from the window.api
@@ -54,10 +54,17 @@ export default function PersonalityMatcher(): React.JSX.Element {
     [archetypes, selectedArchetype]
   )
 
-  const handleIdeologyChange = (key: keyof IdeologyProfile, value: number[]): void => {
-    setIdeology((prev) => ({ ...prev, [key]: value[0] }))
-    setErrors([])
-    setResult(null)
+  const handleInputChange = (key: keyof IdeologyProfile, value: string): void => {
+    const numValue = parseInt(value, 10)
+    if (!isNaN(numValue)) {
+      const stat = ideologyStats.find((s) => s.key === key)
+      if (stat) {
+        const clampedValue = Math.max(stat.min, Math.min(stat.max, numValue))
+        setIdeology((prev) => ({ ...prev, [key]: clampedValue }))
+        setErrors([])
+        setResult(null)
+      }
+    }
   }
 
   const handleMatch = async (): Promise<void> => {
@@ -99,35 +106,37 @@ export default function PersonalityMatcher(): React.JSX.Element {
   ]
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen p-4">
+      <div className="max-w-5xl mx-auto space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex-1 text-center space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight">Aurora 4X Personality Matcher</h1>
-            <p className="text-lg text-muted-foreground">
+          <div className="flex-1 text-center">
+            <h1 className="text-xl font-semibold tracking-tight">Aurora 4X Personality Matcher</h1>
+            <p className="text-xs text-muted-foreground">
               Match your empire&apos;s ideology to a leadership personality
             </p>
           </div>
           <ModeToggle />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Configuration Card */}
           <Card>
             <CardHeader>
               <CardTitle>Configuration</CardTitle>
               <CardDescription>Select an archetype and adjust ideology values</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               {/* Archetype Selector */}
-              <div className="space-y-2">
-                <Label htmlFor="archetype">Leadership Archetype</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="archetype" className="text-xs">
+                  Leadership Archetype
+                </Label>
                 <Select
                   value={selectedArchetype}
                   onValueChange={(value) => setSelectedArchetype(value as ArchetypeId)}
                 >
-                  <SelectTrigger id="archetype">
+                  <SelectTrigger id="archetype" className="h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -139,50 +148,48 @@ export default function PersonalityMatcher(): React.JSX.Element {
                   </SelectContent>
                 </Select>
                 {selectedArchetypeInfo && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground leading-tight">
                     {selectedArchetypeInfo.description}
                   </p>
                 )}
               </div>
 
-              {/* Ideology Sliders */}
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Ideology Profile</h3>
+              {/* Ideology Inputs */}
+              <div className="space-y-2">
+                <h3 className="text-xs font-medium">Ideology Profile</h3>
                 {ideologyStats.map(({ key, label, min, max }) => (
-                  <div key={key} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor={key} className="text-sm">
-                        {label}
-                      </Label>
-                      <Badge variant="secondary">{ideology[key]}</Badge>
-                    </div>
-                    <Slider
-                      id={key}
-                      min={min}
-                      max={max}
-                      step={1}
-                      value={[ideology[key]]}
-                      onValueChange={(value) => handleIdeologyChange(key, value)}
-                    />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{min}</span>
-                      <span>{max}</span>
+                  <div key={key} className="flex items-center justify-between gap-2">
+                    <Label htmlFor={key} className="text-xs">
+                      {label}
+                    </Label>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] text-muted-foreground text-right w-6">{min}</span>
+                      <Input
+                        id={key}
+                        type="number"
+                        min={min}
+                        max={max}
+                        value={ideology[key]}
+                        onChange={(e) => handleInputChange(key, e.target.value)}
+                        className="w-14 h-6 text-xs text-center"
+                      />
+                      <span className="text-[10px] text-muted-foreground w-6">{max}</span>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Match Button */}
-              <Button onClick={handleMatch} disabled={isLoading} className="w-full">
+              <Button onClick={handleMatch} disabled={isLoading} className="w-full h-8 text-sm">
                 {isLoading ? 'Matching...' : 'Find Matching Personality'}
               </Button>
 
               {/* Errors */}
               {errors.length > 0 && (
                 <Card className="border-destructive">
-                  <CardContent className="pt-6">
-                    <h4 className="font-semibold mb-2">Validation Errors:</h4>
-                    <ul className="list-disc list-inside text-sm space-y-1">
+                  <CardContent className="pt-3">
+                    <h4 className="text-xs font-semibold mb-1">Validation Errors:</h4>
+                    <ul className="list-disc list-inside text-xs space-y-0.5">
                       {errors.map((error, idx) => (
                         <li key={idx}>{error}</li>
                       ))}
@@ -201,36 +208,36 @@ export default function PersonalityMatcher(): React.JSX.Element {
             </CardHeader>
             <CardContent>
               {!result ? (
-                <div className="flex items-center justify-center h-96 text-muted-foreground">
-                  <div className="text-center space-y-2">
-                    <p className="text-lg">No results yet</p>
-                    <p className="text-sm">
+                <div className="flex items-center justify-center h-48 text-muted-foreground">
+                  <div className="text-center space-y-0.5">
+                    <p className="text-xs font-medium">No results yet</p>
+                    <p className="text-[10px]">
                       Configure your ideology and click &quot;Find Matching Personality&quot;
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-3">
                   {/* Primary Match */}
                   <Card className="border-2">
-                    <CardHeader>
+                    <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
-                        <div className="space-y-2">
-                          <CardTitle className="text-xl">{result.primary.patternName}</CardTitle>
-                          <Badge>Best Match</Badge>
+                        <div className="space-y-1">
+                          <CardTitle className="text-base">{result.primary.patternName}</CardTitle>
+                          <Badge className="text-xs">Best Match</Badge>
                         </div>
                         <div className="text-right">
-                          <div className="text-3xl font-bold">{result.primary.confidence}%</div>
-                          <p className="text-xs text-muted-foreground">Confidence</p>
+                          <div className="text-xl font-bold">{result.primary.confidence}%</div>
+                          <p className="text-[10px] text-muted-foreground">Confidence</p>
                         </div>
                       </div>
                     </CardHeader>
                     {result.primary.failedRules.length > 0 && (
-                      <CardContent>
-                        <p className="text-xs text-muted-foreground mb-2">Weak areas:</p>
-                        <div className="flex flex-wrap gap-2">
+                      <CardContent className="pt-0">
+                        <p className="text-[10px] text-muted-foreground mb-1">Weak areas:</p>
+                        <div className="flex flex-wrap gap-1">
                           {result.primary.failedRules.map((rule) => (
-                            <Badge key={rule} variant="destructive" className="text-xs">
+                            <Badge key={rule} variant="destructive" className="text-[10px]">
                               {rule}
                             </Badge>
                           ))}
@@ -241,22 +248,22 @@ export default function PersonalityMatcher(): React.JSX.Element {
 
                   {/* Alternative Matches */}
                   {result.alternatives.length > 0 && (
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-medium">Alternative Matches</h3>
-                      <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <h3 className="text-xs font-medium">Alternative Matches</h3>
+                      <div className="space-y-1.5">
                         {result.alternatives.map((alt) => (
                           <Card key={alt.patternId}>
-                            <CardContent className="pt-6">
+                            <CardContent className="pt-3 pb-3">
                               <div className="flex items-center justify-between">
-                                <div className="space-y-1">
-                                  <h4 className="font-semibold">{alt.patternName}</h4>
+                                <div className="space-y-0.5">
+                                  <h4 className="text-xs font-medium">{alt.patternName}</h4>
                                   {alt.failedRules.length > 0 && (
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-[10px] text-muted-foreground">
                                       Weak: {alt.failedRules.join(', ')}
                                     </p>
                                   )}
                                 </div>
-                                <Badge variant="outline" className="text-lg font-bold">
+                                <Badge variant="outline" className="text-xs font-bold">
                                   {alt.confidence}%
                                 </Badge>
                               </div>
@@ -270,20 +277,22 @@ export default function PersonalityMatcher(): React.JSX.Element {
                   {/* All Matches Summary */}
                   {result.allMatches.length > 3 && (
                     <details className="group">
-                      <summary className="cursor-pointer text-sm font-medium list-none">
-                        <span className="flex items-center gap-2">
+                      <summary className="cursor-pointer text-xs font-medium list-none">
+                        <span className="flex items-center gap-1.5">
                           <span className="group-open:rotate-90 transition-transform">▶</span>
                           View All {result.allMatches.length} Patterns
                         </span>
                       </summary>
-                      <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
+                      <div className="mt-2 space-y-1 max-h-48 overflow-y-auto">
                         {result.allMatches.map((match) => (
                           <div
                             key={match.patternId}
-                            className="flex items-center justify-between text-sm p-3 rounded-lg border"
+                            className="flex items-center justify-between text-xs p-2 rounded-lg border"
                           >
                             <span>{match.patternName}</span>
-                            <Badge variant="outline">{match.confidence}%</Badge>
+                            <Badge variant="outline" className="text-[10px]">
+                              {match.confidence}%
+                            </Badge>
                           </div>
                         ))}
                       </div>
