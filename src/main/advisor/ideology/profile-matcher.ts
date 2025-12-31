@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 /**
- * Weight values for pattern matching
+ * Weight values for profile matching
  */
 export enum MatchWeight {
   Critical = 3,
@@ -114,7 +114,7 @@ function calculateProfileMatch(
  */
 function loadAllProfiles(): PersonalityProfile[] {
   const profiles: PersonalityProfile[] = []
-  const configDir = path.join(process.cwd(), 'config', 'personality-patterns')
+  const configDir = path.join(process.cwd(), 'config', 'personality-profiles')
 
   if (!fs.existsSync(configDir)) {
     return profiles

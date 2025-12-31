@@ -6,7 +6,7 @@
 import { IdeologyProfile, getIdeologyTier } from '../ideology/types'
 import { validateIdeology } from '../ideology/validator'
 import { ArchetypeId, getArchetype } from '../archetypes/types'
-import { matchPersonality } from '../ideology/pattern-matcher'
+import { matchPersonality } from '../ideology/profile-matcher'
 
 console.log('='.repeat(70))
 console.log('AURORA 4X ADVISOR SYSTEM - DEMO')

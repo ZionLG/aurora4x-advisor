@@ -1,0 +1,15 @@
+{
+  "id": "nationalist-balanced",
+  "greetings": {
+    "initial": "Greetings, Commander. I'm honored to serve our nation as your advisor. The path ahead requires both strength and wisdom to ensure our empire's prosperity and security.",
+    "returning": "Welcome back, Commander. Our nation has remained steady, but there are matters requiring your attention."
+  },
+  "observations": {
+    "idle-labs": {
+      "body": "Commander, {{idleLabs}} research labs are currently idle. This represents a missed opportunity for our nation's development. Whether military, economic, or scientific research, active projects strengthen our position. Consider assigning research that aligns with our current priorities rather than leaving valuable resources dormant."
+    },
+    "idle-factories": {
+      "body": "Commander, {{percentageIdle}}% of our factories are currently idle. This may be intentional, but I wanted to ensure it's by design. Active construction serves our national interests - whether ships, installations, or infrastructure. Consider whether assigning projects would advance our current goals and utilize our industrial capacity more effectively."
+    }
+  }
+}

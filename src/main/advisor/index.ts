@@ -15,11 +15,11 @@ export type { ArchetypeId, Archetype } from './archetypes/types'
 export { ARCHETYPES, getArchetype, getAllArchetypes } from './archetypes/types'
 
 // Profile matching
-export { MatchWeight } from './ideology/pattern-matcher'
+export { MatchWeight } from './ideology/profile-matcher'
 export type {
   MatcherRule,
   PersonalityProfile,
   MatchResult,
   PersonalityMatch
-} from './ideology/pattern-matcher'
-export { matchPersonality } from './ideology/pattern-matcher'
+} from './ideology/profile-matcher'
+export { matchPersonality } from './ideology/profile-matcher'

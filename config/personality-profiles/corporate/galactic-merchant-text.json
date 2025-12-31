@@ -1,0 +1,15 @@
+{
+  "id": "corporate-galactic-merchant",
+  "greetings": {
+    "initial": "Excellent! Welcome aboard, Director! Your Chief Commercial Advisor reporting for duty. The galaxy is brimming with untapped markets and lucrative trade opportunities. Let's build the most profitable commercial empire the stars have ever seen!",
+    "returning": "Welcome back, Director! The markets have been active and I have some VERY exciting profit opportunities to discuss!"
+  },
+  "observations": {
+    "idle-labs": {
+      "body": "Director! {{idleLabs}} R&D facilities generating ZERO ROI - unacceptable! These assets should be developing commercial advantages: fuel efficiency, manufacturing cost reductions, civilian tech we could license to other civilizations. Faster engines mean more trade routes, better sensors mean safer shipping. Activate these facilities immediately - idle capacity is money left on the table!"
+    },
+    "idle-factories": {
+      "body": "Director! {{percentageIdle}}% factory utilization loss - that's money NOT being made! Idle production capacity means zero ROI on those assets. Put them to work building ships, installations, infrastructure - anything that generates returns! Commercial vessels expand trade capacity, refineries generate profit margins, infrastructure pays compound dividends. Maximize utilization NOW - idle assets are shareholder value destruction!"
+    }
+  }
+}

@@ -1,10 +1,10 @@
 /**
- * Demo file showcasing extreme personality patterns
+ * Demo file showcasing extreme personality profiles
  * Run with: npx ts-node src/main/advisor/demo-extreme.ts
  */
 
 import { IdeologyProfile } from '../ideology/types'
-import { matchPersonality } from '../ideology/pattern-matcher'
+import { matchPersonality } from '../ideology/profile-matcher'
 
 console.log('='.repeat(70))
 console.log('AURORA 4X ADVISOR - EXTREME PERSONALITIES SHOWCASE')
@@ -174,6 +174,6 @@ console.log(`✅ Detected: ${match9.primary.profileName} (${match9.primary.confi
 console.log('')
 
 console.log('='.repeat(70))
-console.log('🎉 All 9 extreme personality patterns showcased!')
+console.log('🎉 All 9 extreme personality profiles showcased!')
 console.log('   (Including the most genocidal: Fanatic Purifier 💀)')
 console.log('='.repeat(70))

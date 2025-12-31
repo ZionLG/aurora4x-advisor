@@ -69,7 +69,7 @@ export function GameProvider({ children }: GameProviderProps): React.JSX.Element
       // Return context with previous value for rollback
       return { previousGames }
     },
-    onError: (err, game, context) => {
+    onError: (_, __, context) => {
       // Rollback on error
       if (context?.previousGames) {
         queryClient.setQueryData(['games'], context.previousGames)

@@ -1,0 +1,15 @@
+{
+  "id": "nationalist-xenophobe-militarist",
+  "greetings": {
+    "initial": "Commander! Your advisor stands ready to serve our great nation. The galaxy is hostile, filled with alien threats seeking our destruction. Only through strength and vigilance will we ensure our empire's survival!",
+    "returning": "Commander! Our nation awaits your leadership. The alien menace never rests - we must remain eternally vigilant!"
+  },
+  "observations": {
+    "idle-labs": {
+      "body": "Commander! {{idleLabs}} research labs sit idle while hostile xenos advance their technology! Every inactive moment, our enemies grow stronger and we fall behind in the arms race. Our national security DEMANDS we develop superior weapons and defenses. Assign military research projects IMMEDIATELY - our survival depends on it!"
+    },
+    "idle-factories": {
+      "body": "Commander! {{percentageIdle}}% of our factories sit idle while our enemies maximize their industrial output! This production weakness leaves us VULNERABLE! Our military machine demands constant manufacturing - warships, installations, infrastructure, everything! A strong nation is a productive nation. Assign construction NOW or fall behind our adversaries!"
+    }
+  }
+}

@@ -9,7 +9,7 @@ import { IdeologyProfileSchema } from '@shared/types'
 import type { IdeologyProfile, ArchetypeId, PersonalityMatch } from '@shared/types'
 
 interface PersonalityMatcherProps {
-  onComplete?: (archetype: ArchetypeId, patternName: string) => void | Promise<void>
+  onComplete?: (archetype: ArchetypeId, profileName: string) => void | Promise<void>
 }
 
 export function PersonalityMatcher({ onComplete }: PersonalityMatcherProps): React.JSX.Element {
@@ -95,7 +95,7 @@ export function PersonalityMatcher({ onComplete }: PersonalityMatcherProps): Rea
           <Card>
             <CardHeader>
               <CardTitle>Match Results</CardTitle>
-              <CardDescription>Personality patterns ranked by compatibility</CardDescription>
+              <CardDescription>Personality profiles ranked by compatibility</CardDescription>
             </CardHeader>
             <CardContent>
               {!isValid ? (
@@ -111,7 +111,7 @@ export function PersonalityMatcher({ onComplete }: PersonalityMatcherProps): Rea
                 <div className="flex items-center justify-center h-48 text-muted-foreground">
                   <div className="text-center space-y-0.5">
                     <p className="text-xs font-medium">Calculating matches...</p>
-                    <p className="text-[10px]">Personality patterns will appear automatically</p>
+                    <p className="text-[10px]">Personality profiles will appear automatically</p>
                   </div>
                 </div>
               ) : (

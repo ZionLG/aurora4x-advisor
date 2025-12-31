@@ -6,7 +6,7 @@
 import { IdeologyProfile, getIdeologyTier } from '../ideology/types'
 import { validateIdeology } from '../ideology/validator'
 import { ArchetypeId, getArchetype } from '../archetypes/types'
-import { matchPersonality } from '../ideology/pattern-matcher'
+import { matchPersonality } from '../ideology/profile-matcher'
 
 console.log('='.repeat(70))
 console.log('💀 FANATIC PURIFIER TEST 💀')
@@ -65,7 +65,7 @@ console.log('-'.repeat(70))
 console.log(`🔥 PRIMARY: ${match.primary.profileName} (${match.primary.confidence}% match)`)
 console.log('')
 
-console.log('ALL RELIGIOUS ZEALOT PATTERNS:')
+console.log('ALL RELIGIOUS ZEALOT PROFILES:')
 console.log('-'.repeat(70))
 match.allMatches.forEach((m, i) => {
   const emoji = i === 0 ? '🔥' : '  '

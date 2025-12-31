@@ -189,7 +189,9 @@ export class DatabaseWatcher {
       const gameYears = Math.floor(gameDays / 365)
       const currentYear = gameRow.StartYear + gameYears
 
-      console.log(`[DB Watcher] Game time: ${gameRow.GameTime} seconds (${gameDays.toFixed(1)} days)`)
+      console.log(
+        `[DB Watcher] Game time: ${gameRow.GameTime} seconds (${gameDays.toFixed(1)} days)`
+      )
       console.log(`[DB Watcher] Start year: ${gameRow.StartYear}`)
       console.log(`[DB Watcher] Current year: ${currentYear}`)
 
