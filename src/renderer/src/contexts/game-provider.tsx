@@ -42,9 +42,42 @@ export function GameProvider({ children }: GameProviderProps): React.JSX.Element
   // Mutation: Add or update game
   const addGameMutation = useMutation({
     mutationFn: (game: GameSession) => window.api.games.addOrUpdate(game),
-    onSuccess: (_, game) => {
-      queryClient.invalidateQueries({ queryKey: ['games'] })
+    onMutate: async (game) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['games'] })
+
+      // Snapshot the previous value
+      const previousGames = queryClient.getQueryData<GameSession[]>(['games'])
+
+      // Optimistically update to the new value
+      queryClient.setQueryData<GameSession[]>(['games'], (oldGames = []) => {
+        const existingIndex = oldGames.findIndex((g) => g.id === game.id)
+        if (existingIndex >= 0) {
+          // Update existing game
+          const newGames = [...oldGames]
+          newGames[existingIndex] = game
+          return newGames
+        } else {
+          // Add new game
+          return [...oldGames, game]
+        }
+      })
+
+      // Set as current game
       setCurrentGameId(game.id)
+
+      // Return context with previous value for rollback
+      return { previousGames }
+    },
+    onError: (err, game, context) => {
+      // Rollback on error
+      if (context?.previousGames) {
+        queryClient.setQueryData(['games'], context.previousGames)
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure cache is in sync
+      queryClient.invalidateQueries({ queryKey: ['games'] })
     }
   })
 
