@@ -23,7 +23,7 @@ const ideology1: IdeologyProfile = {
   militancy: 48,
   expansionism: 52,
   determination: 60,
-  trade: 45,
+  trade: 45
 }
 
 console.log('Ideology Values:')
@@ -43,8 +43,7 @@ console.log(
   `  Determination: ${ideology1.determination} (${getIdeologyTier('determination', ideology1.determination)})`
 )
 console.log(`  Trade: ${ideology1.trade} (${getIdeologyTier('trade', ideology1.trade)})`)
-console.log(
-)
+console.log()
 console.log('')
 
 const validation1 = validateIdeology(ideology1)
@@ -78,7 +77,7 @@ const ideology2: IdeologyProfile = {
   militancy: 30,
   expansionism: 65,
   determination: 55,
-  trade: 85,
+  trade: 85
 }
 
 console.log('Ideology Values:')
@@ -98,8 +97,7 @@ console.log(
   `  Determination: ${ideology2.determination} (${getIdeologyTier('determination', ideology2.determination)})`
 )
 console.log(`  Trade: ${ideology2.trade} (${getIdeologyTier('trade', ideology2.trade)})`)
-console.log(
-)
+console.log()
 console.log('')
 
 const validation2 = validateIdeology(ideology2)
@@ -133,7 +131,7 @@ const ideology3: IdeologyProfile = {
   militancy: 75,
   expansionism: 55,
   determination: 80,
-  trade: 35,
+  trade: 35
 }
 
 console.log('Ideology Values:')
@@ -153,8 +151,7 @@ console.log(
   `  Determination: ${ideology3.determination} (${getIdeologyTier('determination', ideology3.determination)})`
 )
 console.log(`  Trade: ${ideology3.trade} (${getIdeologyTier('trade', ideology3.trade)})`)
-console.log(
-)
+console.log()
 console.log('')
 
 const validation3 = validateIdeology(ideology3)

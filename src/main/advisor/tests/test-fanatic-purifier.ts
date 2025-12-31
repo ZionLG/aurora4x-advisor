@@ -20,7 +20,7 @@ const ideology: IdeologyProfile = {
   militancy: 95, // Bloodthirsty
   expansionism: 85, // Manifest Destiny
   determination: 98, // Fanatical
-  trade: 10, // Autarky
+  trade: 10 // Autarky
 }
 
 console.log('IDEOLOGY VALUES:')
@@ -41,8 +41,7 @@ console.log(
   `  Determination: ${ideology.determination} (${getIdeologyTier('determination', ideology.determination)})`
 )
 console.log(`  Trade: ${ideology.trade} (${getIdeologyTier('trade', ideology.trade)})`)
-console.log(
-)
+console.log()
 console.log('')
 
 const validation = validateIdeology(ideology)

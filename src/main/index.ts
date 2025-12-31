@@ -148,7 +148,7 @@ app.whenReady().then(async () => {
   })
 
   ipcMain.handle('dbWatcher:setCurrentGame', (_event, gameId: string | null) => {
-    dbWatcher.setCurrentGameId(gameId)
+    dbWatcher.setCurrentGame(gameId)
     return dbWatcher.getStatus()
   })
 

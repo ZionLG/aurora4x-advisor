@@ -21,7 +21,7 @@ const ideology1: IdeologyProfile = {
   militancy: 95,
   expansionism: 80,
   determination: 85,
-  trade: 20,
+  trade: 20
 }
 
 console.log('Ideology: Genocidal Xenophobia + Bloodthirsty Militancy')
@@ -39,7 +39,7 @@ const ideology2: IdeologyProfile = {
   militancy: 20,
   expansionism: 85,
   determination: 60,
-  trade: 95,
+  trade: 95
 }
 
 console.log('Ideology: Welcoming Xenophilia + Merchant Republic Trade')
@@ -57,7 +57,7 @@ const ideology3: IdeologyProfile = {
   militancy: 75,
   expansionism: 90,
   determination: 95,
-  trade: 40,
+  trade: 40
 }
 
 console.log('Ideology: Fanatical Determination + Lebensraum Expansion')
@@ -75,7 +75,7 @@ const ideology4: IdeologyProfile = {
   militancy: 98,
   expansionism: 75,
   determination: 92,
-  trade: 25,
+  trade: 25
 }
 
 console.log('Ideology: Bloodthirsty Militancy + Fanatical Determination')
@@ -93,7 +93,7 @@ const ideology5: IdeologyProfile = {
   militancy: 35,
   expansionism: 25,
   determination: 88,
-  trade: 30,
+  trade: 30
 }
 
 console.log('Ideology: Unbreakable Research Focus + Isolationist Fortress')
@@ -111,7 +111,7 @@ const ideology6: IdeologyProfile = {
   militancy: 85,
   expansionism: 92,
   determination: 88,
-  trade: 35,
+  trade: 35
 }
 
 console.log('Ideology: Lebensraum Expansion + Warmonger Militancy')
@@ -129,7 +129,7 @@ const ideology7: IdeologyProfile = {
   militancy: 12,
   expansionism: 55,
   determination: 60,
-  trade: 85,
+  trade: 85
 }
 
 console.log('Ideology: Naive Xenophilia + Master Negotiator Diplomacy')
@@ -147,7 +147,7 @@ const ideology8: IdeologyProfile = {
   militancy: 90,
   expansionism: 85,
   determination: 98,
-  trade: 30,
+  trade: 30
 }
 
 console.log('Ideology: Fanatical Determination + Bloodthirsty Holy War')
@@ -165,7 +165,7 @@ const ideology9: IdeologyProfile = {
   militancy: 95,
   expansionism: 85,
   determination: 98,
-  trade: 10,
+  trade: 10
 }
 
 console.log('Ideology: Genocidal + Bloodthirsty + Fanatical + Incomprehensible')
