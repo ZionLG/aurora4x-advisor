@@ -39,6 +39,27 @@ export function SetupWizard(): React.JSX.Element {
     // Add game via provider (handles backend save and sets as current)
     await addGame(newGame)
 
+    // Trigger initial analysis to get advice immediately
+    try {
+      const settings = await window.api.settings.load()
+      if (settings.auroraDbPath) {
+        // Get profile ID from archetype
+        const profiles = await window.api.advisor.loadAllProfiles()
+        const matchingProfile = profiles.find(
+          (p: { archetype: string }) => p.archetype === archetype
+        )
+
+        if (matchingProfile?.id) {
+          console.log('Triggering initial analysis...')
+          await window.api.advisor.triggerInitialAnalysis(settings.auroraDbPath, matchingProfile.id)
+          console.log('Initial analysis complete!')
+        }
+      }
+    } catch (error) {
+      console.error('Failed to trigger initial analysis:', error)
+      // Don't block navigation on analysis failure
+    }
+
     toast.success('Game created', {
       description: `${tempGameInfo.gameName} is ready!`
     })

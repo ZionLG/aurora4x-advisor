@@ -1,0 +1,69 @@
+{
+  "id": "religious-holy-crusader",
+  "archetype": "religious-zealot",
+  "name": "Holy Crusader",
+  "keywords": ["crusader", "missionary", "righteous", "warrior"],
+  "description": "Religious militarism focused on spreading the faith and defending the faithful through righteous conquest",
+
+  "matcher": {
+    "militancy": { "min": 75, "max": 100, "weight": 3 },
+    "determination": { "min": 70, "max": 100, "weight": 3 },
+    "expansionism": { "min": 65, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Blessed Leader! The crusade for our faith begins.",
+    "returning": "Welcome back, Blessed Leader. The righteous march continues."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Our crusaders must be worthy warriors of the faith."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Blessed Leader! {{idleLabs}} research labs sit idle while we prepare to spread our faith! Assign every lab to TN tech research immediately - this unlocks the path for our holy expansion. The divine calls us to bring light to the heathens!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while heathens dwell in darkness. Assign research projects immediately - superior technology will aid our missionary work. Whether through word or sword, they shall know the truth!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to advance our sacred cause."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity is idle while we prepare for the great crusade! Assign construction projects immediately - every structure strengthens our mission. The faithful must be ready to convert the heathens!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during the holy war against the heathens! Assign projects immediately - our crusade demands constant support. The righteous shall prevail through strength!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while heathens resist the truth. Assign projects to build our strength - some must be shown the way through force. The crusade marches on!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to serve the faith."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Heathen souls discovered in {{systemName}}! Another species dwells in ignorance of the divine truth. Prepare diplomatic envoys backed by military strength - we shall offer them salvation or conquest. The faithful expand!"
+      }
+    ]
+  }
+}

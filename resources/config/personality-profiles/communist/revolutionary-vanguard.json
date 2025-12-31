@@ -1,0 +1,69 @@
+{
+  "id": "communist-revolutionary-vanguard",
+  "archetype": "communist-commissar",
+  "name": "Revolutionary Vanguard",
+  "keywords": ["revolutionary", "vanguard", "proletariat", "collective"],
+  "description": "Revolutionary communist ideology focused on spreading workers' liberation across the galaxy",
+
+  "matcher": {
+    "determination": { "min": 75, "max": 100, "weight": 3 },
+    "expansionism": { "min": 70, "max": 100, "weight": 2 },
+    "militancy": { "min": 65, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Comrade Leader! The revolution awaits our guidance.",
+    "returning": "Welcome back, Comrade. The people's struggle continues."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. The people's officers must be educated and capable to lead the revolution."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Comrade Leader! {{idleLabs}} research labs sit idle while capitalist oppressors advance! Assign every lab to TN tech research immediately - this unlocks the path for the people's expansion. The revolution requires superior technology!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while other species face exploitation or practice it themselves! Assign research projects immediately - we must be strong to liberate the oppressed or defend against aggressors. The workers' revolution will not wait!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to advance the people's cause!"
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% of the people's construction capacity sits unused! Assign construction projects immediately - every structure built serves the collective. The workers demand full mobilization!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during the people's war! Assign projects immediately - the revolution's defense requires total commitment. No worker shall stand idle while others fight!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while other species exist - some may be workers awaiting liberation, others oppressors to be overthrown! Assign projects to strengthen our position. The revolution must be ready!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to serve the collective!"
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Comrade! New species discovered in {{systemName}}! Assess their social structure immediately - are they workers to be liberated or oppressors to be defeated? The revolution extends to all peoples!"
+      }
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "id": "generic",
+  "archetype": "generic",
+  "name": "Generic Advisor",
+  "keywords": ["neutral", "balanced", "generic"],
+  "description": "Neutral advisor with no ideological bias",
+
+  "greetings": {
+    "initial": "Advisor reporting. Empire status follows.",
+    "returning": "Welcome back. Status report ready."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. This ensures better officer quality."
+    },
+    {
+      "id": "first-survey-ship",
+      "conditions": { "hasBuiltFirstShip": false, "gameYear": { "max": 5 } },
+      "body": "Design your first survey ship. Essential components: engines, sensors, bridge, crew quarters, fuel tanks."
+    },
+    {
+      "id": "mineral-survey",
+      "conditions": { "hasSurveyedHomeSystem": false, "gameYear": { "max": 3 } },
+      "body": "Survey your home system for minerals. This reveals resource locations for mining."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{idleLabs}} research labs are idle. Assign as many labs as possible to TN tech research - this unlocks the next era."
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Consider assigning research projects."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity is idle. Consider assigning construction projects."
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during active conflict. Consider assigning construction projects."
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle with alien contact established. Consider assigning construction projects."
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Consider assigning construction projects."
+      }
+    ],
+
+    "fuel-low": [
+      {
+        "conditions": {},
+        "message": "Fleet fuel at {{fuelPercent}}% in {{systemName}}. Consider refueling operations."
+      }
+    ],
+
+    "maintenance-needed": [
+      {
+        "conditions": {},
+        "message": "Fleet maintenance backlog detected in {{systemName}}. Consider scheduling maintenance."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "New species detected in {{systemName}}. Evaluate response options."
+      }
+    ]
+  }
+}

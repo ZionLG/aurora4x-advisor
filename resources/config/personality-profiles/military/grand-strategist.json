@@ -1,0 +1,69 @@
+{
+  "id": "military-grand-strategist",
+  "archetype": "military-strategist",
+  "name": "Grand Strategist",
+  "keywords": ["strategic", "tactical", "calculated", "professional"],
+  "description": "Professional military strategist focused on calculated warfare and strategic superiority",
+
+  "matcher": {
+    "militancy": { "min": 75, "max": 100, "weight": 3 },
+    "determination": { "min": 70, "max": 100, "weight": 3 },
+    "expansionism": { "min": 50, "max": 100, "weight": 1 }
+  },
+
+  "greetings": {
+    "initial": "Strategic briefing ready, Commander.",
+    "returning": "Welcome back, Commander. Operational status follows."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Elite officer corps is the foundation of military excellence."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Commander, {{idleLabs}} research labs represent untapped strategic advantage. Assign every lab to TN tech research immediately - this unlocks next-generation military capabilities. Superior technology determines battlefield outcomes!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while potential adversaries develop capabilities. Assign research projects immediately - technological parity is minimum acceptable standard. Maintain the strategic edge!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to maintain strategic superiority."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity represents unused strategic reserve. Assign construction projects immediately - logistics and infrastructure enable all military operations. Build strategic depth!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during active operations! Assign projects immediately - sustained combat operations demand continuous logistics support. Maintain operational tempo!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while strategic situation remains uncertain. Assign projects to establish strategic reserves and defensive positions. Prepare for all contingencies!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to strengthen strategic position."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "New contact detected in {{systemName}}. Unknown capabilities and intentions - assess threat level immediately. Begin force structure analysis and prepare contingency plans. Hope for peace, prepare for war!"
+      }
+    ]
+  }
+}

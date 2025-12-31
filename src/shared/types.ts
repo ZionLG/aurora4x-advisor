@@ -64,12 +64,24 @@ export interface GameInfo {
   empireName: string
 }
 
+// Game state snapshot (captured after initial setup)
+export interface GameSnapshot {
+  gameYear: number
+  hasTNTech: boolean
+  alienContact: boolean
+  warStatus: 'peace' | 'active'
+  hasBuiltFirstShip: boolean
+  hasSurveyedHomeSystem: boolean
+  capturedAt: number
+}
+
 // Game session types
 export interface GameSession {
   id: string
   gameInfo: GameInfo
   personalityArchetype: string | null
   personalityName: string | null
+  initialSnapshot?: GameSnapshot // Captured right after setup
   createdAt: number
   lastAccessedAt: number
 }

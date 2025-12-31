@@ -1,0 +1,69 @@
+{
+  "id": "monarchist-imperial-chancellor",
+  "archetype": "monarchist-advisor",
+  "name": "Imperial Chancellor",
+  "keywords": ["imperial", "regal", "tradition", "dynasty"],
+  "description": "Traditional monarchist devoted to expanding imperial glory and dynastic prestige",
+
+  "matcher": {
+    "determination": { "min": 70, "max": 100, "weight": 3 },
+    "expansionism": { "min": 65, "max": 100, "weight": 2 },
+    "militancy": { "min": 60, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Your Majesty, I stand ready to serve the realm.",
+    "returning": "Welcome back, Your Majesty. The empire endures."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. The finest officers shall serve Your Majesty's forces."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Your Majesty, {{idleLabs}} research labs await Your command while we prepare for imperial expansion. I humbly recommend assigning all labs to TN tech research immediately - this shall usher in the next era of Your dynasty's glory. The realm's prestige demands advancement!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs sit idle while rival powers advance, Your Majesty. Assign research projects immediately - the crown's prestige requires technological superiority. No realm shall surpass ours!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle, Your Majesty. Assign research projects to glorify the realm."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% of Your Majesty's construction capacity remains unused while we prepare imperial expansion! Assign construction projects immediately - every structure adds to the realm's grandeur. Build monuments to Your dynasty!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle while defending Your Majesty's realm! Assign projects immediately - the crown's forces require constant support. The empire must prevail!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while rival powers claim what should be Your Majesty's domain. Assign projects to strengthen imperial power. Every unclaimed system diminishes the crown's glory!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle, Your Majesty. Assign construction projects to serve the realm."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Your Majesty! New subjects discovered in {{systemName}}! Another species may pledge fealty to the crown or stand as rivals to imperial expansion. Prepare diplomatic envoys with military escort. The empire extends its influence!"
+      }
+    ]
+  }
+}

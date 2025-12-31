@@ -1,0 +1,65 @@
+{
+  "id": "nationalist-militarist-expansionist",
+  "archetype": "staunch-nationalist",
+  "name": "Militarist Expansionist",
+  "keywords": ["expansionist", "militarist", "aggressive", "empire-builder"],
+  "description": "Aggressive expansionism focused on military strength and territorial dominance",
+
+  "matcher": {
+    "militancy": { "min": 75, "max": 100, "weight": 3 },
+    "expansionism": { "min": 75, "max": 100, "weight": 3 },
+    "determination": { "min": 60, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Commander! Our empire awaits expansion.",
+    "returning": "Commander. Our forces stand ready."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Elite officers will lead our conquest."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Commander! {{idleLabs}} research labs sit idle while our empire stagnates! Assign every lab to TN tech research immediately - this unlocks the path for territorial expansion. Our destiny demands we reach beyond our current borders!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects immediately - superior technology ensures military dominance. Every advancement strengthens our conquest!"
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity sits unused while we prepare for expansion! Assign construction projects immediately - our growing empire requires infrastructure. Build the foundation for conquest!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during active warfare! Assign projects immediately - our fleets require constant reinforcement. Victory demands maximum production!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle with rivals present. Assign projects to expand our military and industrial might. They control systems that should be ours!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects - our empire must grow stronger!"
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "New species detected in {{systemName}}. Assess their military capabilities and territorial holdings immediately. Every system they control is one we could claim for our empire!"
+      }
+    ]
+  }
+}

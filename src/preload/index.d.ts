@@ -9,10 +9,52 @@ import type {
   AppSettings
 } from '@shared/types'
 
+interface Profile {
+  id: string
+  archetype: string
+  name: string
+  keywords: string[]
+  description: string
+}
+
+interface TutorialAdvice {
+  id: string
+  conditions: Record<string, unknown>
+  body: string
+}
+
+interface GameState {
+  gameYear: number
+  hasTNTech: boolean
+  alienContact: boolean
+  warStatus: 'peace' | 'active'
+  hasBuiltFirstShip: boolean
+  hasSurveyedHomeSystem: boolean
+}
+
+interface AdvicePackage {
+  gameState: GameState
+  tutorials: TutorialAdvice[]
+  analyzedAt: number
+}
+
 interface AdvisorAPI {
   getAllArchetypes: () => Promise<Archetype[]>
   getArchetype: (id: ArchetypeId) => Promise<Archetype>
   matchPersonality: (archetype: ArchetypeId, ideology: IdeologyProfile) => Promise<PersonalityMatch>
+  // V2 Profile API
+  loadProfile: (profileId: string) => Promise<Profile>
+  loadAllProfiles: () => Promise<Profile[]>
+  getGreeting: (profileId: string, isInitial: boolean) => Promise<string>
+  getObservationMessage: (
+    profileId: string,
+    observationId: string,
+    observation: unknown,
+    gameState: unknown
+  ) => Promise<string>
+  getTutorialAdvice: (profileId: string, gameState: unknown) => Promise<TutorialAdvice[]>
+  triggerInitialAnalysis: (dbPath: string, profileId: string) => Promise<AdvicePackage>
+  onAdviceUpdate: (callback: (advice: AdvicePackage) => void) => () => void
 }
 
 interface GameAPI {

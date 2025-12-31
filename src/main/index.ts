@@ -3,7 +3,17 @@ import { join } from 'path'
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { getAllArchetypes, getArchetype, matchPersonality } from './advisor'
+import {
+  getAllArchetypes,
+  getArchetype,
+  matchPersonality,
+  loadProfile,
+  loadAllProfiles,
+  getObservationMessage,
+  getTutorialAdvice,
+  getGreeting
+} from './advisor'
+import type { GameState, Observation } from './advisor'
 import { detectGame } from './services/game-detection'
 import {
   loadGames,
@@ -16,6 +26,7 @@ import {
 } from './services/game-persistence'
 import { loadSettings, saveSettings, updateSetting } from './services/settings-persistence'
 import { dbWatcher } from './services/db-watcher'
+import { triggerImmediateAnalysis } from './services/game-state-analyzer'
 import { dialog } from 'electron'
 
 function createWindow(): void {
@@ -83,6 +94,39 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('advisor:matchPersonality', (_event, archetype, ideology) => {
     return matchPersonality(archetype, ideology)
+  })
+
+  // V2 Profile API handlers
+  ipcMain.handle('advisor:loadProfile', (_event, profileId: string) => {
+    return loadProfile(profileId)
+  })
+
+  ipcMain.handle('advisor:loadAllProfiles', () => {
+    return loadAllProfiles()
+  })
+
+  ipcMain.handle('advisor:getGreeting', (_event, profileId: string, isInitial: boolean) => {
+    const profile = loadProfile(profileId)
+    return getGreeting(profile, isInitial)
+  })
+
+  ipcMain.handle(
+    'advisor:getObservationMessage',
+    (
+      _event,
+      profileId: string,
+      observationId: string,
+      observation: Observation,
+      gameState: GameState
+    ) => {
+      const profile = loadProfile(profileId)
+      return getObservationMessage(observationId, observation, gameState, profile)
+    }
+  )
+
+  ipcMain.handle('advisor:getTutorialAdvice', (_event, profileId: string, gameState: GameState) => {
+    const profile = loadProfile(profileId)
+    return getTutorialAdvice(gameState, profile)
   })
 
   // Game API handlers
@@ -161,14 +205,48 @@ app.whenReady().then(async () => {
     return dbWatcher.getStatus()
   })
 
-  ipcMain.handle('dbWatcher:setCurrentGame', (_event, gameId: string | null) => {
-    dbWatcher.setCurrentGame(gameId)
+  ipcMain.handle('dbWatcher:setCurrentGame', async (_event, gameId: string | null) => {
+    // Get profile ID from the game session
+    let profileId: string | null = null
+    if (gameId) {
+      const games = await loadGames()
+      const game = games.find((g) => g.id === gameId)
+      if (game && game.personalityArchetype) {
+        // Use the first profile matching the archetype (for now)
+        // TODO: Store actual profile ID in game session
+        const allProfiles = loadAllProfiles()
+        const matchingProfile = allProfiles.find((p) => p.archetype === game.personalityArchetype)
+        profileId = matchingProfile?.id || null
+      }
+    }
+
+    dbWatcher.setCurrentGame(gameId, profileId)
     return dbWatcher.getStatus()
   })
 
   ipcMain.handle('dbWatcher:getStatus', () => {
     return dbWatcher.getStatus()
   })
+
+  // Trigger immediate analysis after setup completes
+  ipcMain.handle(
+    'advisor:triggerInitialAnalysis',
+    async (_event, dbPath: string, profileId: string) => {
+      console.log('[Main] Triggering initial analysis after setup')
+      console.log('[Main] DB path:', dbPath)
+      console.log('[Main] Profile ID:', profileId)
+
+      try {
+        const advice = await triggerImmediateAnalysis(dbPath, profileId)
+        console.log('[Main] ✅ Initial analysis complete')
+        console.log('[Main] Tutorials:', advice.tutorials.length)
+        return advice
+      } catch (error) {
+        console.error('[Main] ❌ Failed to analyze game state:', error)
+        throw error
+      }
+    }
+  )
 
   ipcMain.handle('dbWatcher:pickFile', async () => {
     const result = await dialog.showOpenDialog({

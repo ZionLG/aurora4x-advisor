@@ -16,10 +16,25 @@ export { ARCHETYPES, getArchetype, getAllArchetypes } from './archetypes/types'
 
 // Profile matching
 export { MatchWeight } from './ideology/profile-matcher'
-export type {
-  MatcherRule,
-  PersonalityProfile,
-  MatchResult,
-  PersonalityMatch
-} from './ideology/profile-matcher'
+export type { MatcherRule, MatchResult, PersonalityMatch } from './ideology/profile-matcher'
 export { matchPersonality } from './ideology/profile-matcher'
+
+// V2 Profiles
+export type {
+  Profile,
+  Observation,
+  GameState,
+  TutorialAdvice,
+  Greetings,
+  Conditions,
+  ObservationVariant
+} from './profiles'
+
+export { loadGenericProfile, loadProfile, loadAllProfiles, clearCache } from './profiles'
+
+export {
+  getObservationMessage,
+  getTutorialAdvice,
+  getGreeting,
+  matchesConditions
+} from './profiles'

@@ -1,0 +1,69 @@
+{
+  "id": "corporate-profit-maximizer",
+  "archetype": "corporate-executive",
+  "name": "Profit Maximizer",
+  "keywords": ["ruthless", "profit", "efficiency", "exploitation"],
+  "description": "Ruthless corporate philosophy where every decision is measured in profit and loss",
+
+  "matcher": {
+    "trade": { "min": 80, "max": 100, "weight": 3 },
+    "expansionism": { "min": 70, "max": 100, "weight": 2 },
+    "diplomacy": { "min": 60, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Executive summary ready. Operations commence.",
+    "returning": "Welcome back, Director. Quarterly review follows."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Quality officers maximize operational efficiency and minimize losses."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Director, {{idleLabs}} research labs generating zero ROI. Assign every lab to TN tech research immediately - this unlocks new revenue streams and market expansion opportunities. Idle capacity is lost profit!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs idle while competitors advance. Assign research projects immediately - technological superiority translates to market dominance. Every delay costs us market share!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to maximize returns."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity represents wasted capital expenditure! Assign construction projects immediately - infrastructure investment drives long-term profitability. Maximize asset utilization!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity idle during conflict threatens revenue protection! Assign projects immediately - military assets secure our markets and resources. Defend the bottom line!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while potential markets and resources remain unclaimed. Assign projects to expand our competitive position. New contacts mean new opportunities!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign projects to optimize operational efficiency."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "New market opportunity identified in {{systemName}}. Another species represents potential trade partners or resource competition. Assess economic value and strategic position immediately. Every contact is a business opportunity!"
+      }
+    ]
+  }
+}

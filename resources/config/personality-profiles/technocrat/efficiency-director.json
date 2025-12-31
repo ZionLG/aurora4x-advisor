@@ -1,0 +1,68 @@
+{
+  "id": "technocrat-efficiency-director",
+  "archetype": "technocrat-admin",
+  "name": "Efficiency Director",
+  "keywords": ["optimization", "efficiency", "data-driven", "systematic"],
+  "description": "Data-driven technocrat obsessed with optimization and systematic efficiency in all operations",
+
+  "matcher": {
+    "determination": { "min": 70, "max": 100, "weight": 3 },
+    "trade": { "min": 60, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Director. System initialization complete.",
+    "returning": "Director. Operational status: nominal."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Officer quality directly correlates with operational efficiency metrics."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Director. Analysis indicates {{idleLabs}} research labs operating at zero efficiency. Recommend immediate assignment to TN tech research - this unlocks next technological tier. Current configuration: suboptimal. Expected efficiency gain: significant."
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs idle. Current technological parity status: uncertain. Assign research projects immediately to maintain competitive position. Inefficiency detected. Correction recommended."
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs idle. Efficiency loss detected. Assign research projects immediately."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity represents {{percentageIdle}}% efficiency loss. Assign construction projects immediately - idle capacity generates zero returns. Optimization required."
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity idle during conflict operations. Assign projects immediately - sustained operations require maximum throughput. System efficiency: critical."
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity idle. Multiple strategic priorities identified. Assign projects to optimize resource allocation. Competitive advantage requires maximum utilization."
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity idle. Efficiency suboptimal. Assign construction projects."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "New data point detected in {{systemName}}. Unknown variables identified. Recommend comprehensive analysis of capabilities, intentions, and resource potential. Information gathering: priority one."
+      }
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
@@ -7,7 +7,36 @@ const api = {
     getAllArchetypes: () => ipcRenderer.invoke('advisor:getAllArchetypes'),
     getArchetype: (id: string) => ipcRenderer.invoke('advisor:getArchetype', id),
     matchPersonality: (archetype: string, ideology: unknown) =>
-      ipcRenderer.invoke('advisor:matchPersonality', archetype, ideology)
+      ipcRenderer.invoke('advisor:matchPersonality', archetype, ideology),
+    // V2 Profile API
+    loadProfile: (profileId: string) => ipcRenderer.invoke('advisor:loadProfile', profileId),
+    loadAllProfiles: () => ipcRenderer.invoke('advisor:loadAllProfiles'),
+    getGreeting: (profileId: string, isInitial: boolean) =>
+      ipcRenderer.invoke('advisor:getGreeting', profileId, isInitial),
+    getObservationMessage: (
+      profileId: string,
+      observationId: string,
+      observation: unknown,
+      gameState: unknown
+    ) =>
+      ipcRenderer.invoke(
+        'advisor:getObservationMessage',
+        profileId,
+        observationId,
+        observation,
+        gameState
+      ),
+    getTutorialAdvice: (profileId: string, gameState: unknown) =>
+      ipcRenderer.invoke('advisor:getTutorialAdvice', profileId, gameState),
+    triggerInitialAnalysis: (dbPath: string, profileId: string) =>
+      ipcRenderer.invoke('advisor:triggerInitialAnalysis', dbPath, profileId),
+    onAdviceUpdate: (callback: (advice: unknown) => void): (() => void) => {
+      const subscription = (_event: IpcRendererEvent, advice: unknown): void => callback(advice)
+      ipcRenderer.on('advisor:adviceUpdate', subscription)
+      return (): void => {
+        ipcRenderer.removeListener('advisor:adviceUpdate', subscription)
+      }
+    }
   },
   game: {
     detectGame: (gameName: string) => ipcRenderer.invoke('game:detectGame', gameName)

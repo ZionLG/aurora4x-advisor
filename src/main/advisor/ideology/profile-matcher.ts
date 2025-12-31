@@ -1,7 +1,6 @@
 import { IdeologyProfile } from './types'
 import { ArchetypeId } from '../archetypes/types'
-import * as fs from 'fs'
-import * as path from 'path'
+import { loadAllProfiles, Profile } from '../profiles'
 
 /**
  * Weight values for profile matching
@@ -13,26 +12,12 @@ export enum MatchWeight {
 }
 
 /**
- * Matcher rule for a single ideology stat
+ * Matcher rule for a single ideology stat (includes weight for scoring)
  */
 export interface MatcherRule {
   min?: number
   max?: number
-  weight: MatchWeight
-}
-
-/**
- * Personality profile definition
- */
-export interface PersonalityProfile {
-  id: string
-  archetype: ArchetypeId
-  name: string
-  keywords: string[]
-  description: string
-  matcher: {
-    [key: string]: MatcherRule
-  }
+  weight?: MatchWeight // Optional: default to Important if not specified
 }
 
 /**
@@ -66,17 +51,24 @@ function calculateDistance(value: number, min?: number, max?: number): number {
 /**
  * Calculate match score for a single profile
  */
-function calculateProfileMatch(
-  ideology: IdeologyProfile,
-  profile: PersonalityProfile
-): MatchResult {
+function calculateProfileMatch(ideology: IdeologyProfile, profile: Profile): MatchResult {
   let totalScore = 0
   let maxPossibleScore = 0
   const failedRules: string[] = []
 
+  // If profile has no matcher, return 50% confidence (neutral match)
+  if (!profile.matcher || Object.keys(profile.matcher).length === 0) {
+    return {
+      profileId: profile.id,
+      profileName: profile.name,
+      confidence: 50,
+      failedRules: []
+    }
+  }
+
   for (const [stat, rule] of Object.entries(profile.matcher)) {
     const value = ideology[stat as keyof IdeologyProfile] as number
-    const weight = rule.weight // Enum value is already the number
+    const weight = rule.weight || MatchWeight.Important // Default to Important
 
     maxPossibleScore += weight
 
@@ -107,40 +99,6 @@ function calculateProfileMatch(
     confidence: Math.round(confidence),
     failedRules
   }
-}
-
-/**
- * Load all personality profiles from config directory
- */
-function loadAllProfiles(): PersonalityProfile[] {
-  const profiles: PersonalityProfile[] = []
-  const configDir = path.join(process.cwd(), 'config', 'personality-profiles')
-
-  if (!fs.existsSync(configDir)) {
-    return profiles
-  }
-
-  // Read all archetype folders
-  const archetypeFolders = fs.readdirSync(configDir)
-
-  for (const folder of archetypeFolders) {
-    const folderPath = path.join(configDir, folder)
-    const stat = fs.statSync(folderPath)
-
-    if (!stat.isDirectory()) continue
-
-    // Read all JSON files in the folder
-    const files = fs.readdirSync(folderPath).filter((f) => f.endsWith('.json'))
-
-    for (const file of files) {
-      const filePath = path.join(folderPath, file)
-      const content = fs.readFileSync(filePath, 'utf-8')
-      const profile = JSON.parse(content) as PersonalityProfile
-      profiles.push(profile)
-    }
-  }
-
-  return profiles
 }
 
 /**

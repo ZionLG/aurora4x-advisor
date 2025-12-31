@@ -1,0 +1,69 @@
+{
+  "id": "diplomatic-galactic-unifier",
+  "archetype": "diplomatic-envoy",
+  "name": "Galactic Unifier",
+  "keywords": ["unifier", "federation", "peaceful", "cooperative"],
+  "description": "Idealistic diplomacy seeking to unite all species under peaceful cooperation and mutual prosperity",
+
+  "matcher": {
+    "diplomacy": { "min": 80, "max": 100, "weight": 3 },
+    "trade": { "min": 70, "max": 100, "weight": 2 },
+    "determination": { "min": 60, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Honored Leader. Our mission of unity begins.",
+    "returning": "Welcome back, Honored Leader. The path to harmony continues."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Skilled officers will represent us well in future diplomatic endeavors."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Honored Leader, {{idleLabs}} research labs sit idle while we prepare for contact with other civilizations. Assign every lab to TN tech research immediately - this unlocks the path for peaceful expansion and first contact protocols. Knowledge builds bridges between species!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while potential partners await cooperation. Assign research projects immediately - shared technological advancement strengthens all species. Together we rise!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to expand our understanding."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity is idle while we prepare for our role in the galactic community. Assign construction projects immediately - infrastructure enables peaceful cooperation and trade. Build the foundation for unity!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during conflict - this tragedy could have been avoided through diplomacy. Assign projects immediately - we must defend ourselves while seeking peace. War serves no one!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while potential allies await partnership. Assign projects to build trade infrastructure and defensive capabilities. Trust is earned through strength tempered by wisdom!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to serve our peaceful mission."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Honored Leader! New species discovered in {{systemName}}! This is a momentous occasion - another civilization to welcome into the galactic community. Prepare diplomatic envoys and translation teams immediately. Every species enriches the tapestry of galactic civilization!"
+      }
+    ]
+  }
+}

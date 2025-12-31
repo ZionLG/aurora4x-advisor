@@ -1,0 +1,69 @@
+{
+  "id": "religious-fanatic-purifier",
+  "archetype": "religious-zealot",
+  "name": "Divine Purifier",
+  "keywords": ["fanatic", "purifier", "holy", "zealot"],
+  "description": "Religious fanaticism demanding purification of the unclean xeno from the galaxy",
+
+  "matcher": {
+    "xenophobia": { "min": 85, "max": 100, "weight": 3 },
+    "determination": { "min": 80, "max": 100, "weight": 3 },
+    "militancy": { "min": 70, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Blessed Leader. The divine will guides our sacred mission.",
+    "returning": "The purification continues as ordained."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Our faithful officers must be worthy to execute the divine plan."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Blessed Leader! {{idleLabs}} research labs sit idle while we prepare for the sacred purification! Assign every lab to TN tech research immediately - this unlocks the tools of divine judgment. The heathen xenos will reveal themselves, and we must be prepared to cleanse them!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while the heathen abominations defile the galaxy. Assign research projects immediately - each advancement brings us closer to righteous cleansing. The divine wills their eradication!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to fulfill the sacred mission."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "alienContact": false },
+        "message": "{{percentageIdle}}% construction capacity lies dormant while we await the revelation of the heathens! Assign construction projects immediately - every structure serves the divine purpose. We must be ready for the holy purge!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during the sacred cleansing! Assign projects immediately - our righteous crusade against the heathens demands constant production. Every idle factory delays divine judgment!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle while heathen xenos corrupt the galaxy. Assign projects to strengthen our instruments of purification. The divine has revealed the unclean - we must answer the call!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to serve the sacred mission."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Heathens reveal themselves in {{systemName}}! Another xeno abomination defiles the divine creation. Prepare our forces - negotiation with the faithless is blasphemy. They exist only to be purged from existence!"
+      }
+    ]
+  }
+}

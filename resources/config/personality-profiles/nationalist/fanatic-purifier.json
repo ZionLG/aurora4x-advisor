@@ -1,0 +1,69 @@
+{
+  "id": "nationalist-fanatic-purifier",
+  "archetype": "staunch-nationalist",
+  "name": "Fanatic Purifier",
+  "keywords": ["extreme", "xenophobe", "militant", "supremacist"],
+  "description": "Extreme xenophobic nationalism with absolute dedication to species purity and dominance",
+
+  "matcher": {
+    "xenophobia": { "min": 85, "max": 100, "weight": 3 },
+    "militancy": { "min": 80, "max": 100, "weight": 3 },
+    "expansionism": { "min": 70, "max": 100, "weight": 2 }
+  },
+
+  "greetings": {
+    "initial": "Commander! Our species stands alone against the xeno threat.",
+    "returning": "Commander. The purge continues."
+  },
+
+  "tutorialAdvice": [
+    {
+      "id": "training-level",
+      "conditions": { "gameYear": 1 },
+      "body": "Before you begin: Go to Race Info screen and set training level to 5. Our officers must be trained to the highest standard for the coming purge."
+    }
+  ],
+
+  "observations": {
+    "idle-labs": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "Commander! {{idleLabs}} research labs sit idle while we prepare for the inevitable xeno threat! Assign every lab to TN tech research immediately - this unlocks the path for our species' dominance. We must be ready when the filth reveals itself!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{idleLabs}} research labs are idle while xeno threats lurk in the darkness. Assign research projects immediately - every advancement brings us closer to their annihilation. Weakness invites extinction!"
+      },
+      {
+        "conditions": {},
+        "message": "{{idleLabs}} research labs are idle. Assign research projects to ensure our superiority."
+      }
+    ],
+
+    "idle-construction-factories": [
+      {
+        "conditions": { "hasTNTech": false },
+        "message": "{{percentageIdle}}% construction capacity wastes away while we prepare for the inevitable xeno threat! Assign construction projects immediately - every idle moment weakens our species. We must be ready when they reveal themselves!"
+      },
+      {
+        "conditions": { "alienContact": true, "warStatus": "active" },
+        "message": "{{percentageIdle}}% construction capacity is idle during the purge! Assign projects immediately - our war machine demands constant production. Every idle factory is a betrayal of our species!"
+      },
+      {
+        "conditions": { "alienContact": true },
+        "message": "{{percentageIdle}}% construction capacity is idle with xeno vermin in our galaxy. Assign projects to strengthen our defenses and production capability. They will test us, and we must be ready to cleanse them from existence!"
+      },
+      {
+        "conditions": {},
+        "message": "{{percentageIdle}}% construction capacity is idle. Assign construction projects to ensure our dominance."
+      }
+    ],
+
+    "new-alien-contact": [
+      {
+        "conditions": {},
+        "message": "Xeno contact detected in {{systemName}}. Another xeno species infests our galaxy. Prepare military forces immediately - negotiation with inferior species is impossible. They exist only to be purged!"
+      }
+    ]
+  }
+}
