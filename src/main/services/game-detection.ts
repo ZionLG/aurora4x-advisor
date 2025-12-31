@@ -4,15 +4,14 @@ import type { GameInfo } from '@shared/types'
 
 /**
  * Detects game information from Aurora 4X database
+ * @param gameName - The name of the game to detect
+ * @param dbPath - Path to the Aurora database file
  */
-export async function detectGame(gameName: string): Promise<GameInfo> {
+export async function detectGame(gameName: string, dbPath: string): Promise<GameInfo> {
   console.log('[Game Detection] ========================================')
   console.log('[Game Detection] Detecting game information')
   console.log('[Game Detection] ========================================')
   console.log(`[Game Detection] Looking for game: "${gameName}"`)
-
-  // Path to Aurora database - should be configurable in production
-  const dbPath = path.join(process.cwd(), 'docs', 'AuroraDB.db')
   console.log(`[Game Detection] Database path: ${dbPath}`)
 
   let db: Database.Database | null = null

@@ -86,8 +86,22 @@ app.whenReady().then(async () => {
   })
 
   // Game API handlers
-  ipcMain.handle('game:detectGame', (_event, gameName: string) => {
-    return detectGame(gameName)
+  ipcMain.handle('game:detectGame', async (_event, gameName: string) => {
+    console.log('[Main] game:detectGame handler called')
+    console.log(`[Main] Game name: "${gameName}"`)
+
+    // Load settings to get Aurora DB path
+    const settings = await loadSettings()
+    console.log('[Main] Settings loaded:', JSON.stringify(settings, null, 2))
+
+    if (!settings.auroraDbPath) {
+      const errorMsg = 'Aurora database path not configured. Please set it in Settings.'
+      console.error(`[Main] ❌ ${errorMsg}`)
+      throw new Error(errorMsg)
+    }
+
+    console.log(`[Main] Using Aurora DB path: ${settings.auroraDbPath}`)
+    return detectGame(gameName, settings.auroraDbPath)
   })
 
   // Game persistence handlers
