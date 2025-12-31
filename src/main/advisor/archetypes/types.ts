@@ -121,8 +121,8 @@ export function getArchetype(id: ArchetypeId): Archetype {
 }
 
 /**
- * Get all archetype IDs
+ * Get all archetypes
  */
-export function getAllArchetypeIds(): ArchetypeId[] {
-  return Object.keys(ARCHETYPES) as ArchetypeId[]
+export function getAllArchetypes(): Archetype[] {
+  return Object.values(ARCHETYPES)
 }

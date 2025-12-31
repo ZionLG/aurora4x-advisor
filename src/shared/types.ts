@@ -1,5 +1,7 @@
 // Shared type definitions for IPC communication between main, preload, and renderer
 
+import { z } from 'zod'
+
 export type ArchetypeId =
   | 'staunch-nationalist'
   | 'technocrat-admin'
@@ -18,24 +20,32 @@ export interface Archetype {
   vocabularyTags: string[]
 }
 
-export interface IdeologyProfile {
-  xenophobia: number
-  diplomacy: number
-  militancy: number
-  expansionism: number
-  determination: number
-  trade: number
-  translation: number
-}
+// Zod schema for ideology validation
+export const IdeologyProfileSchema = z.object({
+  /** Fear of other races (1-100) */
+  xenophobia: z.number().int().min(1).max(100),
 
-export interface ValidationResult {
-  valid: boolean
-  errors: string[]
-}
+  /** Persuasion & negotiation skill (1-100) */
+  diplomacy: z.number().int().min(1).max(100),
+
+  /** Use of military force (1-100) */
+  militancy: z.number().int().min(1).max(100),
+
+  /** Desire to expand territory (1-100) */
+  expansionism: z.number().int().min(1).max(100),
+
+  /** Perseverance despite setbacks (1-100) */
+  determination: z.number().int().min(1).max(100),
+
+  /** Willingness to trade (1-100) */
+  trade: z.number().int().min(1).max(100)
+})
+
+export type IdeologyProfile = z.infer<typeof IdeologyProfileSchema>
 
 export interface MatchResult {
-  patternId: string
-  patternName: string
+  profileId: string
+  profileName: string
   confidence: number
   failedRules: string[]
 }
@@ -43,6 +53,29 @@ export interface MatchResult {
 export interface PersonalityMatch {
   archetype: ArchetypeId
   primary: MatchResult
-  alternatives: MatchResult[]
   allMatches: MatchResult[]
+}
+
+// Game detection types
+export interface GameInfo {
+  gameName: string
+  startingYear: number
+  techLevel: 'TN' | 'Industrial'
+  empireName: string
+}
+
+// Game session types
+export interface GameSession {
+  id: string
+  gameInfo: GameInfo
+  personalityArchetype: string | null
+  personalityName: string | null
+  createdAt: number
+  lastAccessedAt: number
+}
+
+// App settings types
+export interface AppSettings {
+  auroraDbPath: string | null
+  watchEnabled: boolean
 }

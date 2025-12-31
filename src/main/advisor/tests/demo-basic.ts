@@ -24,7 +24,6 @@ const ideology1: IdeologyProfile = {
   expansionism: 52,
   determination: 60,
   trade: 45,
-  translation: 0
 }
 
 console.log('Ideology Values:')
@@ -45,7 +44,6 @@ console.log(
 )
 console.log(`  Trade: ${ideology1.trade} (${getIdeologyTier('trade', ideology1.trade)})`)
 console.log(
-  `  Translation: ${ideology1.translation} (${getIdeologyTier('translation', ideology1.translation)})`
 )
 console.log('')
 
@@ -65,14 +63,8 @@ console.log('')
 
 const match1 = matchPersonality(archetype1, ideology1)
 console.log(
-  `Detected Personality: ${match1.primary.patternName} (${match1.primary.confidence}% match)`
+  `Detected Personality: ${match1.primary.profileName} (${match1.primary.confidence}% match)`
 )
-if (match1.alternatives.length > 0) {
-  console.log('Alternative matches:')
-  match1.alternatives.forEach((alt) => {
-    console.log(`  - ${alt.patternName} (${alt.confidence}% match)`)
-  })
-}
 console.log('')
 console.log('')
 
@@ -87,7 +79,6 @@ const ideology2: IdeologyProfile = {
   expansionism: 65,
   determination: 55,
   trade: 85,
-  translation: 10
 }
 
 console.log('Ideology Values:')
@@ -108,7 +99,6 @@ console.log(
 )
 console.log(`  Trade: ${ideology2.trade} (${getIdeologyTier('trade', ideology2.trade)})`)
 console.log(
-  `  Translation: ${ideology2.translation} (${getIdeologyTier('translation', ideology2.translation)})`
 )
 console.log('')
 
@@ -128,14 +118,8 @@ console.log('')
 
 const match2 = matchPersonality(archetype2, ideology2)
 console.log(
-  `Detected Personality: ${match2.primary.patternName} (${match2.primary.confidence}% match)`
+  `Detected Personality: ${match2.primary.profileName} (${match2.primary.confidence}% match)`
 )
-if (match2.alternatives.length > 0) {
-  console.log('Alternative matches:')
-  match2.alternatives.forEach((alt) => {
-    console.log(`  - ${alt.patternName} (${alt.confidence}% match)`)
-  })
-}
 console.log('')
 console.log('')
 
@@ -150,7 +134,6 @@ const ideology3: IdeologyProfile = {
   expansionism: 55,
   determination: 80,
   trade: 35,
-  translation: -5
 }
 
 console.log('Ideology Values:')
@@ -171,7 +154,6 @@ console.log(
 )
 console.log(`  Trade: ${ideology3.trade} (${getIdeologyTier('trade', ideology3.trade)})`)
 console.log(
-  `  Translation: ${ideology3.translation} (${getIdeologyTier('translation', ideology3.translation)})`
 )
 console.log('')
 
@@ -191,14 +173,8 @@ console.log('')
 
 const match3 = matchPersonality(archetype3, ideology3)
 console.log(
-  `Detected Personality: ${match3.primary.patternName} (${match3.primary.confidence}% match)`
+  `Detected Personality: ${match3.primary.profileName} (${match3.primary.confidence}% match)`
 )
-if (match3.alternatives.length > 0) {
-  console.log('Alternative matches:')
-  match3.alternatives.forEach((alt) => {
-    console.log(`  - ${alt.patternName} (${alt.confidence}% match)`)
-  })
-}
 console.log('')
 console.log('='.repeat(70))
 console.log('Demo completed successfully!')

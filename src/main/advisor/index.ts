@@ -12,13 +12,13 @@ export { validateIdeology } from './ideology/validator'
 
 // Archetype types
 export type { ArchetypeId, Archetype } from './archetypes/types'
-export { ARCHETYPES, getArchetype, getAllArchetypeIds } from './archetypes/types'
+export { ARCHETYPES, getArchetype, getAllArchetypes } from './archetypes/types'
 
-// Pattern matching
+// Profile matching
 export { MatchWeight } from './ideology/pattern-matcher'
 export type {
   MatcherRule,
-  PersonalityPattern,
+  PersonalityProfile,
   MatchResult,
   PersonalityMatch
 } from './ideology/pattern-matcher'

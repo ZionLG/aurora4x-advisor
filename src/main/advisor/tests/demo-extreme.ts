@@ -22,12 +22,11 @@ const ideology1: IdeologyProfile = {
   expansionism: 80,
   determination: 85,
   trade: 20,
-  translation: -10
 }
 
 console.log('Ideology: Genocidal Xenophobia + Bloodthirsty Militancy')
 const match1 = matchPersonality('staunch-nationalist', ideology1)
-console.log(`✅ Detected: ${match1.primary.patternName} (${match1.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match1.primary.profileName} (${match1.primary.confidence}% match)`)
 console.log('')
 
 // Test 2: Galactic Merchant Republic
@@ -41,12 +40,11 @@ const ideology2: IdeologyProfile = {
   expansionism: 85,
   determination: 60,
   trade: 95,
-  translation: 18
 }
 
 console.log('Ideology: Welcoming Xenophilia + Merchant Republic Trade')
 const match2 = matchPersonality('corporate-executive', ideology2)
-console.log(`✅ Detected: ${match2.primary.patternName} (${match2.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match2.primary.profileName} (${match2.primary.confidence}% match)`)
 console.log('')
 
 // Test 3: Revolutionary Expansionist Commissar
@@ -60,12 +58,11 @@ const ideology3: IdeologyProfile = {
   expansionism: 90,
   determination: 95,
   trade: 40,
-  translation: 0
 }
 
 console.log('Ideology: Fanatical Determination + Lebensraum Expansion')
 const match3 = matchPersonality('communist-commissar', ideology3)
-console.log(`✅ Detected: ${match3.primary.patternName} (${match3.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match3.primary.profileName} (${match3.primary.confidence}% match)`)
 console.log('')
 
 // Test 4: Total War Strategist
@@ -79,12 +76,11 @@ const ideology4: IdeologyProfile = {
   expansionism: 75,
   determination: 92,
   trade: 25,
-  translation: -15
 }
 
 console.log('Ideology: Bloodthirsty Militancy + Fanatical Determination')
 const match4 = matchPersonality('military-strategist', ideology4)
-console.log(`✅ Detected: ${match4.primary.patternName} (${match4.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match4.primary.profileName} (${match4.primary.confidence}% match)`)
 console.log('')
 
 // Test 5: Research-Obsessed Technocrat
@@ -98,12 +94,11 @@ const ideology5: IdeologyProfile = {
   expansionism: 25,
   determination: 88,
   trade: 30,
-  translation: 5
 }
 
 console.log('Ideology: Unbreakable Research Focus + Isolationist Fortress')
 const match5 = matchPersonality('technocrat-admin', ideology5)
-console.log(`✅ Detected: ${match5.primary.patternName} (${match5.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match5.primary.profileName} (${match5.primary.confidence}% match)`)
 console.log('')
 
 // Test 6: Imperial Conqueror
@@ -117,12 +112,11 @@ const ideology6: IdeologyProfile = {
   expansionism: 92,
   determination: 88,
   trade: 35,
-  translation: -5
 }
 
 console.log('Ideology: Lebensraum Expansion + Warmonger Militancy')
 const match6 = matchPersonality('monarchist-advisor', ideology6)
-console.log(`✅ Detected: ${match6.primary.patternName} (${match6.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match6.primary.profileName} (${match6.primary.confidence}% match)`)
 console.log('')
 
 // Test 7: Galactic Peace Unifier
@@ -136,12 +130,11 @@ const ideology7: IdeologyProfile = {
   expansionism: 55,
   determination: 60,
   trade: 85,
-  translation: 22
 }
 
 console.log('Ideology: Naive Xenophilia + Master Negotiator Diplomacy')
 const match7 = matchPersonality('diplomatic-envoy', ideology7)
-console.log(`✅ Detected: ${match7.primary.patternName} (${match7.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match7.primary.profileName} (${match7.primary.confidence}% match)`)
 console.log('')
 
 // Test 8: Holy Crusader
@@ -155,12 +148,11 @@ const ideology8: IdeologyProfile = {
   expansionism: 85,
   determination: 98,
   trade: 30,
-  translation: -8
 }
 
 console.log('Ideology: Fanatical Determination + Bloodthirsty Holy War')
 const match8 = matchPersonality('religious-zealot', ideology8)
-console.log(`✅ Detected: ${match8.primary.patternName} (${match8.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match8.primary.profileName} (${match8.primary.confidence}% match)`)
 console.log('')
 
 // Test 9: Fanatic Purifier (THE MOST EXTREME)
@@ -174,12 +166,11 @@ const ideology9: IdeologyProfile = {
   expansionism: 85,
   determination: 98,
   trade: 10,
-  translation: -22
 }
 
 console.log('Ideology: Genocidal + Bloodthirsty + Fanatical + Incomprehensible')
 const match9 = matchPersonality('religious-zealot', ideology9)
-console.log(`✅ Detected: ${match9.primary.patternName} (${match9.primary.confidence}% match)`)
+console.log(`✅ Detected: ${match9.primary.profileName} (${match9.primary.confidence}% match)`)
 console.log('')
 
 console.log('='.repeat(70))

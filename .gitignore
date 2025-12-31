@@ -8,3 +8,6 @@ out
 .claude
 build
 docs
+.mcp.json
+*.md
+!README.md

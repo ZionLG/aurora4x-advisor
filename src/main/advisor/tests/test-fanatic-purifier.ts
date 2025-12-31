@@ -21,7 +21,6 @@ const ideology: IdeologyProfile = {
   expansionism: 85, // Manifest Destiny
   determination: 98, // Fanatical
   trade: 10, // Autarky
-  translation: -22 // Incomprehensible
 }
 
 console.log('IDEOLOGY VALUES:')
@@ -43,7 +42,6 @@ console.log(
 )
 console.log(`  Trade: ${ideology.trade} (${getIdeologyTier('trade', ideology.trade)})`)
 console.log(
-  `  Translation: ${ideology.translation} (${getIdeologyTier('translation', ideology.translation)})`
 )
 console.log('')
 
@@ -65,22 +63,14 @@ const match = matchPersonality(archetype, ideology)
 
 console.log('PERSONALITY MATCH:')
 console.log('-'.repeat(70))
-console.log(`🔥 PRIMARY: ${match.primary.patternName} (${match.primary.confidence}% match)`)
+console.log(`🔥 PRIMARY: ${match.primary.profileName} (${match.primary.confidence}% match)`)
 console.log('')
-
-if (match.alternatives.length > 0) {
-  console.log('Alternative matches:')
-  match.alternatives.forEach((alt) => {
-    console.log(`  - ${alt.patternName} (${alt.confidence}% match)`)
-  })
-  console.log('')
-}
 
 console.log('ALL RELIGIOUS ZEALOT PATTERNS:')
 console.log('-'.repeat(70))
 match.allMatches.forEach((m, i) => {
   const emoji = i === 0 ? '🔥' : '  '
-  console.log(`${emoji} ${m.patternName}: ${m.confidence}%`)
+  console.log(`${emoji} ${m.profileName}: ${m.confidence}%`)
 })
 console.log('')
 

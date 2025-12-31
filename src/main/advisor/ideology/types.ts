@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 /**
- * Ideology Profile - 7 racial characteristics that shape worldview
+ * Ideology Profile - 6 racial characteristics that shape worldview
  *
  * These values are read from FCT_Species table in Aurora DB (or manual input in Phase 1).
  * They define how the advisor interprets events and what priorities it emphasizes.
@@ -23,10 +23,7 @@ export const IdeologyProfileSchema = z.object({
   determination: z.number().int().min(1).max(100),
 
   /** Willingness to trade (1-100) */
-  trade: z.number().int().min(1).max(100),
-
-  /** Communication ability modifier (-25 to +25) */
-  translation: z.number().int().min(-25).max(25)
+  trade: z.number().int().min(1).max(100)
 })
 
 export type IdeologyProfile = z.infer<typeof IdeologyProfileSchema>
@@ -111,19 +108,6 @@ export const IDEOLOGY_RANGES = {
       { min: 25, max: 39, label: 'Protectionist' },
       { min: 10, max: 24, label: 'Autarky' },
       { min: 1, max: 9, label: 'Hermit Kingdom' }
-    ]
-  },
-  translation: {
-    min: -25,
-    max: 25,
-    tiers: [
-      { min: 20, max: 25, label: 'Universal Translator' },
-      { min: 10, max: 19, label: 'Gifted' },
-      { min: 1, max: 9, label: 'Above Average' },
-      { min: -5, max: 0, label: 'Average' },
-      { min: -10, max: -6, label: 'Below Average' },
-      { min: -20, max: -11, label: 'Poor' },
-      { min: -25, max: -21, label: 'Incomprehensible' }
     ]
   }
 } as const

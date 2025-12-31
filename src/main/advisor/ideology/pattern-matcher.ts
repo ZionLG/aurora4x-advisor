@@ -22,9 +22,9 @@ export interface MatcherRule {
 }
 
 /**
- * Personality pattern definition
+ * Personality profile definition
  */
-export interface PersonalityPattern {
+export interface PersonalityProfile {
   id: string
   archetype: ArchetypeId
   name: string
@@ -36,11 +36,11 @@ export interface PersonalityPattern {
 }
 
 /**
- * Match result for a single pattern
+ * Match result for a single profile
  */
 export interface MatchResult {
-  patternId: string
-  patternName: string
+  profileId: string
+  profileName: string
   confidence: number
   failedRules: string[]
 }
@@ -51,7 +51,6 @@ export interface MatchResult {
 export interface PersonalityMatch {
   archetype: ArchetypeId
   primary: MatchResult
-  alternatives: MatchResult[]
   allMatches: MatchResult[]
 }
 
@@ -65,17 +64,17 @@ function calculateDistance(value: number, min?: number, max?: number): number {
 }
 
 /**
- * Calculate match score for a single pattern
+ * Calculate match score for a single profile
  */
-function calculatePatternMatch(
+function calculateProfileMatch(
   ideology: IdeologyProfile,
-  pattern: PersonalityPattern
+  profile: PersonalityProfile
 ): MatchResult {
   let totalScore = 0
   let maxPossibleScore = 0
   const failedRules: string[] = []
 
-  for (const [stat, rule] of Object.entries(pattern.matcher)) {
+  for (const [stat, rule] of Object.entries(profile.matcher)) {
     const value = ideology[stat as keyof IdeologyProfile] as number
     const weight = rule.weight // Enum value is already the number
 
@@ -103,22 +102,22 @@ function calculatePatternMatch(
   const confidence = (totalScore / maxPossibleScore) * 100
 
   return {
-    patternId: pattern.id,
-    patternName: pattern.name,
+    profileId: profile.id,
+    profileName: profile.name,
     confidence: Math.round(confidence),
     failedRules
   }
 }
 
 /**
- * Load all personality patterns from config directory
+ * Load all personality profiles from config directory
  */
-function loadAllPatterns(): PersonalityPattern[] {
-  const patterns: PersonalityPattern[] = []
+function loadAllProfiles(): PersonalityProfile[] {
+  const profiles: PersonalityProfile[] = []
   const configDir = path.join(process.cwd(), 'config', 'personality-patterns')
 
   if (!fs.existsSync(configDir)) {
-    return patterns
+    return profiles
   }
 
   // Read all archetype folders
@@ -136,42 +135,38 @@ function loadAllPatterns(): PersonalityPattern[] {
     for (const file of files) {
       const filePath = path.join(folderPath, file)
       const content = fs.readFileSync(filePath, 'utf-8')
-      const pattern = JSON.parse(content) as PersonalityPattern
-      patterns.push(pattern)
+      const profile = JSON.parse(content) as PersonalityProfile
+      profiles.push(profile)
     }
   }
 
-  return patterns
+  return profiles
 }
 
 /**
- * Match ideology profile to best-fit personality pattern within archetype
+ * Match ideology profile to best-fit personality profile within archetype
  */
 export function matchPersonality(
   archetype: ArchetypeId,
   ideology: IdeologyProfile
 ): PersonalityMatch {
-  const allPatterns = loadAllPatterns()
+  const allProfiles = loadAllProfiles()
 
-  // Filter patterns by archetype
-  const archetypePatterns = allPatterns.filter((p) => p.archetype === archetype)
+  // Filter profiles by archetype
+  const archetypeProfiles = allProfiles.filter((p) => p.archetype === archetype)
 
-  if (archetypePatterns.length === 0) {
-    throw new Error(`No personality patterns found for archetype: ${archetype}`)
+  if (archetypeProfiles.length === 0) {
+    throw new Error(`No personality profiles found for archetype: ${archetype}`)
   }
 
-  // Calculate match scores
-  const results = archetypePatterns
-    .map((pattern) => calculatePatternMatch(ideology, pattern))
+  // Calculate match scores and sort by confidence
+  const results = archetypeProfiles
+    .map((profile) => calculateProfileMatch(ideology, profile))
     .sort((a, b) => b.confidence - a.confidence)
-
-  const primary = results[0]
-  const alternatives = results.slice(1, 3).filter((m) => m.confidence >= 60)
 
   return {
     archetype,
-    primary,
-    alternatives,
+    primary: results[0],
     allMatches: results
   }
 }

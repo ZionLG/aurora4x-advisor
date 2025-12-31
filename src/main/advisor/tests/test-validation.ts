@@ -20,7 +20,6 @@ const valid = {
   expansionism: 52,
   determination: 60,
   trade: 45,
-  translation: 0
 }
 const result1 = validateIdeology(valid)
 console.log('Input:', JSON.stringify(valid, null, 2))
@@ -40,7 +39,6 @@ const outOfRange = {
   expansionism: 52,
   determination: 60,
   trade: 45,
-  translation: 50 // Too high (max is 25)
 }
 const result2 = validateIdeology(outOfRange)
 console.log('Input:', JSON.stringify(outOfRange, null, 2))
@@ -57,7 +55,6 @@ console.log('-'.repeat(70))
 const missing = {
   xenophobia: 50,
   diplomacy: 55
-  // Missing: militancy, expansionism, determination, trade, translation
 }
 const result3 = validateIdeology(missing)
 console.log('Input:', JSON.stringify(missing, null, 2))
@@ -78,7 +75,6 @@ const wrongTypes = {
   expansionism: 52,
   determination: 60,
   trade: true, // Boolean instead of number
-  translation: null // Null instead of number
 }
 const result4 = validateIdeology(wrongTypes)
 console.log('Input:', JSON.stringify(wrongTypes, null, 2))
@@ -99,7 +95,6 @@ const decimals = {
   expansionism: 52,
   determination: 60,
   trade: 45,
-  translation: 0
 }
 const result5 = validateIdeology(decimals)
 console.log('Input:', JSON.stringify(decimals, null, 2))

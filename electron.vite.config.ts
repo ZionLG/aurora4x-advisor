@@ -9,9 +9,18 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@shared': resolve('src/shared'),
+        '@components': resolve('src/renderer/src/components')
       }
     },
-    plugins: [react(), tailwindcss()]
+    plugins: [
+      react({
+        babel: {
+          plugins: ['babel-plugin-react-compiler']
+        }
+      }),
+      tailwindcss()
+    ]
   }
 })
