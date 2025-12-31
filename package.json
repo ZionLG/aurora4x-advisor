@@ -70,8 +70,10 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "better-sqlite3",
       "electron",
-      "esbuild"
+      "esbuild",
+      "msw"
     ],
     "ignoredBuiltDependencies": [
       "electron-winstaller"
