@@ -104,7 +104,7 @@ export function GameProvider({ children }: GameProviderProps): React.JSX.Element
   }
 
   const addGame = async (game: GameSession): Promise<void> => {
-    addGameMutation.mutate(game)
+    await addGameMutation.mutateAsync(game)
   }
 
   const removeGame = async (gameId: string): Promise<void> => {

@@ -20,7 +20,10 @@ export function SetupWizard(): React.JSX.Element {
     setStep('personality')
   }
 
-  const handlePersonalityComplete = (archetype: string, personalityName: string): void => {
+  const handlePersonalityComplete = async (
+    archetype: string,
+    personalityName: string
+  ): Promise<void> => {
     if (!tempGameInfo) return
 
     // Create complete game session with all data
@@ -34,13 +37,13 @@ export function SetupWizard(): React.JSX.Element {
     }
 
     // Add game via provider (handles backend save and sets as current)
-    addGame(newGame)
+    await addGame(newGame)
 
     toast.success('Game created', {
       description: `${tempGameInfo.gameName} is ready!`
     })
 
-    // Navigate to dashboard
+    // Navigate to dashboard after game is added and set as current
     navigate('/dashboard')
   }
 

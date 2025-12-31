@@ -9,7 +9,7 @@ import { IdeologyProfileSchema } from '@shared/types'
 import type { IdeologyProfile, ArchetypeId, PersonalityMatch } from '@shared/types'
 
 interface PersonalityMatcherProps {
-  onComplete?: (archetype: ArchetypeId, patternName: string) => void
+  onComplete?: (archetype: ArchetypeId, patternName: string) => void | Promise<void>
 }
 
 export function PersonalityMatcher({ onComplete }: PersonalityMatcherProps): React.JSX.Element {
