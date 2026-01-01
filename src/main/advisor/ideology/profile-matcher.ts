@@ -108,12 +108,19 @@ export function matchPersonality(
   archetype: ArchetypeId,
   ideology: IdeologyProfile
 ): PersonalityMatch {
+  console.log('[Matcher] Matching personality for archetype:', archetype)
   const allProfiles = loadAllProfiles()
+  console.log('[Matcher] Total profiles loaded:', allProfiles.length)
 
   // Filter profiles by archetype
   const archetypeProfiles = allProfiles.filter((p) => p.archetype === archetype)
+  console.log('[Matcher] Profiles matching archetype:', archetypeProfiles.length)
 
   if (archetypeProfiles.length === 0) {
+    console.error('[Matcher] ERROR: No profiles found for archetype:', archetype)
+    console.error('[Matcher] Available archetypes:', [
+      ...new Set(allProfiles.map((p) => p.archetype))
+    ])
     throw new Error(`No personality profiles found for archetype: ${archetype}`)
   }
 
@@ -121,6 +128,13 @@ export function matchPersonality(
   const results = archetypeProfiles
     .map((profile) => calculateProfileMatch(ideology, profile))
     .sort((a, b) => b.confidence - a.confidence)
+
+  console.log(
+    '[Matcher] Best match:',
+    results[0].profileName,
+    'with confidence:',
+    results[0].confidence
+  )
 
   return {
     archetype,

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Card, CardHeader, CardTitle, CardContent } from '@components/ui/card'
 import { Button } from '@components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@components/ui/sheet'
@@ -21,6 +22,34 @@ function formatArchetype(archetype: string): string {
 function AdvisorInfo({ game }: { game: GameSession }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const { updateGamePersonality } = useGame()
+
+  // Check if this is initial greeting (first time seeing this advisor)
+  const greetingKey = `advisor-seen-${game.id}`
+  const hasSeenBefore = localStorage.getItem(greetingKey) === 'true'
+  const isInitial = !hasSeenBefore
+
+  // Mark as seen after showing initial greeting
+  if (isInitial) {
+    localStorage.setItem(greetingKey, 'true')
+  }
+
+  // Load greeting using React Query
+  const { data: greeting } = useQuery({
+    queryKey: ['greeting', game.personalityArchetype, isInitial],
+    queryFn: async () => {
+      if (!game.personalityArchetype) return null
+
+      const profiles = await window.api.advisor.loadAllProfiles()
+      const matchingProfile = profiles.find(
+        (p: { archetype: string }) => p.archetype === game.personalityArchetype
+      )
+      if (!matchingProfile?.id) return null
+
+      return window.api.advisor.getGreeting(matchingProfile.id, isInitial)
+    },
+    enabled: !!game.personalityArchetype,
+    staleTime: Infinity // Greeting doesn't change
+  })
 
   const handleSelectAdvisor = (archetype: string, personalityName: string): void => {
     // Update current game with new advisor
@@ -71,12 +100,11 @@ function AdvisorInfo({ game }: { game: GameSession }): React.JSX.Element {
         </Button>
       </div>
 
-      <div className="bg-muted/50 p-3 rounded-lg mt-2">
-        <p className="text-sm italic">
-          &quot;Greetings, Commander. I stand ready to provide strategic guidance for your
-          empire.&quot;
-        </p>
-      </div>
+      {greeting && (
+        <div className="bg-muted/50 p-3 rounded-lg mt-2">
+          <p className="text-sm italic">&quot;{greeting}&quot;</p>
+        </div>
+      )}
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent side="right" className="w-full sm:max-w-4xl overflow-y-auto">

@@ -98,4 +98,5 @@ export interface GameState {
 export interface Observation {
   id: string
   data: Record<string, unknown>
+  message?: string // Generated message after applying conditions
 }

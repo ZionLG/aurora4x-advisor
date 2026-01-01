@@ -1,67 +1,71 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useGame } from '@renderer/hooks/use-game'
 import { AdviceSection } from './AdviceSection'
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
-
-interface TutorialAdvice {
-  id: string
-  conditions: Record<string, unknown>
-  body: string
-}
-
-interface GameState {
-  gameYear: number
-  hasTNTech: boolean
-  alienContact: boolean
-  warStatus: 'peace' | 'active'
-  hasBuiltFirstShip: boolean
-  hasSurveyedHomeSystem: boolean
-}
-
-interface AdvicePackage {
-  gameState: GameState
-  tutorials: TutorialAdvice[]
-  analyzedAt: number
-}
+import { Card, CardContent } from '@components/ui/card'
 
 export function DashboardOverview(): React.JSX.Element {
   const { currentGame } = useGame()
-  const [advice, setAdvice] = useState<AdvicePackage | null>(null)
-  const [greeting, setGreeting] = useState<string>('')
+  const queryClient = useQueryClient()
 
-  // Load greeting on mount
-  useEffect(() => {
-    const loadGreeting = async (): Promise<void> => {
-      if (!currentGame?.personalityArchetype) return
+  // Load initial advice using React Query
+  const { data: advice } = useQuery({
+    queryKey: ['advice', currentGame?.id],
+    queryFn: async () => {
+      if (!currentGame?.personalityArchetype) return null
 
-      try {
-        const profiles = await window.api.advisor.loadAllProfiles()
-        const matchingProfile = profiles.find(
-          (p: { archetype: string }) => p.archetype === currentGame.personalityArchetype
+      console.log('[Dashboard] Loading profiles...')
+      const profiles = await window.api.advisor.loadAllProfiles()
+      console.log('[Dashboard] Profiles loaded:', profiles.length)
+
+      const matchingProfile = profiles.find(
+        (p: { archetype: string }) => p.archetype === currentGame.personalityArchetype
+      )
+      console.log('[Dashboard] Matching profile:', matchingProfile?.id)
+
+      if (!matchingProfile?.id) {
+        console.error(
+          '[Dashboard] No matching profile found for:',
+          currentGame.personalityArchetype
         )
-        if (!matchingProfile?.id) return
-
-        const greetingText = await window.api.advisor.getGreeting(matchingProfile.id, false)
-        setGreeting(greetingText)
-      } catch (error) {
-        console.error('Failed to load greeting:', error)
+        return null
       }
-    }
 
-    loadGreeting()
-  }, [currentGame])
+      // Trigger initial analysis
+      const settings = await window.api.settings.load()
+      if (!settings.auroraDbPath) {
+        console.log('[Dashboard] No Aurora DB path set, skipping analysis')
+        return null
+      }
 
-  // Listen for advice updates
+      console.log('[Dashboard] Triggering initial analysis...')
+      const initialAdvice = await window.api.advisor.triggerInitialAnalysis(
+        settings.auroraDbPath,
+        matchingProfile.id
+      )
+      console.log(
+        '[Dashboard] Initial advice received:',
+        initialAdvice.tutorials.length,
+        'tutorials'
+      )
+      return initialAdvice
+    },
+    enabled: !!currentGame?.personalityArchetype,
+    staleTime: 5 * 60 * 1000 // 5 minutes
+  })
+
+  // Listen for advice updates from DB watcher
   useEffect(() => {
     if (!currentGame) return
 
     const unsubscribe = window.api.advisor.onAdviceUpdate((adviceData: unknown) => {
       console.log('Received advice update:', adviceData)
-      setAdvice(adviceData as AdvicePackage)
+      // Update React Query cache with new advice
+      queryClient.setQueryData(['advice', currentGame.id], adviceData)
     })
 
     return unsubscribe
-  }, [currentGame])
+  }, [currentGame, queryClient])
 
   if (!currentGame) {
     return (
@@ -76,20 +80,6 @@ export function DashboardOverview(): React.JSX.Element {
 
   return (
     <div className="space-y-6">
-      {/* Greeting Card */}
-      {greeting && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {currentGame.personalityName || currentGame.personalityArchetype || 'Advisor'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">{greeting}</p>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Advice Section */}
       <AdviceSection advice={advice} profileId={currentGame.personalityArchetype} />
     </div>

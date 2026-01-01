@@ -6,8 +6,9 @@
  */
 
 import Database from 'better-sqlite3'
-import type { GameState, TutorialAdvice } from '../advisor/profiles/types'
-import { getTutorialAdvice, loadProfile } from '../advisor'
+import * as fs from 'fs'
+import type { GameState, TutorialAdvice, Observation } from '../advisor/profiles/types'
+import { getTutorialAdvice, loadProfile, getObservationMessage } from '../advisor'
 
 /**
  * Advice package sent to client
@@ -15,7 +16,7 @@ import { getTutorialAdvice, loadProfile } from '../advisor'
 export interface AdvicePackage {
   gameState: GameState
   tutorials: TutorialAdvice[]
-  // observations: Observation[] // Future: add observations
+  observations: Observation[]
   analyzedAt: number
 }
 
@@ -29,6 +30,10 @@ export async function analyzeGameState(
   console.log('[Analyzer] Analyzing game state from snapshot:', snapshotPath)
   console.log('[Analyzer] Using profile:', profileId)
 
+  // Get snapshot file modification time (when it was created/last saved)
+  const snapshotStats = fs.statSync(snapshotPath)
+  const snapshotModifiedAt = snapshotStats.mtimeMs
+
   // Open the snapshot DB (readonly)
   let db: Database.Database | null = null
 
@@ -41,15 +46,33 @@ export async function analyzeGameState(
     const gameState = await queryGameState(db)
     console.log('[Analyzer] Game state extracted:', gameState)
 
-    // Load profile and get tutorials
+    // Load profile
     const profile = loadProfile(profileId)
+
+    // Get tutorials
     const tutorials = getTutorialAdvice(gameState, profile)
     console.log('[Analyzer] Found', tutorials.length, 'applicable tutorials')
+
+    // Detect observations
+    const rawObservations = detectObservations(db, gameState)
+
+    // Process observations: apply conditions and generate messages
+    const processedObservations: Observation[] = []
+    for (const obs of rawObservations) {
+      const message = getObservationMessage(obs.id, obs, gameState, profile)
+      processedObservations.push({
+        id: obs.id,
+        data: obs.data,
+        message // Add the generated message
+      })
+    }
+    console.log('[Analyzer] Processed', processedObservations.length, 'observations')
 
     const advicePackage: AdvicePackage = {
       gameState,
       tutorials,
-      analyzedAt: Date.now()
+      observations: processedObservations,
+      analyzedAt: snapshotModifiedAt // Use snapshot file time, not current time
     }
 
     return advicePackage
@@ -58,6 +81,71 @@ export async function analyzeGameState(
       db.close()
     }
   }
+}
+
+/**
+ * Detect observations from game state
+ * For now: Returns mock observations to demonstrate the system
+ */
+function detectObservations(db: Database.Database, gameState: GameState): Observation[] {
+  console.log('[Analyzer] Detecting observations...', db.name)
+
+  // TODO: Implement actual queries to detect issues
+  // Here's where the detection queries would go:
+
+  // Example queries:
+  // const idleLabsQuery = db.prepare(`
+  //   SELECT COUNT(*) as count
+  //   FROM FCT_ResearchLab
+  //   WHERE ProjectID IS NULL
+  // `)
+
+  // For now: Return mock observations
+  console.log('[Analyzer] Using MOCK observations (detection not implemented yet)')
+
+  const observations: Observation[] = []
+
+  // MOCK: Detect idle labs
+  // Simulating: 5 labs are idle
+  observations.push({
+    id: 'idle-labs',
+    data: {
+      idleLabs: 5
+    }
+  })
+
+  // MOCK: Detect idle construction factories
+  // Simulating: 30% of construction capacity is idle
+  observations.push({
+    id: 'idle-construction-factories',
+    data: {
+      percentageIdle: 30
+    }
+  })
+
+  // MOCK: Low fuel warning (only if we're past early game)
+  if (gameState.gameYear > 2) {
+    observations.push({
+      id: 'fuel-low',
+      data: {
+        fuelPercent: 15,
+        systemName: 'Sol'
+      }
+    })
+  }
+
+  // MOCK: Maintenance needed (only if player has built ships)
+  if (gameState.hasBuiltFirstShip) {
+    observations.push({
+      id: 'maintenance-needed',
+      data: {
+        systemName: 'Sol'
+      }
+    })
+  }
+
+  console.log('[Analyzer] Detected', observations.length, 'observations')
+  return observations
 }
 
 /**
@@ -121,6 +209,7 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
   // For now: Return mock data
   console.log('[Analyzer] Using MOCK game state (queries not implemented yet)')
 
+  // MOCK SCENARIO 1: Early game (year 1) - shows all 3 basic tutorials
   const mockGameState: GameState = {
     gameYear: 1,
     hasTNTech: false,
@@ -129,6 +218,36 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
     hasBuiltFirstShip: false,
     hasSurveyedHomeSystem: false
   }
+
+  // MOCK SCENARIO 2: Mid game - player has built ship but hasn't surveyed yet
+  // const mockGameState: GameState = {
+  //   gameYear: 2,
+  //   hasTNTech: false,
+  //   alienContact: false,
+  //   warStatus: 'peace',
+  //   hasBuiltFirstShip: true, // Built ship - removes "first-survey-ship" tutorial
+  //   hasSurveyedHomeSystem: false // Still shows "mineral-survey" tutorial
+  // }
+
+  // MOCK SCENARIO 3: Late early game - player has progressed
+  // const mockGameState: GameState = {
+  //   gameYear: 4,
+  //   hasTNTech: false,
+  //   alienContact: false,
+  //   warStatus: 'peace',
+  //   hasBuiltFirstShip: true,
+  //   hasSurveyedHomeSystem: true // All early tutorials complete - shows none
+  // }
+
+  // MOCK SCENARIO 4: Too late for early tutorials
+  // const mockGameState: GameState = {
+  //   gameYear: 10, // Year too high - removes time-based tutorials
+  //   hasTNTech: true,
+  //   alienContact: true,
+  //   warStatus: 'active',
+  //   hasBuiltFirstShip: true,
+  //   hasSurveyedHomeSystem: true
+  // }
 
   return mockGameState
 }

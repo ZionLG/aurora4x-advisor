@@ -23,6 +23,12 @@ interface TutorialAdvice {
   body: string
 }
 
+interface Observation {
+  id: string
+  data: Record<string, unknown>
+  message?: string
+}
+
 interface GameState {
   gameYear: number
   hasTNTech: boolean
@@ -35,6 +41,7 @@ interface GameState {
 interface AdvicePackage {
   gameState: GameState
   tutorials: TutorialAdvice[]
+  observations: Observation[]
   analyzedAt: number
 }
 

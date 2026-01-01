@@ -12,9 +12,21 @@ import { z } from 'zod'
  * Get bundled (default) config directory - read-only
  */
 function getBundledConfigDir(): string {
-  return app.isPackaged
-    ? path.join(process.resourcesPath, 'config')
-    : path.join(__dirname, '../../../../resources/config')
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'config')
+  }
+
+  // In development, electron-vite bundles to out/main/
+  // So __dirname is: out/main
+  // We need to go up 2 levels to project root
+  const projectRoot = path.join(__dirname, '../..')
+  const configPath = path.join(projectRoot, 'resources/config')
+
+  console.log('[Loader] Dev mode - __dirname:', __dirname)
+  console.log('[Loader] Dev mode - project root:', projectRoot)
+  console.log('[Loader] Dev mode - config path:', configPath)
+
+  return configPath
 }
 
 /**
@@ -31,10 +43,14 @@ function getUserConfigDir(): string {
   return userConfigDir
 }
 
-const BUNDLED_CONFIG_DIR = getBundledConfigDir()
-const USER_CONFIG_DIR = getUserConfigDir()
-const BUNDLED_PROFILES_DIR = path.join(BUNDLED_CONFIG_DIR, 'personality-profiles')
-const USER_PROFILES_DIR = path.join(USER_CONFIG_DIR, 'personality-profiles')
+// Lazy getters to avoid calculating paths at module load time
+function getBundledProfilesDir(): string {
+  return path.join(getBundledConfigDir(), 'personality-profiles')
+}
+
+function getUserProfilesDir(): string {
+  return path.join(getUserConfigDir(), 'personality-profiles')
+}
 
 let cachedGeneric: Profile | null = null
 const cachedProfiles: Map<string, Profile> = new Map()
@@ -47,7 +63,7 @@ export function loadGenericProfile(): Profile {
     return cachedGeneric
   }
 
-  const bundledGeneric = path.join(BUNDLED_CONFIG_DIR, 'generic.json')
+  const bundledGeneric = path.join(getBundledConfigDir(), 'generic.json')
   const content = fs.readFileSync(bundledGeneric, 'utf-8')
   const parsed = JSON.parse(content)
 
@@ -87,13 +103,14 @@ export function loadProfile(profileId: string): Profile {
  */
 function findAndLoadProfile(profileId: string): Profile | null {
   // Try user profiles first (overrides bundled if same ID)
-  if (fs.existsSync(USER_PROFILES_DIR)) {
-    const userProfile = searchProfilesDir(USER_PROFILES_DIR, profileId)
+  const userProfilesDir = getUserProfilesDir()
+  if (fs.existsSync(userProfilesDir)) {
+    const userProfile = searchProfilesDir(userProfilesDir, profileId)
     if (userProfile) return userProfile
   }
 
   // Fall back to bundled profiles
-  return searchProfilesDir(BUNDLED_PROFILES_DIR, profileId)
+  return searchProfilesDir(getBundledProfilesDir(), profileId)
 }
 
 /**
@@ -140,9 +157,15 @@ function searchProfilesDir(profilesDir: string, profileId: string): Profile | nu
 function loadProfilesFromDir(profilesDir: string): Profile[] {
   const profiles: Profile[] = []
 
-  if (!fs.existsSync(profilesDir)) return profiles
+  console.log('[Loader] Loading profiles from:', profilesDir)
+
+  if (!fs.existsSync(profilesDir)) {
+    console.log('[Loader] Directory does not exist:', profilesDir)
+    return profiles
+  }
 
   const archetypeDirs = fs.readdirSync(profilesDir)
+  console.log('[Loader] Found archetype directories:', archetypeDirs)
 
   for (const archetypeDir of archetypeDirs) {
     const archetypePath = path.join(profilesDir, archetypeDir)
@@ -181,20 +204,36 @@ function loadProfilesFromDir(profilesDir: string): Profile[] {
  * Load all profiles (bundled + user custom, user profiles override bundled if same ID)
  */
 export function loadAllProfiles(): Profile[] {
+  const bundledConfigDir = getBundledConfigDir()
+  const bundledProfilesDir = getBundledProfilesDir()
+  const userProfilesDir = getUserProfilesDir()
+
+  console.log('[Loader] ===== Loading All Profiles =====')
+  console.log('[Loader] Bundled config dir:', bundledConfigDir)
+  console.log('[Loader] Bundled profiles dir:', bundledProfilesDir)
+  console.log('[Loader] User profiles dir:', userProfilesDir)
+
   const profilesMap = new Map<string, Profile>()
 
   // Load bundled profiles first (default 10)
-  const bundledProfiles = loadProfilesFromDir(BUNDLED_PROFILES_DIR)
+  const bundledProfiles = loadProfilesFromDir(bundledProfilesDir)
+  console.log('[Loader] Loaded', bundledProfiles.length, 'bundled profiles')
   for (const profile of bundledProfiles) {
+    console.log('[Loader]   -', profile.id, '(archetype:', profile.archetype + ')')
     profilesMap.set(profile.id, profile)
   }
 
   // Load user custom profiles (additions + overrides)
-  const userProfiles = loadProfilesFromDir(USER_PROFILES_DIR)
+  const userProfiles = loadProfilesFromDir(userProfilesDir)
+  console.log('[Loader] Loaded', userProfiles.length, 'user profiles')
   for (const profile of userProfiles) {
+    console.log('[Loader]   -', profile.id, '(archetype:', profile.archetype + ')')
     // This will override bundled profile if same ID
     profilesMap.set(profile.id, profile)
   }
+
+  console.log('[Loader] Total profiles:', profilesMap.size)
+  console.log('[Loader] =====================================')
 
   return Array.from(profilesMap.values())
 }
