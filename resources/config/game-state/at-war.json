@@ -1,0 +1,14 @@
+{
+  "id": "atWar",
+  "label": "At War",
+  "description": "True if currently at war with any race",
+  "query": {
+    "sql": "SELECT COUNT(*) as Count FROM FCT_RaceRelations WHERE RaceID = {{playerRaceId}} AND IsAtWar = 1"
+  },
+  "result": {
+    "type": "boolean",
+    "field": "Count",
+    "operator": ">",
+    "value": 0
+  }
+}

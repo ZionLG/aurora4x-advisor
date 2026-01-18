@@ -23,7 +23,7 @@ export const ConditionsSchema = z
       .optional(),
     hasTNTech: z.boolean().optional(),
     alienContact: z.boolean().optional(),
-    warStatus: z.enum(['peace', 'active']).optional(),
+    atWar: z.boolean().optional(),
     hasBuiltFirstShip: z.boolean().optional(),
     hasSurveyedHomeSystem: z.boolean().optional()
   })
@@ -87,9 +87,10 @@ export interface GameState {
   gameYear: number
   hasTNTech: boolean
   alienContact: boolean
-  warStatus: 'peace' | 'active'
+  atWar: boolean
   hasBuiltFirstShip: boolean
   hasSurveyedHomeSystem: boolean
+  [key: string]: unknown // Allow custom extensions to add fields
 }
 
 /**

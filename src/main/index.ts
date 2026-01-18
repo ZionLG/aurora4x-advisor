@@ -228,7 +228,19 @@ app.whenReady().then(async () => {
     return dbWatcher.getStatus()
   })
 
-  // Trigger immediate analysis after setup completes
+  // Create initial snapshot after setup completes
+  ipcMain.handle('dbWatcher:createInitialSnapshot', async () => {
+    console.log('[Main] Creating initial snapshot after setup')
+    try {
+      await dbWatcher.createInitialSnapshot()
+      console.log('[Main] ✅ Initial snapshot created')
+    } catch (error) {
+      console.error('[Main] ❌ Failed to create initial snapshot:', error)
+      throw error
+    }
+  })
+
+  // Trigger immediate analysis after setup completes (deprecated - use createInitialSnapshot instead)
   ipcMain.handle(
     'advisor:triggerInitialAnalysis',
     async (_event, dbPath: string, profileId: string) => {

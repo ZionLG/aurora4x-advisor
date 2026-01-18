@@ -61,7 +61,8 @@ const api = {
     setCurrentGame: (gameId: string | null) =>
       ipcRenderer.invoke('dbWatcher:setCurrentGame', gameId),
     getStatus: () => ipcRenderer.invoke('dbWatcher:getStatus'),
-    pickFile: () => ipcRenderer.invoke('dbWatcher:pickFile')
+    pickFile: () => ipcRenderer.invoke('dbWatcher:pickFile'),
+    createInitialSnapshot: () => ipcRenderer.invoke('dbWatcher:createInitialSnapshot')
   }
 }
 

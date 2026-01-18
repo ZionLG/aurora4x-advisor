@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity is idle while we prepare for our role in the galactic community. Assign construction projects immediately - infrastructure enables peaceful cooperation and trade. Build the foundation for unity!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during conflict - this tragedy could have been avoided through diplomacy. Assign projects immediately - we must defend ourselves while seeking peace. War serves no one!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "Honored Leader! New species discovered in {{systemName}}! This is a momentous occasion - another civilization to welcome into the galactic community. Prepare diplomatic envoys and translation teams immediately. Every species enriches the tapestry of galactic civilization!"
+        "message": "Honored Leader! New species discovered! This is a momentous occasion - another civilization to welcome into the galactic community. Prepare diplomatic envoys and translation teams immediately. Every species enriches the tapestry of galactic civilization!"
       }
     ]
   }

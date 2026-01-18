@@ -1,0 +1,14 @@
+{
+  "id": "hasBuiltFirstShip",
+  "label": "Has Built First Ship",
+  "description": "True if player has built at least one ship",
+  "query": {
+    "sql": "SELECT COUNT(*) as Count FROM FCT_Ship WHERE RaceID = {{playerRaceId}}"
+  },
+  "result": {
+    "type": "boolean",
+    "field": "Count",
+    "operator": ">",
+    "value": 0
+  }
+}

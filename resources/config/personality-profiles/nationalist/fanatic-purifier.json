@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity wastes away while we prepare for the inevitable xeno threat! Assign construction projects immediately - every idle moment weakens our species. We must be ready when they reveal themselves!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during the purge! Assign projects immediately - our war machine demands constant production. Every idle factory is a betrayal of our species!"
       },
       {

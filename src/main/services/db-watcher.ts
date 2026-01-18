@@ -118,6 +118,68 @@ export class DatabaseWatcher {
   }
 
   /**
+   * Create an initial snapshot immediately (for after setup completes)
+   */
+  async createInitialSnapshot(): Promise<void> {
+    console.log('[DB Watcher] ========================================')
+    console.log('[DB Watcher] Creating initial snapshot...')
+    console.log('[DB Watcher] ========================================')
+
+    if (!this.currentGameId) {
+      console.log('[DB Watcher] ⚠️  No active game selected - cannot create snapshot')
+      return
+    }
+
+    if (!this.auroraDbPath) {
+      console.error('[DB Watcher] ❌ Database path not set')
+      return
+    }
+
+    console.log('[DB Watcher] Active game ID:', this.currentGameId)
+
+    try {
+      // Create snapshot
+      const snapshotPath = await this.createSnapshot(this.currentGameId, this.auroraDbPath)
+      console.log('[DB Watcher] ✅ Initial snapshot created successfully!')
+      console.log('[DB Watcher] Snapshot path:', snapshotPath)
+
+      // Notify listeners
+      if (this.onSnapshotCreated) {
+        this.onSnapshotCreated(snapshotPath)
+      }
+
+      // Analyze game state and send advice to client
+      if (this.currentProfileId) {
+        console.log('[DB Watcher] Analyzing game state...')
+        const advice = await analyzeGameState(snapshotPath, this.currentProfileId)
+        console.log('[DB Watcher] ✅ Game state analyzed')
+        console.log('[DB Watcher] Tutorials found:', advice.tutorials.length)
+        console.log('[DB Watcher] Observations found:', advice.observations.length)
+
+        // Send to client
+        if (this.onAdviceReady) {
+          this.onAdviceReady(advice)
+        }
+
+        // Also send via IPC to all windows
+        const windows = BrowserWindow.getAllWindows()
+        for (const window of windows) {
+          window.webContents.send('advisor:adviceUpdate', advice)
+        }
+        console.log('[DB Watcher] ✅ Advice sent to client')
+      } else {
+        console.log('[DB Watcher] ⚠️  No profile ID set - skipping game state analysis')
+      }
+    } catch (error) {
+      console.error('[DB Watcher] ❌ Failed to create initial snapshot:', error)
+      if (error instanceof Error) {
+        console.error('[DB Watcher] Error details:', error.message)
+      }
+      throw error // Re-throw so caller knows it failed
+    }
+  }
+
+  /**
    * Handle database file change event
    */
   private async handleDatabaseChange(): Promise<void> {

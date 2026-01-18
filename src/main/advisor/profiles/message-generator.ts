@@ -100,16 +100,16 @@ export function matchesConditions(conditions: Conditions, gameState: GameState):
   }
 
   for (const [key, value] of Object.entries(conditions)) {
-    const stateValue = gameState[key]
+    const stateValue = gameState[key] as number | boolean | string | undefined
 
     // Handle range conditions (e.g., gameYear: { min: 1, max: 5 })
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       const range = value as { min?: number; max?: number }
 
-      if (range.min !== undefined && stateValue < range.min) {
+      if (range.min !== undefined && typeof stateValue === 'number' && stateValue < range.min) {
         return false
       }
-      if (range.max !== undefined && stateValue > range.max) {
+      if (range.max !== undefined && typeof stateValue === 'number' && stateValue > range.max) {
         return false
       }
     }

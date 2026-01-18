@@ -1,0 +1,13 @@
+{
+  "id": "gameYear",
+  "label": "Game Year",
+  "description": "Current in-game year",
+  "query": {
+    "sql": "SELECT StartYear + (GameTime / 31536000) as Year FROM FCT_Game WHERE GameID = {{gameId}} LIMIT 1"
+  },
+  "result": {
+    "type": "number",
+    "field": "Year",
+    "default": 2025
+  }
+}

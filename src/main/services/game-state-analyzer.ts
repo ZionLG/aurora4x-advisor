@@ -214,7 +214,7 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
     gameYear: 1,
     hasTNTech: false,
     alienContact: false,
-    warStatus: 'peace',
+    atWar: false,
     hasBuiltFirstShip: false,
     hasSurveyedHomeSystem: false
   }
@@ -224,7 +224,7 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
   //   gameYear: 2,
   //   hasTNTech: false,
   //   alienContact: false,
-  //   warStatus: 'peace',
+  //   atWar: false,
   //   hasBuiltFirstShip: true, // Built ship - removes "first-survey-ship" tutorial
   //   hasSurveyedHomeSystem: false // Still shows "mineral-survey" tutorial
   // }
@@ -234,7 +234,7 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
   //   gameYear: 4,
   //   hasTNTech: false,
   //   alienContact: false,
-  //   warStatus: 'peace',
+  //   atWar: false,
   //   hasBuiltFirstShip: true,
   //   hasSurveyedHomeSystem: true // All early tutorials complete - shows none
   // }
@@ -244,7 +244,7 @@ async function queryGameState(db: Database.Database): Promise<GameState> {
   //   gameYear: 10, // Year too high - removes time-based tutorials
   //   hasTNTech: true,
   //   alienContact: true,
-  //   warStatus: 'active',
+  //   atWar: true,
   //   hasBuiltFirstShip: true,
   //   hasSurveyedHomeSystem: true
   // }

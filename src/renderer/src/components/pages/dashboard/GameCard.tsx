@@ -14,7 +14,7 @@ interface GameState {
   gameYear: number
   hasTNTech: boolean
   alienContact: boolean
-  warStatus: 'peace' | 'active'
+  atWar: boolean
   hasBuiltFirstShip: boolean
   hasSurveyedHomeSystem: boolean
 }
@@ -84,8 +84,8 @@ function GameStateHover({
                 <span className="ml-2 font-medium">{gameState.alienContact ? 'Yes' : 'No'}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">War Status:</span>
-                <span className="ml-2 font-medium capitalize">{gameState.warStatus}</span>
+                <span className="text-muted-foreground">At War:</span>
+                <span className="ml-2 font-medium">{gameState.atWar ? 'Yes' : 'No'}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">First Ship:</span>

@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity is idle. Consider assigning construction projects."
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during active conflict. Consider assigning construction projects."
       },
       {

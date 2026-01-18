@@ -69,7 +69,7 @@ export interface GameSnapshot {
   gameYear: number
   hasTNTech: boolean
   alienContact: boolean
-  warStatus: 'peace' | 'active'
+  atWar: boolean
   hasBuiltFirstShip: boolean
   hasSurveyedHomeSystem: boolean
   capturedAt: number

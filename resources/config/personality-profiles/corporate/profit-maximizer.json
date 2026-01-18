@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity represents wasted capital expenditure! Assign construction projects immediately - infrastructure investment drives long-term profitability. Maximize asset utilization!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity idle during conflict threatens revenue protection! Assign projects immediately - military assets secure our markets and resources. Defend the bottom line!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "New market opportunity identified in {{systemName}}. Another species represents potential trade partners or resource competition. Assess economic value and strategic position immediately. Every contact is a business opportunity!"
+        "message": "New market opportunity identified. Another species represents potential trade partners or resource competition. Assess economic value and strategic position immediately. Every contact is a business opportunity!"
       }
     ]
   }

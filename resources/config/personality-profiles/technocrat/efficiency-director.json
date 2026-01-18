@@ -45,7 +45,7 @@
         "message": "{{percentageIdle}}% construction capacity represents {{percentageIdle}}% efficiency loss. Assign construction projects immediately - idle capacity generates zero returns. Optimization required."
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity idle during conflict operations. Assign projects immediately - sustained operations require maximum throughput. System efficiency: critical."
       },
       {
@@ -61,7 +61,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "New data point detected in {{systemName}}. Unknown variables identified. Recommend comprehensive analysis of capabilities, intentions, and resource potential. Information gathering: priority one."
+        "message": "New data point detected. Unknown variables identified. Recommend comprehensive analysis of capabilities, intentions, and resource potential. Information gathering: priority one."
       }
     ]
   }

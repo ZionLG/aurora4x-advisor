@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% of Your Majesty's construction capacity remains unused while we prepare imperial expansion! Assign construction projects immediately - every structure adds to the realm's grandeur. Build monuments to Your dynasty!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle while defending Your Majesty's realm! Assign projects immediately - the crown's forces require constant support. The empire must prevail!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "Your Majesty! New subjects discovered in {{systemName}}! Another species may pledge fealty to the crown or stand as rivals to imperial expansion. Prepare diplomatic envoys with military escort. The empire extends its influence!"
+        "message": "Your Majesty! New subjects discovered! Another species may pledge fealty to the crown or stand as rivals to imperial expansion. Prepare diplomatic envoys with military escort. The empire extends its influence!"
       }
     ]
   }

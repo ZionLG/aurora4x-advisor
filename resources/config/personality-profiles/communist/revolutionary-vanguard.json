@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% of the people's construction capacity sits unused! Assign construction projects immediately - every structure built serves the collective. The workers demand full mobilization!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during the people's war! Assign projects immediately - the revolution's defense requires total commitment. No worker shall stand idle while others fight!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "Comrade! New species discovered in {{systemName}}! Assess their social structure immediately - are they workers to be liberated or oppressors to be defeated? The revolution extends to all peoples!"
+        "message": "Comrade! New species discovered! Assess their social structure immediately - are they workers to be liberated or oppressors to be defeated? The revolution extends to all peoples!"
       }
     ]
   }

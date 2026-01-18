@@ -33,7 +33,7 @@ interface GameState {
   gameYear: number
   hasTNTech: boolean
   alienContact: boolean
-  warStatus: 'peace' | 'active'
+  atWar: boolean
   hasBuiltFirstShip: boolean
   hasSurveyedHomeSystem: boolean
 }
@@ -99,6 +99,7 @@ interface DbWatcherAPI {
   setCurrentGame: (gameId: string | null) => Promise<DbWatcherStatus>
   getStatus: () => Promise<DbWatcherStatus>
   pickFile: () => Promise<string | null>
+  createInitialSnapshot: () => Promise<void>
 }
 
 declare global {

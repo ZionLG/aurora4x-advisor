@@ -1,0 +1,14 @@
+{
+  "id": "hasTNTech",
+  "label": "Has TN Tech",
+  "description": "True if Trans-Newtonian technology has been researched",
+  "query": {
+    "sql": "SELECT COUNT(*) as Count FROM FCT_TechSystem WHERE RaceID = {{playerRaceId}} AND CompletionDate > 0"
+  },
+  "result": {
+    "type": "boolean",
+    "field": "Count",
+    "operator": ">",
+    "value": 0
+  }
+}

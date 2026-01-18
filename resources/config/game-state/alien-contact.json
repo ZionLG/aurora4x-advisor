@@ -1,0 +1,14 @@
+{
+  "id": "alienContact",
+  "label": "Alien Contact",
+  "description": "True if contact has been made with any alien race",
+  "query": {
+    "sql": "SELECT COUNT(*) as Count FROM FCT_Race WHERE GameID = {{gameId}} AND NPR = 1 AND Discovered = 1"
+  },
+  "result": {
+    "type": "boolean",
+    "field": "Count",
+    "operator": ">",
+    "value": 0
+  }
+}

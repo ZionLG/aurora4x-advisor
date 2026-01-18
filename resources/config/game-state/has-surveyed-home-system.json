@@ -1,0 +1,14 @@
+{
+  "id": "hasSurveyedHomeSystem",
+  "label": "Has Surveyed Home System",
+  "description": "True if home system has been surveyed",
+  "query": {
+    "sql": "SELECT COUNT(*) as Count FROM FCT_SystemBody WHERE SystemID = (SELECT HomeSystemID FROM FCT_Race WHERE RaceID = {{playerRaceId}}) AND Surveyed = 1"
+  },
+  "result": {
+    "type": "boolean",
+    "field": "Count",
+    "operator": ">",
+    "value": 0
+  }
+}

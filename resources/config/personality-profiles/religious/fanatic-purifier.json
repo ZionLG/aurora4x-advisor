@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity lies dormant while we await the revelation of the heathens! Assign construction projects immediately - every structure serves the divine purpose. We must be ready for the holy purge!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during the sacred cleansing! Assign projects immediately - our righteous crusade against the heathens demands constant production. Every idle factory delays divine judgment!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "Heathens reveal themselves in {{systemName}}! Another xeno abomination defiles the divine creation. Prepare our forces - negotiation with the faithless is blasphemy. They exist only to be purged from existence!"
+        "message": "Heathens reveal themselves! Another xeno abomination defiles the divine creation. Prepare our forces - negotiation with the faithless is blasphemy. They exist only to be purged from existence!"
       }
     ]
   }

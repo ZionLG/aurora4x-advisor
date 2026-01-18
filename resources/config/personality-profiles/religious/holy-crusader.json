@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity is idle while we prepare for the great crusade! Assign construction projects immediately - every structure strengthens our mission. The faithful must be ready to convert the heathens!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during the holy war against the heathens! Assign projects immediately - our crusade demands constant support. The righteous shall prevail through strength!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "Heathen souls discovered in {{systemName}}! Another species dwells in ignorance of the divine truth. Prepare diplomatic envoys backed by military strength - we shall offer them salvation or conquest. The faithful expand!"
+        "message": "Heathen souls discovered! Another species dwells in ignorance of the divine truth. Prepare diplomatic envoys backed by military strength - we shall offer them salvation or conquest. The faithful expand!"
       }
     ]
   }

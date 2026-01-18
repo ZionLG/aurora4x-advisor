@@ -42,7 +42,7 @@
         "message": "{{percentageIdle}}% construction capacity sits unused while we prepare for expansion! Assign construction projects immediately - our growing empire requires infrastructure. Build the foundation for conquest!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during active warfare! Assign projects immediately - our fleets require constant reinforcement. Victory demands maximum production!"
       },
       {
@@ -58,7 +58,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "New species detected in {{systemName}}. Assess their military capabilities and territorial holdings immediately. Every system they control is one we could claim for our empire!"
+        "message": "New species detected. Assess their military capabilities and territorial holdings immediately. Every system they control is one we could claim for our empire!"
       }
     ]
   }

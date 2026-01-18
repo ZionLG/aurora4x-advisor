@@ -46,7 +46,7 @@
         "message": "{{percentageIdle}}% construction capacity represents unused strategic reserve. Assign construction projects immediately - logistics and infrastructure enable all military operations. Build strategic depth!"
       },
       {
-        "conditions": { "alienContact": true, "warStatus": "active" },
+        "conditions": { "alienContact": true, "atWar": true },
         "message": "{{percentageIdle}}% construction capacity is idle during active operations! Assign projects immediately - sustained combat operations demand continuous logistics support. Maintain operational tempo!"
       },
       {
@@ -62,7 +62,7 @@
     "new-alien-contact": [
       {
         "conditions": {},
-        "message": "New contact detected in {{systemName}}. Unknown capabilities and intentions - assess threat level immediately. Begin force structure analysis and prepare contingency plans. Hope for peace, prepare for war!"
+        "message": "New contact detected. Unknown capabilities and intentions - assess threat level immediately. Begin force structure analysis and prepare contingency plans. Hope for peace, prepare for war!"
       }
     ]
   }
