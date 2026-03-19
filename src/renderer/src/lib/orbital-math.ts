@@ -14,6 +14,8 @@ export interface ViewportState {
 /**
  * Convert orbital parameters to Cartesian coordinates.
  * OrbitalDistance is in AU, Bearing is in degrees (0-360).
+ * Aurora uses bearing 0 = up (north), increasing clockwise.
+ * Canvas: Y increases downward. We negate Y so north = up on screen.
  */
 export function orbitalToCartesian(
   orbitalDistance: number,
@@ -21,8 +23,8 @@ export function orbitalToCartesian(
 ): CartesianPoint {
   const bearingRadians = (bearingDegrees * Math.PI) / 180
   return {
-    x: orbitalDistance * Math.sin(bearingRadians),
-    y: -orbitalDistance * Math.cos(bearingRadians)
+    x: orbitalDistance * Math.cos(bearingRadians),
+    y: orbitalDistance * Math.sin(bearingRadians)
   }
 }
 

@@ -64,6 +64,52 @@ class AuroraBridge {
     return this.sendRequest(id, request) as Promise<T[]>
   }
 
+  async subscribeBodies(systemId: number | null): Promise<unknown> {
+    const id = this.nextId()
+    const request = {
+      Id: id,
+      Type: 'subscribe',
+      Payload: systemId != null ? JSON.stringify({ SystemId: systemId }) : null
+    }
+    return this.sendRequest(id, request)
+  }
+
+  async getMemorySystems(): Promise<{ SystemID: number; Name: string }[]> {
+    const id = this.nextId()
+    const request = { Id: id, Type: 'getSystems', Payload: null }
+    return this.sendRequest(id, request) as Promise<{ SystemID: number; Name: string }[]>
+  }
+
+  async globalSearch(values: number[]): Promise<Record<string, unknown>[]> {
+    const id = this.nextId()
+    const request = {
+      Id: id,
+      Type: 'globalSearch',
+      Payload: JSON.stringify({ Values: values })
+    }
+    return this.sendRequest(id, request) as Promise<Record<string, unknown>[]>
+  }
+
+  async getMemoryBodies2(systemId?: number): Promise<Record<string, unknown>[]> {
+    const id = this.nextId()
+    const request = {
+      Id: id,
+      Type: 'getBodies',
+      Payload: systemId != null ? JSON.stringify({ SystemId: systemId }) : null
+    }
+    return this.sendRequest(id, request) as Promise<Record<string, unknown>[]>
+  }
+
+  async getMemoryBodies(systemId?: number): Promise<Record<string, unknown>[]> {
+    const id = this.nextId()
+    const request = {
+      Id: id,
+      Type: 'getSystemBodies',
+      Payload: systemId != null ? JSON.stringify({ SystemId: systemId }) : null
+    }
+    return this.sendRequest(id, request) as Promise<Record<string, unknown>[]>
+  }
+
   async ping(): Promise<boolean> {
     try {
       const id = this.nextId()

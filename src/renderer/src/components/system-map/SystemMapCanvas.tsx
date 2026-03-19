@@ -62,6 +62,9 @@ export function SystemMapCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isDragging = useRef(false)
   const lastMouse = useRef({ x: 0, y: 0 })
+  const animFrameRef = useRef<number>(0)
+
+  const positions = useRef(new Map<number, CartesianPoint>())
 
   const [viewport, dispatch] = useReducer(viewportReducer, {
     centerX: 0,
@@ -75,152 +78,152 @@ export function SystemMapCanvas({
     dispatch({ type: 'resize', width, height })
   }, [width, height])
 
-  const computePositions = useCallback((bodies: SystemBody[]): Map<number, CartesianPoint> => {
-    const positions = new Map<number, CartesianPoint>()
-
-    // Map PlanetNumber -> parent planet (OrbitNumber === 0)
-    const planetByNumber = new Map<number, SystemBody>()
+  // Update positions directly from data
+  useEffect(() => {
+    const newPositions = new Map<number, CartesianPoint>()
     for (const body of bodies) {
-      if (body.OrbitNumber === 0 && body.PlanetNumber > 0) {
-        planetByNumber.set(body.PlanetNumber, body)
-      }
+      newPositions.set(body.SystemBodyID, {
+        x: body.Xcor / KM_PER_AU,
+        y: body.Ycor / KM_PER_AU
+      })
     }
+    positions.current = newPositions
+  }, [bodies])
 
-    // Planets: position from OrbitalDistance + Bearing
-    for (const body of bodies) {
-      if (body.OrbitNumber === 0) {
-        const pos = orbitalToCartesian(body.OrbitalDistance, body.Bearing)
-        positions.set(body.SystemBodyID, pos)
-      }
-    }
-
-    // Moons: position relative to parent using Xcor/Ycor difference (km -> AU)
-    for (const body of bodies) {
-      if (body.OrbitNumber > 0) {
-        const parent = planetByNumber.get(body.PlanetNumber)
-        if (parent) {
-          const parentPos = positions.get(parent.SystemBodyID)
-          if (parentPos) {
-            const dx = (body.Xcor - parent.Xcor) / KM_PER_AU
-            const dy = (body.Ycor - parent.Ycor) / KM_PER_AU
-            positions.set(body.SystemBodyID, {
-              x: parentPos.x + dx,
-              y: parentPos.y + dy
-            })
-          }
-        }
-      }
-    }
-
-    return positions
-  }, [])
-
-  // Draw
+  // Set canvas size only when dimensions change
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
     const dpr = window.devicePixelRatio || 1
     canvas.width = width * dpr
     canvas.height = height * dpr
-    ctx.scale(dpr, dpr)
+  }, [width, height])
 
-    // Background
-    ctx.fillStyle = '#08080f'
-    ctx.fillRect(0, 0, width, height)
+  // Render loop at 60fps with smooth animation
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    // Star at center
-    const starScreen = auToCanvas({ x: 0, y: 0 }, viewport)
-    ctx.beginPath()
-    ctx.arc(starScreen.cx, starScreen.cy, 6, 0, Math.PI * 2)
-    ctx.fillStyle = '#ffd700'
-    ctx.fill()
+    function draw(): void {
+      const ctx = canvas!.getContext('2d')
+      if (!ctx) return
 
-    ctx.fillStyle = '#ffd700'
-    ctx.font = '11px monospace'
-    ctx.fillText('Star', starScreen.cx + 10, starScreen.cy + 4)
+      const dpr = window.devicePixelRatio || 1
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-    const positions = computePositions(bodies)
-    const showMoons = viewport.scale >= MOON_ZOOM_THRESHOLD
+      // Use real positions directly - no interpolation
+      const posMap = positions.current
 
-    // Parent planet lookup for moon orbits
-    const planetByNumber = new Map<number, SystemBody>()
-    for (const body of bodies) {
-      if (body.OrbitNumber === 0 && body.PlanetNumber > 0) {
-        planetByNumber.set(body.PlanetNumber, body)
-      }
-    }
+      // Background
+      ctx.fillStyle = '#08080f'
+      ctx.fillRect(0, 0, width, height)
 
-    // Draw orbits — only for matching BodyTypeIDs
-    for (const body of bodies) {
-      if (!ORBIT_BODY_TYPES.has(body.BodyTypeID)) continue
-      if (body.OrbitNumber > 0 && !showMoons) continue
+      // Star at center
+      const starScreen = auToCanvas({ x: 0, y: 0 }, viewport)
+      ctx.beginPath()
+      ctx.arc(starScreen.cx, starScreen.cy, 6, 0, Math.PI * 2)
+      ctx.fillStyle = '#ffd700'
+      ctx.fill()
+      ctx.fillStyle = '#ffd700'
+      ctx.font = '11px monospace'
+      ctx.fillText('Star', starScreen.cx + 10, starScreen.cy + 4)
 
-      if (body.OrbitNumber === 0) {
-        // Planet orbit around star
-        const orbitRadius = body.OrbitalDistance * viewport.scale
-        if (orbitRadius > 2 && orbitRadius < width * 3) {
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'
-          ctx.lineWidth = 1
-          ctx.beginPath()
-          ctx.arc(starScreen.cx, starScreen.cy, orbitRadius, 0, Math.PI * 2)
-          ctx.stroke()
+      const showMoons = viewport.scale >= MOON_ZOOM_THRESHOLD
+
+      const planetByNumber = new Map<number, SystemBody>()
+      for (const body of bodies) {
+        if (body.OrbitNumber === 0 && body.PlanetNumber > 0) {
+          planetByNumber.set(body.PlanetNumber, body)
         }
-      } else {
-        // Moon orbit around parent planet
-        const parent = planetByNumber.get(body.PlanetNumber)
-        if (parent) {
-          const parentPos = positions.get(parent.SystemBodyID)
-          if (parentPos) {
-            const parentScreen = auToCanvas(parentPos, viewport)
-            const moonOrbitRadius = (body.DistanceToParent / KM_PER_AU) * viewport.scale
-            if (moonOrbitRadius > 1 && moonOrbitRadius < width * 2) {
-              ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)'
-              ctx.lineWidth = 1
-              ctx.beginPath()
-              ctx.arc(parentScreen.cx, parentScreen.cy, moonOrbitRadius, 0, Math.PI * 2)
-              ctx.stroke()
+      }
+
+      // Draw orbits (elliptical using Eccentricity)
+      for (const body of bodies) {
+        if (!ORBIT_BODY_TYPES.has(body.BodyTypeID)) continue
+        if (body.OrbitNumber > 0 && !showMoons) continue
+
+        if (body.OrbitNumber === 0) {
+          const a = body.OrbitalDistance // semi-major axis in AU
+          const e = body.Eccentricity || 0
+          const b = a * Math.sqrt(1 - e * e) // semi-minor axis
+          const c = a * e // distance from center to focus (star)
+
+          const semiMajorPx = a * viewport.scale
+          const semiMinorPx = b * viewport.scale
+
+          if (semiMajorPx > 2 && semiMajorPx < width * 3) {
+            // EccentricityDirection is the angle of periapsis from the star
+            // The ellipse center is offset from the star (focus) by c along that direction
+            const dirRad = ((body.EccentricityDirection || 0) * Math.PI) / 180
+            const offsetPx = c * viewport.scale
+
+            // Ellipse center = star + offset along eccentricity direction
+            // Using same coordinate system as body positions (cos for x, y direct)
+            const ellipseCx = starScreen.cx + Math.cos(dirRad) * offsetPx
+            const ellipseCy = starScreen.cy + Math.sin(dirRad) * offsetPx
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.ellipse(ellipseCx, ellipseCy, semiMajorPx, semiMinorPx, dirRad, 0, Math.PI * 2)
+            ctx.stroke()
+          }
+        } else {
+          const parent = planetByNumber.get(body.PlanetNumber)
+          if (parent) {
+            const parentPos = posMap.get(parent.SystemBodyID)
+            if (parentPos) {
+              const parentScreen = auToCanvas(parentPos, viewport)
+              const moonOrbitRadius = (body.DistanceToParent / KM_PER_AU) * viewport.scale
+              if (moonOrbitRadius > 1 && moonOrbitRadius < width * 2) {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)'
+                ctx.lineWidth = 1
+                ctx.beginPath()
+                ctx.arc(parentScreen.cx, parentScreen.cy, moonOrbitRadius, 0, Math.PI * 2)
+                ctx.stroke()
+              }
             }
           }
         }
       }
+
+      // Draw bodies
+      for (const body of bodies) {
+        if (body.OrbitNumber > 0 && !showMoons) continue
+
+        const pos = posMap.get(body.SystemBodyID)
+        if (!pos) continue
+
+        const screen = auToCanvas(pos, viewport)
+        if (screen.cx < -50 || screen.cx > width + 50 || screen.cy < -50 || screen.cy > height + 50)
+          continue
+
+        const moon = body.OrbitNumber > 0
+        const radius = moon ? 2.5 : 4
+        const color = getBodyColor(body.BodyClass)
+
+        ctx.beginPath()
+        ctx.arc(screen.cx, screen.cy, radius, 0, Math.PI * 2)
+        ctx.fillStyle = color
+        ctx.fill()
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+        ctx.font = moon ? '9px monospace' : '10px monospace'
+        ctx.fillText(body.Name || `Body ${body.SystemBodyID}`, screen.cx + radius + 4, screen.cy + 3)
+      }
+
+      // HUD
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
+      ctx.font = '10px monospace'
+      ctx.fillText(`Scale: ${formatScale(viewport.scale)}`, 10, height - 10)
+      ctx.fillText(`Bodies: ${bodies.length}`, 10, height - 24)
+
+      animFrameRef.current = requestAnimationFrame(draw)
     }
 
-    // Draw all bodies
-    for (const body of bodies) {
-      if (body.OrbitNumber > 0 && !showMoons) continue
-
-      const pos = positions.get(body.SystemBodyID)
-      if (!pos) continue
-
-      const screen = auToCanvas(pos, viewport)
-
-      if (screen.cx < -50 || screen.cx > width + 50 || screen.cy < -50 || screen.cy > height + 50)
-        continue
-
-      const moon = body.OrbitNumber > 0
-      const radius = moon ? 2.5 : 4
-      const color = getBodyColor(body.BodyClass)
-
-      ctx.beginPath()
-      ctx.arc(screen.cx, screen.cy, radius, 0, Math.PI * 2)
-      ctx.fillStyle = color
-      ctx.fill()
-
-      // Label
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
-      ctx.font = moon ? '9px monospace' : '10px monospace'
-      ctx.fillText(body.Name || `Body ${body.SystemBodyID}`, screen.cx + radius + 4, screen.cy + 3)
-    }
-
-    // HUD
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-    ctx.font = '10px monospace'
-    ctx.fillText(`Scale: ${formatScale(viewport.scale)}`, 10, height - 10)
-    ctx.fillText(`Bodies: ${bodies.length}`, 10, height - 24)
-  }, [bodies, viewport, width, height, computePositions])
+    animFrameRef.current = requestAnimationFrame(draw)
+    return () => cancelAnimationFrame(animFrameRef.current)
+  }, [bodies, viewport, width, height])
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     isDragging.current = true

@@ -1,12 +1,49 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { SystemMapCanvas } from '../../system-map/SystemMapCanvas'
 import { SystemSelector } from '../../system-map/SystemSelector'
-import { useSystemBodies } from '../../../hooks/use-system-map-data'
+import { useMemoryBodies, type MemorySystemBody } from '../../../contexts/aurora-data-context'
 import { Button } from '@components/ui/button'
-import type { GameSession } from '@shared/types'
+import type { GameSession, SystemBody } from '@shared/types'
 
 interface SystemMapTabProps {
   game: GameSession
+}
+
+// Map BodyClass string to numeric BodyTypeID used by the canvas renderer
+function bodyClassToTypeId(bodyClass: string): number {
+  switch (bodyClass) {
+    case 'Terrestrial': return 2
+    case 'GasGiant': return 3
+    case 'GasDwarf': return 4
+    case 'IceGiant': return 5
+    case 'Asteroid': return 7
+    case 'Comet': return 14
+    case 'Moon': return 9
+    case 'DwarfPlanet': return 6
+    default: return 2
+  }
+}
+
+// Convert MemorySystemBody to SystemBody for the canvas
+function toCanvasBody(mb: MemorySystemBody): SystemBody {
+  return {
+    SystemBodyID: mb.SystemBodyID,
+    SystemID: mb.SystemID,
+    Name: mb.Name,
+    OrbitalDistance: mb.OrbitalDistance,
+    Bearing: mb.Bearing,
+    BodyClass: bodyClassToTypeId(mb.BodyClass),
+    BodyTypeID: bodyClassToTypeId(mb.BodyClass),
+    PlanetNumber: mb.PlanetNumber,
+    OrbitNumber: mb.OrbitNumber,
+    ParentBodyID: mb.ParentBodyID,
+    Radius: mb.Radius,
+    Xcor: mb.Xcor,
+    Ycor: mb.Ycor,
+    DistanceToParent: mb.DistanceToParent,
+    Eccentricity: mb.Eccentricity,
+    EccentricityDirection: mb.EccentricityDirection
+  }
 }
 
 export function SystemMapTab({ game }: SystemMapTabProps): React.JSX.Element {
@@ -14,7 +51,7 @@ export function SystemMapTab({ game }: SystemMapTabProps): React.JSX.Element {
   const raceId = game.gameInfo.auroraRaceId
 
   const [selectedSystemId, setSelectedSystemId] = useState<number | null>(null)
-  const { data: bodies, isLoading, refetch } = useSystemBodies(selectedSystemId, gameId)
+  const { data: memoryBodies, isLoading, refetch } = useMemoryBodies(selectedSystemId)
   const containerRef = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const updateDimensions = useCallback(() => {
@@ -32,6 +69,12 @@ export function SystemMapTab({ game }: SystemMapTabProps): React.JSX.Element {
     }
     return () => observer.disconnect()
   }, [updateDimensions])
+
+  // Convert memory bodies to canvas format
+  const bodies = useMemo(() => {
+    if (!memoryBodies) return undefined
+    return memoryBodies.map(toCanvasBody)
+  }, [memoryBodies])
 
   if (!gameId || !raceId) {
     return (
@@ -56,6 +99,11 @@ export function SystemMapTab({ game }: SystemMapTabProps): React.JSX.Element {
           </Button>
         )}
         {isLoading && <span className="text-xs text-muted-foreground">Loading...</span>}
+        {bodies && (
+          <span className="text-xs text-muted-foreground">
+            {bodies.length} bodies (live)
+          </span>
+        )}
       </div>
 
       <div

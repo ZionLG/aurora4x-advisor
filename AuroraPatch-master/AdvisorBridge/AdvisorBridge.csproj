@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AdvisorBridge.cs" />
     <Compile Include="BridgeServer.cs" />
+    <Compile Include="MemoryReader.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="QueryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

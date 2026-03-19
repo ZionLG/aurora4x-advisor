@@ -113,6 +113,12 @@ interface BridgeAPI {
   getSystemBodies: (systemId: number, gameId: number) => Promise<SystemBody[]>
   getSystems: (gameId: number, raceId: number) => Promise<StarSystem[]>
   getTableInfo: (tableName: string) => Promise<unknown[]>
+  getAllTables: () => Promise<{ name: string; rows: number }[]>
+  getMemoryBodies: (systemId?: number) => Promise<Record<string, unknown>[]>
+  subscribeBodies: (systemId: number | null) => Promise<unknown>
+  getMemorySystems: () => Promise<{ SystemID: number; Name: string }[]>
+  globalSearch: (values: number[]) => Promise<Record<string, unknown>[]>
+  getMemoryBodies2: (systemId?: number) => Promise<Record<string, unknown>[]>
   ping: () => Promise<boolean>
   onPush: (callback: (data: unknown) => void) => () => void
 }

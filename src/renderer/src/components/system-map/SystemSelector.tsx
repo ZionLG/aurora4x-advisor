@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@components/ui/select'
-import { useSystems } from '../../hooks/use-system-map-data'
+import { useMemorySystems } from '../../contexts/aurora-data-context'
 
 interface SystemSelectorProps {
   value: number | null
@@ -21,16 +21,10 @@ export function SystemSelector({
   gameId,
   raceId
 }: SystemSelectorProps): React.JSX.Element {
-  const { data: systems, isLoading, error } = useSystems(gameId, raceId)
+  const { data: systems, isLoading } = useMemorySystems(gameId, raceId)
 
   if (!gameId) {
     return <div className="text-sm text-muted-foreground">Select a game first</div>
-  }
-
-  if (error) {
-    return (
-      <div className="text-sm text-red-400">Failed to load systems. Is the bridge connected?</div>
-    )
   }
 
   return (
@@ -43,11 +37,13 @@ export function SystemSelector({
         <SelectValue placeholder={isLoading ? 'Loading systems...' : 'Select a star system'} />
       </SelectTrigger>
       <SelectContent>
-        {systems?.map((sys) => (
-          <SelectItem key={sys.SystemID} value={sys.SystemID.toString()}>
-            {sys.Name || `System ${sys.SystemID}`}
-          </SelectItem>
-        ))}
+        {systems
+          ?.sort((a, b) => a.Name.localeCompare(b.Name))
+          .map((sys) => (
+            <SelectItem key={sys.SystemID} value={sys.SystemID.toString()}>
+              {sys.Name}
+            </SelectItem>
+          ))}
       </SelectContent>
     </Select>
   )

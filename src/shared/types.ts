@@ -119,6 +119,8 @@ export interface SystemBody {
   Xcor: number
   Ycor: number
   DistanceToParent: number
+  Eccentricity: number
+  EccentricityDirection: number
 }
 
 export interface StarSystem {

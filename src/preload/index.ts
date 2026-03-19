@@ -74,6 +74,12 @@ const api = {
     getSystems: (gameId: number, raceId: number) =>
       ipcRenderer.invoke('bridge:getSystems', gameId, raceId),
     getTableInfo: (tableName: string) => ipcRenderer.invoke('bridge:getTableInfo', tableName),
+    getAllTables: () => ipcRenderer.invoke('bridge:getAllTables'),
+    getMemoryBodies: (systemId?: number) => ipcRenderer.invoke('bridge:getMemoryBodies', systemId),
+    subscribeBodies: (systemId: number | null) => ipcRenderer.invoke('bridge:subscribeBodies', systemId),
+    getMemorySystems: () => ipcRenderer.invoke('bridge:getMemorySystems'),
+    globalSearch: (values: number[]) => ipcRenderer.invoke('bridge:globalSearch', values),
+    getMemoryBodies2: (systemId?: number) => ipcRenderer.invoke('bridge:getMemoryBodies2', systemId),
     ping: () => ipcRenderer.invoke('bridge:ping'),
     onPush: (callback: (data: unknown) => void): (() => void) => {
       const subscription = (_event: IpcRendererEvent, data: unknown): void => callback(data)

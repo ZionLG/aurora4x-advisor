@@ -310,6 +310,44 @@ app.whenReady().then(async () => {
     return auroraBridge.query(`PRAGMA table_info(${tableName})`)
   })
 
+  ipcMain.handle('bridge:getAllTables', async () => {
+    const tables = await auroraBridge.query<{ name: string }>(
+      "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+    )
+    const results: { name: string; rows: number }[] = []
+    for (const t of tables) {
+      try {
+        const count = await auroraBridge.query<{ cnt: number }>(
+          `SELECT COUNT(*) as cnt FROM "${t.name}"`
+        )
+        results.push({ name: t.name, rows: count[0]?.cnt ?? 0 })
+      } catch {
+        results.push({ name: t.name, rows: -1 })
+      }
+    }
+    return results
+  })
+
+  ipcMain.handle('bridge:subscribeBodies', async (_event, systemId: number | null) => {
+    return auroraBridge.subscribeBodies(systemId)
+  })
+
+  ipcMain.handle('bridge:getMemorySystems', async () => {
+    return auroraBridge.getMemorySystems()
+  })
+
+  ipcMain.handle('bridge:globalSearch', async (_event, values: number[]) => {
+    return auroraBridge.globalSearch(values)
+  })
+
+  ipcMain.handle('bridge:getMemoryBodies2', async (_event, systemId?: number) => {
+    return auroraBridge.getMemoryBodies2(systemId)
+  })
+
+  ipcMain.handle('bridge:getMemoryBodies', async (_event, systemId?: number) => {
+    return auroraBridge.getMemoryBodies(systemId)
+  })
+
   ipcMain.handle('bridge:ping', async () => {
     return auroraBridge.ping()
   })

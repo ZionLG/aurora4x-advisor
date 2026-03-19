@@ -5,6 +5,7 @@ import { GameCard } from './GameCard'
 import { AdvisorCard } from './AdvisorCard'
 import { DashboardOverview } from './DashboardOverview'
 import { SystemMapTab } from './SystemMapTab'
+import { TableExplorerTab } from './TableExplorerTab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { BridgeStatusIndicator } from '../../system-map/BridgeStatusIndicator'
 
@@ -39,8 +40,9 @@ export function DashboardLayout(): React.JSX.Element {
             <TabsList>
               <TabsTrigger value="advisor">Advisor</TabsTrigger>
               <TabsTrigger value="map">System Map</TabsTrigger>
+              <TabsTrigger value="tables">DB Explorer</TabsTrigger>
             </TabsList>
-            {activeTab === 'map' && <BridgeStatusIndicator />}
+            {(activeTab === 'map' || activeTab === 'tables') && <BridgeStatusIndicator />}
           </div>
 
           <TabsContent value="advisor">
@@ -49,6 +51,10 @@ export function DashboardLayout(): React.JSX.Element {
 
           <TabsContent value="map" className="mt-0">
             <SystemMapTab game={currentGame} />
+          </TabsContent>
+
+          <TabsContent value="tables" className="mt-0">
+            <TableExplorerTab />
           </TabsContent>
         </Tabs>
       </div>

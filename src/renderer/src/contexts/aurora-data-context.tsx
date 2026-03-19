@@ -1,0 +1,265 @@
+import React, { createContext, useContext, useMemo, useEffect, useRef, useState, useCallback } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { BridgeStatus } from '@shared/types'
+
+interface TableInfo {
+  name: string
+  rows: number
+}
+
+// Mapped system body from live memory (kc type)
+export interface MemorySystemBody {
+  SystemBodyID: number
+  SystemID: number
+  StarID: number
+  PlanetNumber: number
+  OrbitNumber: number
+  ParentBodyID: number
+  ParentBodyType: number
+  BodyClass: string
+  Name: string
+  OrbitalDistance: number
+  Bearing: number
+  Density: number
+  Radius: number
+  Gravity: number
+  Mass: number
+  EscapeVelocity: number
+  Xcor: number
+  Ycor: number
+  BaseTemp: number
+  SurfaceTemp: number
+  Year: number
+  TidalForce: number
+  DayValue: number
+  Eccentricity: number
+  EccentricityDirection: number
+  AtmosPress: number
+  Albedo: number
+  GHFactor: number
+  TidalLock: boolean
+  DistanceToOrbitCentre: number
+  DistanceToParent: number
+  CurrentOrbitalSpeed: number
+  MeanOrbitalSpeed: number
+  HydroType: string
+  TectonicActivity: string
+  Roche: number
+  MagneticField: number
+  Ring: number
+  DominantTerrain: number
+  AGHFactor: number
+  FixedBody: boolean
+  FixedBodyParentID: number
+}
+
+// Map obfuscated kc fields to readable names
+function mapBody(raw: Record<string, unknown>): MemorySystemBody {
+  return {
+    SystemBodyID: raw.v as number,
+    SystemID: raw.w as number,
+    StarID: raw.x as number,
+    PlanetNumber: raw.y as number,
+    OrbitNumber: raw.z as number,
+    ParentBodyID: raw.aa as number,
+    ParentBodyType: raw.ab as number,
+    BodyClass: raw.o as string,
+    Name: raw.bs as string,
+    OrbitalDistance: raw.ap as number,
+    Bearing: raw.as as number,
+    Density: raw.at as number,
+    Radius: raw.a7 as number,
+    Gravity: raw.au as number,
+    Mass: raw.av as number,
+    EscapeVelocity: raw.aw as number,
+    Xcor: raw.an as number,
+    Ycor: raw.ao as number,
+    BaseTemp: raw.aq as number,
+    SurfaceTemp: raw.ar as number,
+    Year: raw.ax as number,
+    TidalForce: raw.ay as number,
+    DayValue: raw.az as number,
+    Eccentricity: raw.bb as number,
+    EccentricityDirection: raw.bc as number,
+    AtmosPress: raw.a2 as number,
+    Albedo: raw.a3 as number,
+    GHFactor: raw.a4 as number,
+    TidalLock: raw.bp as boolean,
+    DistanceToOrbitCentre: raw.bn as number,
+    DistanceToParent: raw.bo as number,
+    CurrentOrbitalSpeed: raw.a9 as number,
+    MeanOrbitalSpeed: raw.ba as number,
+    HydroType: raw.q as string,
+    TectonicActivity: raw.r as string,
+    Roche: raw.a0 as number,
+    MagneticField: raw.a1 as number,
+    Ring: raw.a8 as number,
+    DominantTerrain: raw.a5 as number,
+    AGHFactor: raw.cd as number,
+    FixedBody: raw.ce as boolean,
+    FixedBodyParentID: raw.cf as number
+  }
+}
+
+interface AuroraDataContextValue {
+  // Connection
+  bridgeStatus: BridgeStatus | null
+  isConnected: boolean
+
+  // Table discovery (DB - refreshes every 10 min)
+  tables: TableInfo[]
+  tablesLoading: boolean
+  refetchTables: () => void
+
+  // Raw query
+  queryTable: <T = Record<string, unknown>>(sql: string) => Promise<T[]>
+}
+
+const AuroraDataContext = createContext<AuroraDataContextValue | null>(null)
+
+export function AuroraDataProvider({
+  children
+}: {
+  children: React.ReactNode
+}): React.JSX.Element {
+  // Bridge status - poll every 2 seconds
+  const { data: bridgeStatus } = useQuery<BridgeStatus>({
+    queryKey: ['bridgeStatus'],
+    queryFn: () => window.api.bridge.getStatus(),
+    refetchInterval: 2000
+  })
+
+  const isConnected = bridgeStatus?.isConnected ?? false
+
+  // All tables with row counts - manual refresh only (DB queries trigger Save() which can crash)
+  const {
+    data: tables,
+    isLoading: tablesLoading,
+    refetch: refetchTables
+  } = useQuery<TableInfo[]>({
+    queryKey: ['allTables'],
+    queryFn: () => window.api.bridge.getAllTables(),
+    enabled: false
+  })
+
+  const value = useMemo<AuroraDataContextValue>(
+    () => ({
+      bridgeStatus: bridgeStatus ?? null,
+      isConnected,
+      tables: tables ?? [],
+      tablesLoading,
+      refetchTables,
+      queryTable: <T,>(sql: string) => window.api.bridge.query(sql) as Promise<T[]>
+    }),
+    [bridgeStatus, isConnected, tables, tablesLoading, refetchTables]
+  )
+
+  return <AuroraDataContext.Provider value={value}>{children}</AuroraDataContext.Provider>
+}
+
+export function useAuroraData(): AuroraDataContextValue {
+  const ctx = useContext(AuroraDataContext)
+  if (!ctx) throw new Error('useAuroraData must be used within AuroraDataProvider')
+  return ctx
+}
+
+// Live system bodies from memory - push-based (server broadcasts on game tick)
+export function useMemoryBodies(
+  systemId: number | null
+): { data: MemorySystemBody[] | undefined; isLoading: boolean; refetch: () => void } {
+  const { isConnected } = useAuroraData()
+  const [data, setData] = useState<MemorySystemBody[] | undefined>()
+  const [isLoading, setIsLoading] = useState(false)
+  const subscribedRef = useRef<number | null>(null)
+
+  // Subscribe to system when it changes
+  useEffect(() => {
+    if (!isConnected || !systemId) {
+      setData(undefined)
+      subscribedRef.current = null
+      return
+    }
+
+    if (subscribedRef.current === systemId) return
+    subscribedRef.current = systemId
+    setIsLoading(true)
+
+    // Subscribe tells the server which system to watch
+    window.api.bridge.subscribeBodies(systemId).catch(() => {})
+
+    // Also fetch initial data immediately
+    window.api.bridge.getMemoryBodies2(systemId).then((raw) => {
+      setData(raw.map(mapBody))
+      setIsLoading(false)
+    }).catch(() => setIsLoading(false))
+  }, [isConnected, systemId])
+
+  // Listen for push notifications from server
+  useEffect(() => {
+    if (!isConnected) return
+
+    const unsub = window.api.bridge.onPush((payload: unknown) => {
+      const msg = payload as { pushType?: string; data?: { systemId?: number; bodies?: Record<string, unknown>[] } }
+      if (msg?.pushType === 'bodies' && msg.data?.bodies) {
+        if (msg.data.systemId === subscribedRef.current) {
+          setData(msg.data.bodies.map(mapBody))
+        }
+      }
+    })
+
+    return unsub
+  }, [isConnected])
+
+  const refetch = useCallback(() => {
+    if (!systemId || !isConnected) return
+    window.api.bridge.getMemoryBodies2(systemId).then((raw) => {
+      setData(raw.map(mapBody))
+    }).catch(() => {})
+  }, [systemId, isConnected])
+
+  return { data, isLoading, refetch }
+}
+
+// Live stars from memory - auto-refreshing
+export function useMemoryStars(
+  systemId: number | null
+): { data: Record<string, unknown>[] | undefined; isLoading: boolean } {
+  const { isConnected } = useAuroraData()
+
+  const { data, isLoading } = useQuery<Record<string, unknown>[]>({
+    queryKey: ['memoryStars', systemId],
+    queryFn: () => window.api.bridge.getMemoryBodies(systemId!),
+    enabled: isConnected && !!systemId,
+    refetchInterval: isConnected && !!systemId ? 2000 : false,
+    staleTime: 1800
+  })
+
+  return { data, isLoading }
+}
+
+// Surveyed systems list - single DB query, no auto-refresh
+export function useMemorySystems(
+  gameId?: number | null,
+  raceId?: number | null
+): {
+  data: { SystemID: number; Name: string }[] | undefined
+  isLoading: boolean
+} {
+  const { isConnected } = useAuroraData()
+
+  const { data, isLoading } = useQuery<{ SystemID: number; Name: string }[]>({
+    queryKey: ['surveyedSystems', gameId, raceId],
+    queryFn: async () => {
+      console.log(`[useMemorySystems] fetching systems gameId=${gameId} raceId=${raceId}`)
+      const result = await window.api.bridge.getSystems(gameId!, raceId!)
+      console.log(`[useMemorySystems] got ${result?.length} systems`, result)
+      return result
+    },
+    enabled: isConnected && !!gameId && !!raceId,
+    staleTime: 5 * 60 * 1000
+  })
+
+  console.log(`[useMemorySystems] isConnected=${isConnected} gameId=${gameId} raceId=${raceId} enabled=${isConnected && !!gameId && !!raceId} data=${data?.length}`)
+
+  return { data, isLoading }
+}

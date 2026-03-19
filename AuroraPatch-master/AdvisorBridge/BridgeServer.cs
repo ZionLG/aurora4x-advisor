@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -13,6 +14,7 @@ namespace AdvisorBridge
     {
         private readonly Lib.DatabaseManager _db;
         private readonly AuroraPatch.Patch _patch;
+        private readonly MemoryReader _memoryReader;
         private HttpListener _listener;
         private CancellationTokenSource _cts;
         private readonly ConcurrentDictionary<string, WebSocket> _clients = new ConcurrentDictionary<string, WebSocket>();
@@ -20,10 +22,15 @@ namespace AdvisorBridge
         public int Port { get; private set; }
         public bool IsRunning { get; private set; }
 
-        public BridgeServer(Lib.DatabaseManager db, AuroraPatch.Patch patch)
+        // Change detection for push notifications
+        private int? _subscribedSystemId;
+        private bool _hookInstalled;
+
+        public BridgeServer(Lib.DatabaseManager db, AuroraPatch.Patch patch, Lib.Lib lib)
         {
             _db = db;
             _patch = patch;
+            _memoryReader = new MemoryReader(lib, patch);
         }
 
         public void Start(int port = 47842)
@@ -137,7 +144,7 @@ namespace AdvisorBridge
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
                         var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                        var response = HandleMessage(message);
+                        var response = HandleMessage(message, clientId);
                         var responseBytes = Encoding.UTF8.GetBytes(response);
 
                         await ws.SendAsync(
@@ -171,7 +178,7 @@ namespace AdvisorBridge
             }
         }
 
-        private string HandleMessage(string rawMessage)
+        private string HandleMessage(string rawMessage, string clientId = null)
         {
             BridgeRequest request;
             try
@@ -194,6 +201,26 @@ namespace AdvisorBridge
 
                 case "query":
                     response = HandleQuery(request);
+                    break;
+
+                case "getsystembodies":
+                    response = HandleGetSystemBodies(request);
+                    break;
+
+                case "getbodies":
+                    response = HandleGetBodies(request);
+                    break;
+
+                case "getsystems":
+                    response = HandleGetSystems(request);
+                    break;
+
+                case "subscribe":
+                    response = HandleSubscribe(request, clientId);
+                    break;
+
+                case "globalsearch":
+                    response = HandleGlobalSearch(request);
                     break;
 
                 default:
@@ -231,6 +258,56 @@ namespace AdvisorBridge
             }
         }
 
+        private BridgeResponse HandleSubscribe(BridgeRequest request, string clientId)
+        {
+            try
+            {
+                int? systemId = null;
+                if (!string.IsNullOrEmpty(request.Payload))
+                {
+                    var payload = JsonConvert.DeserializeObject<SystemBodiesPayload>(request.Payload);
+                    systemId = payload?.SystemId;
+                }
+
+                _subscribedSystemId = systemId;
+                InstallTickHook();
+
+                _patch.LogInfo($"Client subscribed to system {systemId}");
+                return BridgeResponse.Ok(request.Id, "subscribed", systemId);
+            }
+            catch (Exception ex)
+            {
+                return BridgeResponse.Fail(request.Id, "error", ex.Message);
+            }
+        }
+
+        private void InstallTickHook()
+        {
+            if (_hookInstalled) return;
+
+            var map = _patch.TacticalMap;
+            if (map == null) return;
+
+            map.TextChanged += OnGameTick;
+            _hookInstalled = true;
+            _patch.LogInfo("Installed TextChanged hook on TacticalMap for tick detection");
+        }
+
+        private void OnGameTick(object sender, EventArgs e)
+        {
+            if (_clients.IsEmpty || !_subscribedSystemId.HasValue) return;
+
+            try
+            {
+                var bodies = _memoryReader.ReadBodies(_subscribedSystemId);
+                Broadcast("bodies", new { systemId = _subscribedSystemId.Value, bodies });
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"OnGameTick broadcast error: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Broadcast a push notification to all connected clients.
         /// </summary>
@@ -263,6 +340,105 @@ namespace AdvisorBridge
                 }
                 catch { }
             }
+        }
+
+        private BridgeResponse HandleGetSystemBodies(BridgeRequest request)
+        {
+            try
+            {
+                int? systemId = null;
+                if (!string.IsNullOrEmpty(request.Payload))
+                {
+                    try
+                    {
+                        var payload = JsonConvert.DeserializeObject<SystemBodiesPayload>(request.Payload);
+                        systemId = payload?.SystemId;
+                    }
+                    catch { }
+                }
+
+                var bodies = _memoryReader.ReadStars(systemId);
+                return BridgeResponse.Ok(request.Id, "result", bodies);
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"GetSystemBodies error: {ex.Message}");
+                return BridgeResponse.Fail(request.Id, "result", $"Failed: {ex.Message}");
+            }
+        }
+
+        private BridgeResponse HandleGetBodies(BridgeRequest request)
+        {
+            try
+            {
+                int? systemId = null;
+                if (!string.IsNullOrEmpty(request.Payload))
+                {
+                    try
+                    {
+                        var payload = JsonConvert.DeserializeObject<SystemBodiesPayload>(request.Payload);
+                        systemId = payload?.SystemId;
+                    }
+                    catch { }
+                }
+
+                var bodies = _memoryReader.ReadBodies(systemId);
+                return BridgeResponse.Ok(request.Id, "result", bodies);
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"GetBodies error: {ex.Message}");
+                return BridgeResponse.Fail(request.Id, "result", $"Failed: {ex.Message}");
+            }
+        }
+
+        private BridgeResponse HandleGetSystems(BridgeRequest request)
+        {
+            try
+            {
+                var systems = _memoryReader.ReadSystems();
+                return BridgeResponse.Ok(request.Id, "result", systems);
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"GetSystems error: {ex.Message}");
+                return BridgeResponse.Fail(request.Id, "result", $"Failed: {ex.Message}");
+            }
+        }
+
+        private BridgeResponse HandleGlobalSearch(BridgeRequest request)
+        {
+            try
+            {
+                int[] searchValues = new int[] { 2008597, 21859 };
+                if (!string.IsNullOrEmpty(request.Payload))
+                {
+                    try
+                    {
+                        var payload = JsonConvert.DeserializeObject<GlobalSearchPayload>(request.Payload);
+                        if (payload?.Values != null) searchValues = payload.Values;
+                    }
+                    catch { }
+                }
+
+                var hits = _memoryReader.GlobalSearch(searchValues);
+                return BridgeResponse.Ok(request.Id, "result", hits);
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"GlobalSearch error: {ex.Message}");
+                return BridgeResponse.Fail(request.Id, "result", $"Failed: {ex.Message}");
+            }
+        }
+
+        private class GlobalSearchPayload
+        {
+            public int[] Values { get; set; }
+        }
+
+        private class SystemBodiesPayload
+        {
+            public int? SystemId { get; set; }
         }
 
         private class QueryPayload
