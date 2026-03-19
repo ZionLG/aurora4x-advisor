@@ -6,7 +6,10 @@ import type {
   PersonalityMatch,
   GameInfo,
   GameSession,
-  AppSettings
+  AppSettings,
+  BridgeStatus,
+  SystemBody,
+  StarSystem
 } from '@shared/types'
 
 interface Profile {
@@ -102,6 +105,18 @@ interface DbWatcherAPI {
   createInitialSnapshot: () => Promise<void>
 }
 
+interface BridgeAPI {
+  connect: (port?: number) => Promise<BridgeStatus>
+  disconnect: () => Promise<BridgeStatus>
+  getStatus: () => Promise<BridgeStatus>
+  query: (sql: string) => Promise<unknown[]>
+  getSystemBodies: (systemId: number, gameId: number) => Promise<SystemBody[]>
+  getSystems: (gameId: number, raceId: number) => Promise<StarSystem[]>
+  getTableInfo: (tableName: string) => Promise<unknown[]>
+  ping: () => Promise<boolean>
+  onPush: (callback: (data: unknown) => void) => () => void
+}
+
 declare global {
   interface Window {
     electron: ElectronAPI
@@ -111,6 +126,7 @@ declare global {
       games: GamesAPI
       settings: SettingsAPI
       dbWatcher: DbWatcherAPI
+      bridge: BridgeAPI
     }
   }
 }

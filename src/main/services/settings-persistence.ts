@@ -7,7 +7,9 @@ const SETTINGS_FILE = 'settings.json'
 
 const DEFAULT_SETTINGS: AppSettings = {
   auroraDbPath: null,
-  watchEnabled: true
+  watchEnabled: true,
+  bridgeEnabled: false,
+  bridgePort: 47842
 }
 
 /**

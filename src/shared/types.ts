@@ -59,6 +59,8 @@ export interface PersonalityMatch {
 // Game detection types
 export interface GameInfo {
   gameName: string
+  auroraGameId: number // GameID from FCT_Game
+  auroraRaceId: number // RaceID from FCT_Race (player race)
   startingYear: number
   techLevel: 'TN' | 'Industrial'
   empireName: string
@@ -90,4 +92,38 @@ export interface GameSession {
 export interface AppSettings {
   auroraDbPath: string | null
   watchEnabled: boolean
+  bridgeEnabled: boolean
+  bridgePort: number
+}
+
+// Aurora Bridge types
+export interface BridgeStatus {
+  isConnected: boolean
+  url: string
+  lastError: string | null
+}
+
+// Aurora DB schema types for map rendering
+export interface SystemBody {
+  SystemBodyID: number
+  SystemID: number
+  Name: string
+  OrbitalDistance: number
+  Bearing: number
+  BodyClass: number
+  BodyTypeID: number
+  PlanetNumber: number
+  OrbitNumber: number
+  ParentBodyID: number | null
+  Radius: number
+  Xcor: number
+  Ycor: number
+  DistanceToParent: number
+}
+
+export interface StarSystem {
+  SystemID: number
+  Name: string
+  Xcor: number
+  Ycor: number
 }

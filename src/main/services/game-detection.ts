@@ -50,13 +50,14 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
     console.log(`[Game Detection] Parameter: GameID = ${gameRow.GameID}`)
 
     const raceQuery = db.prepare(`
-      SELECT RaceName, RaceStartingLevel
+      SELECT RaceID, RaceName, RaceStartingLevel
       FROM FCT_Race
       WHERE GameID = ? AND NPR = 0
       LIMIT 1
     `)
     const raceRow = raceQuery.get(gameRow.GameID) as
       | {
+          RaceID: number
           RaceName: string
           RaceStartingLevel: number
         }
@@ -80,6 +81,8 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
 
     const gameInfo: GameInfo = {
       gameName,
+      auroraGameId: gameRow.GameID,
+      auroraRaceId: raceRow.RaceID,
       startingYear: gameRow.StartYear,
       techLevel,
       empireName: raceRow.RaceName

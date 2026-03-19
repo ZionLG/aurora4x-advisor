@@ -27,6 +27,7 @@ import {
 import { loadSettings, saveSettings, updateSetting } from './services/settings-persistence'
 import { dbWatcher } from './services/db-watcher'
 import { triggerImmediateAnalysis } from './services/game-state-analyzer'
+import { auroraBridge } from './services/aurora-bridge'
 import { dialog } from 'electron'
 
 function createWindow(): void {
@@ -274,12 +275,55 @@ app.whenReady().then(async () => {
     return result.filePaths[0]
   })
 
+  // Aurora Bridge handlers
+  ipcMain.handle('bridge:connect', async (_event, port?: number) => {
+    auroraBridge.connect(port)
+    return auroraBridge.getStatus()
+  })
+
+  ipcMain.handle('bridge:disconnect', () => {
+    auroraBridge.disconnect()
+    return auroraBridge.getStatus()
+  })
+
+  ipcMain.handle('bridge:getStatus', () => {
+    return auroraBridge.getStatus()
+  })
+
+  ipcMain.handle('bridge:query', async (_event, sql: string) => {
+    return auroraBridge.query(sql)
+  })
+
+  ipcMain.handle('bridge:getSystemBodies', async (_event, systemId: number, gameId: number) => {
+    return auroraBridge.query(
+      `SELECT SystemBodyID, SystemID, Name, OrbitalDistance, Bearing, BodyClass, BodyTypeID, PlanetNumber, OrbitNumber, ParentBodyID, Radius, Xcor, Ycor, DistanceToParent FROM FCT_SystemBody WHERE SystemID = ${Number(systemId)} AND GameID = ${Number(gameId)}`
+    )
+  })
+
+  ipcMain.handle('bridge:getSystems', async (_event, gameId: number, raceId: number) => {
+    return auroraBridge.query(
+      `SELECT SystemID, Name FROM FCT_RaceSysSurvey WHERE GameID = ${Number(gameId)} AND RaceID = ${Number(raceId)} ORDER BY Name`
+    )
+  })
+
+  ipcMain.handle('bridge:getTableInfo', async (_event, tableName: string) => {
+    return auroraBridge.query(`PRAGMA table_info(${tableName})`)
+  })
+
+  ipcMain.handle('bridge:ping', async () => {
+    return auroraBridge.ping()
+  })
+
   // Initialize database watcher from settings
   loadSettings().then((settings) => {
     if (settings.auroraDbPath && settings.watchEnabled) {
       dbWatcher.setAuroraDbPath(settings.auroraDbPath)
       console.log('Database watcher initialized from settings')
     }
+
+    // Always try to connect the bridge
+    auroraBridge.connect(settings.bridgePort || 47842)
+    console.log('Aurora bridge connecting...')
   })
 
   createWindow()
@@ -303,6 +347,7 @@ app.on('window-all-closed', () => {
 // Cleanup on quit
 app.on('before-quit', () => {
   dbWatcher.stop()
+  auroraBridge.disconnect()
 })
 
 // In this file you can include the rest of your app's specific main process

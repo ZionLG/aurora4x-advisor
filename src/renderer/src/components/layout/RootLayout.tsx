@@ -12,7 +12,7 @@ export function RootLayout(): React.JSX.Element {
       <GameSidebar />
       <div className="fixed top-4 right-4 z-50 flex gap-2">
         <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
-          ⚙️ Settings
+          Settings
         </Button>
         <ModeToggle />
       </div>

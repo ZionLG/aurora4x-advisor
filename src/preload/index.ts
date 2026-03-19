@@ -63,6 +63,25 @@ const api = {
     getStatus: () => ipcRenderer.invoke('dbWatcher:getStatus'),
     pickFile: () => ipcRenderer.invoke('dbWatcher:pickFile'),
     createInitialSnapshot: () => ipcRenderer.invoke('dbWatcher:createInitialSnapshot')
+  },
+  bridge: {
+    connect: (port?: number) => ipcRenderer.invoke('bridge:connect', port),
+    disconnect: () => ipcRenderer.invoke('bridge:disconnect'),
+    getStatus: () => ipcRenderer.invoke('bridge:getStatus'),
+    query: (sql: string) => ipcRenderer.invoke('bridge:query', sql),
+    getSystemBodies: (systemId: number, gameId: number) =>
+      ipcRenderer.invoke('bridge:getSystemBodies', systemId, gameId),
+    getSystems: (gameId: number, raceId: number) =>
+      ipcRenderer.invoke('bridge:getSystems', gameId, raceId),
+    getTableInfo: (tableName: string) => ipcRenderer.invoke('bridge:getTableInfo', tableName),
+    ping: () => ipcRenderer.invoke('bridge:ping'),
+    onPush: (callback: (data: unknown) => void): (() => void) => {
+      const subscription = (_event: IpcRendererEvent, data: unknown): void => callback(data)
+      ipcRenderer.on('bridge:push', subscription)
+      return (): void => {
+        ipcRenderer.removeListener('bridge:push', subscription)
+      }
+    }
   }
 }
 
