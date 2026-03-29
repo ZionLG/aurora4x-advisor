@@ -5,7 +5,8 @@
       "@/*": ["./*"],
       "@/app/*": ["./app/*"],
       "@/lib/*": ["./lib/*"],
-      "@/resources/*": ["./resources/*"]
+      "@/resources/*": ["./resources/*"],
+      "@/shared/*": ["./shared/*"]
     }
   },
   "files": [],

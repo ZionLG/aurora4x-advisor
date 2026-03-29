@@ -1,8 +1,11 @@
-appId: com.guasam.era
-productName: electron-react-app
+appId: com.aurora4x.companion
+productName: Aurora 4X Companion
 asar: true
 asarUnpack:
   - resources/**
+extraResources:
+  - from: resources/config
+    to: config
 directories:
   buildResources: resources/build
 files:
@@ -13,7 +16,7 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 win:
-  executableName: electron-react-app
+  executableName: aurora4x-companion
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -22,8 +25,6 @@ nsis:
 mac:
   entitlementsInherit: resources/build/entitlements.mac.plist
   extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
@@ -40,5 +41,6 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: ZionLG
+  repo: aurora4x-advisor
