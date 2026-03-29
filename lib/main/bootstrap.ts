@@ -44,6 +44,13 @@ export async function bootstrap(): Promise<void> {
     dbWatcher.setAuroraDbPath(settings.auroraDbPath)
   }
 
+  // When Aurora saves in offline mode, broadcast a tick so queries refresh
+  dbWatcher.onSnapshot(() => {
+    if (isOfflineReady()) {
+      broadcast('empire:tick', { gameDate: null })
+    }
+  })
+
   gameSession.on('gameChanged', (game: { id: string } | null) => {
     dbWatcher.setCurrentGame(game?.id ?? null)
     broadcastSessionState()

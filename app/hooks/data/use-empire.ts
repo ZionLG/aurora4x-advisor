@@ -155,6 +155,16 @@ export function useFilters() {
   })
 }
 
+export function useProductionRecap() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'productionRecap'],
+    queryFn: () => window.conveyor.empire.getProductionRecap(),
+    enabled,
+    placeholderData: (prev) => prev,
+  })
+}
+
 export function useProduction() {
   const enabled = useEmpireEnabled()
   return useQuery({

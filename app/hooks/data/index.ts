@@ -21,6 +21,7 @@ export {
   useGameDate,
   useRoutes,
   useFilters,
+  useProductionRecap,
   useProduction,
   useShipyards,
   useWarnings,

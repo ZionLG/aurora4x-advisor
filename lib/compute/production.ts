@@ -14,9 +14,10 @@ export interface ProductionTask {
   colony: string
   description: string
   productionType: number
-  amount: number
-  percentComplete: number
-  paused: boolean
+  remaining: number // remaining units (rounded up from Aurora's float)
+  costPerUnit: number
+  partialBP: number // raw PartialCompletion value
+  paused: number // raw Pause value (0 = active in most cases)
   queue: number
 }
 
@@ -61,22 +62,17 @@ export async function getProductionTasks(query: QueryFn, ctx: GameCtx): Promise<
     ORDER BY p.PopName, ip.Queue`
   )
 
-  return rows.map((r) => {
-    const prodPerUnit = r.ProdPerUnit || 0
-    const totalWork = prodPerUnit * r.Amount
-    const percentComplete = totalWork > 0 ? Math.round((r.PartialCompletion / totalWork) * 100) : 0
-
-    return {
-      projectId: r.ProjectID,
-      colony: r.PopName || 'Unknown',
-      description: r.Description || '',
-      productionType: r.ProductionType,
-      amount: r.Amount,
-      percentComplete: Math.min(percentComplete, 100),
-      paused: !!r.Pause,
-      queue: r.Queue,
-    }
-  })
+  return rows.map((r) => ({
+    projectId: r.ProjectID,
+    colony: r.PopName || 'Unknown',
+    description: r.Description || '',
+    productionType: r.ProductionType,
+    remaining: Math.ceil(r.Amount),
+    costPerUnit: r.ProdPerUnit || 0,
+    partialBP: r.PartialCompletion || 0,
+    paused: r.Pause ?? 0,
+    queue: r.Queue,
+  }))
 }
 
 export async function getShipyards(query: QueryFn, ctx: GameCtx): Promise<ShipyardInfo[]> {

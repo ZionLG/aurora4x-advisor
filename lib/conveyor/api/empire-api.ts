@@ -55,6 +55,9 @@ export class EmpireApi extends ConveyorApi {
   getHabitability = () => this.invoke('empire:getHabitability')
   getSpeciesRequirements = () => this.invoke('empire:getSpeciesRequirements')
 
+  // Production recap
+  getProductionRecap = () => this.invoke('empire:getProductionRecap')
+
   // Game log
   getGameLog = (
     limit?: number,

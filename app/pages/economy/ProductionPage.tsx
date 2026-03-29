@@ -1,143 +1,279 @@
 import { useMemo, useState } from 'react'
-import { useProduction, useShipyards } from '@/app/hooks/data'
-import { Badge } from '@/app/components/ui/badge'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/table'
-import { Factory, Anchor, Loader2, Pause, ChevronDown } from 'lucide-react'
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+  type SortingState,
+  type ColumnDef,
+} from '@tanstack/react-table'
+import { useProductionRecap } from '@/app/hooks/data'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/app/components/ui/table'
+import {
+  Factory,
+  Loader2,
+  ListFilter,
+  ChevronDown,
+  ChevronUp,
+  FlaskConical,
+  Anchor,
+  Ship,
+  Shield,
+  Thermometer,
+  LayoutList,
+  Building2,
+  ArrowUpDown,
+} from 'lucide-react'
 
-interface ProductionTask {
-  projectId: number
-  colony: string
-  description: string
-  productionType: number
-  amount: number
-  percentComplete: number
-  paused: boolean
-  queue: number
-}
-
-interface ShipyardTaskInfo {
-  taskId: number
-  taskType: string
-  className: string
-  unitName: string
-  totalBP: number
-  completedBP: number
-  percentComplete: number
-  paused: boolean
-}
-
-interface ShipyardInfo {
-  shipyardId: number
+interface RecapEntry {
+  id: string
+  type: 'research' | 'production' | 'ship' | 'shipyard' | 'training' | 'terraforming'
+  badge: string
   name: string
+  system: string
   colony: string
-  type: string
-  slipways: number
-  capacity: number
-  currentTask: ShipyardTaskInfo | null
+  colonyId: number
+  remainingDays: number | null
+  annualRate: string
+  annualRateValue: number
+  paused: boolean
+  queued: boolean
 }
 
-function ProgressBar({ percent, paused }: { percent: number; paused?: boolean }) {
-  const color = paused ? 'var(--cic-amber-dim)' : percent >= 100 ? 'var(--cic-green)' : 'var(--cic-cyan)'
+type ViewMode = 'recap' | 'colony'
+
+const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
+  research: { bg: '#dc2626', text: '#fff' },
+  production: { bg: '#0891b2', text: '#fff' },
+  ship: { bg: '#2563eb', text: '#fff' },
+  shipyard: { bg: '#ea580c', text: '#fff' },
+  training: { bg: '#16a34a', text: '#fff' },
+  terraforming: { bg: '#9333ea', text: '#fff' },
+}
+
+const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  research: FlaskConical,
+  production: Factory,
+  ship: Ship,
+  shipyard: Anchor,
+  training: Shield,
+  terraforming: Thermometer,
+}
+
+const ALL_TYPES = ['research', 'production', 'ship', 'shipyard', 'training', 'terraforming'] as const
+
+function formatDays(days: number | null, queued: boolean, paused: boolean): React.ReactNode {
+  if (paused) return <span className="text-[var(--cic-amber)]">Paused</span>
+  if (queued) return <span className="text-[var(--cic-red)]/70">Queued</span>
+  if (days == null) return <span className="text-muted-foreground/30">&mdash;</span>
+  if (days <= 0) return <span className="text-[var(--cic-green)]">Done!</span>
+  const color = days < 100 ? 'var(--cic-green)' : days < 500 ? 'var(--cic-amber)' : 'var(--cic-red)'
+  const prefix = days > 10000 ? '~ ' : ''
+  return (
+    <span style={{ color }}>
+      {prefix}
+      {days.toLocaleString(undefined, { maximumFractionDigits: 1 })}
+    </span>
+  )
+}
+
+function TypeBadge({ badge, type }: { badge: string; type: string }) {
+  const colors = TYPE_COLORS[type] ?? { bg: '#666', text: '#fff' }
+  return (
+    <span
+      className="inline-block text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded whitespace-nowrap"
+      style={{ background: colors.bg, color: colors.text }}
+    >
+      {badge}
+    </span>
+  )
+}
+
+/* ── Summary stat cards ────────────────────────────────────────────── */
+
+function SummaryCards({ entries }: { entries: RecapEntry[] }) {
+  const stats = useMemo(() => {
+    const byType: Record<string, { count: number; soonest: number | null; paused: number }> = {}
+    for (const e of entries) {
+      if (!byType[e.type]) byType[e.type] = { count: 0, soonest: null, paused: 0 }
+      byType[e.type].count++
+      if (e.paused) byType[e.type].paused++
+      if (e.remainingDays != null && !e.queued && !e.paused) {
+        const current = byType[e.type].soonest
+        if (current == null || e.remainingDays < current) byType[e.type].soonest = e.remainingDays
+      }
+    }
+    return byType
+  }, [entries])
+
+  const colonies = useMemo(() => new Set(entries.map((e) => e.colony)).size, [entries])
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative w-20 h-[5px] rounded-sm bg-[var(--cic-void)] overflow-hidden border border-[var(--cic-panel-edge)]/30">
-        <div
-          className="absolute inset-y-0 left-0 rounded-sm transition-all duration-500"
-          style={{
-            width: `${Math.min(percent, 100)}%`,
-            background: `linear-gradient(90deg, transparent 0%, ${color} 100%)`,
-            boxShadow: percent >= 50 ? `0 0 6px ${color}` : 'none',
-          }}
-        />
+    <div className="flex items-stretch gap-2 overflow-x-auto pb-1">
+      {/* Total */}
+      <div className="shrink-0 rounded border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-3 py-2 min-w-[100px]">
+        <div className="text-[8px] uppercase tracking-wider text-muted-foreground/50">Total</div>
+        <div className="text-lg font-bold text-foreground/80 tabular-nums">{entries.length}</div>
+        <div className="text-[8px] text-muted-foreground/40">
+          across {colonies} {colonies === 1 ? 'colony' : 'colonies'}
+        </div>
       </div>
-      <span className="text-[9px] font-mono tabular-nums w-7 text-right" style={{ color }}>
-        {percent}%
-      </span>
+
+      {/* Per type */}
+      {ALL_TYPES.map((type) => {
+        const s = stats[type]
+        if (!s) return null
+        const colors = TYPE_COLORS[type]
+        const Icon = TYPE_ICONS[type]
+        return (
+          <div
+            key={type}
+            className="shrink-0 rounded border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-3 py-2 min-w-[110px]"
+          >
+            <div className="flex items-center gap-1.5">
+              <Icon className="h-3 w-3" style={{ color: colors.bg }} />
+              <span className="text-[8px] uppercase tracking-wider font-semibold" style={{ color: colors.bg }}>
+                {type}
+              </span>
+            </div>
+            <div className="text-base font-bold text-foreground/80 tabular-nums">{s.count}</div>
+            <div className="text-[8px] text-muted-foreground/40">
+              {s.paused > 0 && <span className="text-[var(--cic-amber)]">{s.paused} paused</span>}
+              {s.paused > 0 && s.soonest != null && ' · '}
+              {s.soonest != null && (
+                <span>
+                  next: <span className="text-[var(--cic-green)]">~{Math.round(s.soonest)}d</span>
+                </span>
+              )}
+              {s.paused === 0 && s.soonest == null && 'active'}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-function ColonyGroup({
-  colony,
-  tasks,
-  defaultOpen,
-}: {
-  colony: string
-  tasks: ProductionTask[]
-  defaultOpen: boolean
-}) {
-  const [open, setOpen] = useState(defaultOpen)
-  const activeCount = tasks.filter((t) => !t.paused).length
+/* ── Colony grouped view ───────────────────────────────────────────── */
+
+function ColonyView({ entries }: { entries: RecapEntry[] }) {
+  const groups = useMemo(() => {
+    const map = new Map<string, RecapEntry[]>()
+    for (const e of entries) {
+      const existing = map.get(e.colony) ?? []
+      existing.push(e)
+      map.set(e.colony, existing)
+    }
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
+  }, [entries])
+
+  return (
+    <div className="space-y-3 p-4">
+      {groups.map(([colony, colonyEntries]) => (
+        <ColonyCard key={colony} colony={colony} entries={colonyEntries} />
+      ))}
+    </div>
+  )
+}
+
+function ColonyCard({ colony, entries }: { colony: string; entries: RecapEntry[] }) {
+  const [open, setOpen] = useState(true)
+
+  const typeSummary = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const e of entries) counts[e.type] = (counts[e.type] ?? 0) + 1
+    return counts
+  }, [entries])
+
+  const soonest = useMemo(() => {
+    let best: number | null = null
+    for (const e of entries) {
+      if (e.remainingDays != null && !e.paused && !e.queued) {
+        if (best == null || e.remainingDays < best) best = e.remainingDays
+      }
+    }
+    return best
+  }, [entries])
 
   return (
     <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-[var(--cic-void)]/40 hover:bg-[var(--cic-void)]/60 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-2.5 bg-[var(--cic-void)]/40 hover:bg-[var(--cic-void)]/60 transition-colors"
       >
-        <div className="flex items-center gap-2">
-          <ChevronDown className={`h-3 w-3 text-muted-foreground/50 transition-transform ${open ? '' : '-rotate-90'}`} />
+        <div className="flex items-center gap-3">
+          <ChevronDown
+            className={`h-3 w-3 text-muted-foreground/50 transition-transform ${open ? '' : '-rotate-90'}`}
+          />
+          <Building2 className="h-3.5 w-3.5 text-[var(--cic-amber)]" />
           <span className="text-[11px] font-semibold text-foreground/80">{colony}</span>
-          <span className="text-[8px] font-mono text-muted-foreground/40">
-            {activeCount}/{tasks.length} active
-          </span>
+          <span className="text-[8px] font-mono text-muted-foreground/40">{entries.length} projects</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* Type mini-badges */}
+          {Object.entries(typeSummary).map(([type, count]) => {
+            const colors = TYPE_COLORS[type]
+            return (
+              <span
+                key={type}
+                className="text-[7px] font-bold uppercase px-1.5 py-px rounded"
+                style={{ background: colors?.bg, color: colors?.text, opacity: 0.8 }}
+              >
+                {count} {type}
+              </span>
+            )
+          })}
+          {soonest != null && (
+            <span className="text-[8px] font-mono text-[var(--cic-green)]">~{Math.round(soonest)}d</span>
+          )}
         </div>
       </button>
       {open && (
         <Table>
           <TableHeader>
             <TableRow className="border-b border-[var(--cic-panel-edge)] hover:bg-transparent">
-              <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-3 w-8">
-                #
+              <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-3 w-28">
+                Type
+              </TableHead>
+              <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-24">
+                Days
               </TableHead>
               <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2">
-                Project
-              </TableHead>
-              <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-16 text-right">
-                Qty
+                Name
               </TableHead>
               <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-36">
-                Progress
-              </TableHead>
-              <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-16">
-                Status
+                Annual Production
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tasks.map((task) => (
+            {entries.map((entry) => (
               <TableRow
-                key={task.projectId}
+                key={entry.id}
                 className="border-b border-[var(--cic-panel-edge)]/50 hover:bg-[var(--cic-panel)]/50"
               >
-                <TableCell className="px-3 py-1.5 text-[9px] font-mono text-muted-foreground/40">{task.queue}</TableCell>
-                <TableCell className="px-2 py-1.5">
-                  <span className={`text-[10px] ${task.paused ? 'text-muted-foreground/40' : 'text-foreground/70'}`}>
-                    {task.description}
+                <TableCell className="px-3 py-1.5">
+                  <TypeBadge badge={entry.badge} type={entry.type} />
+                </TableCell>
+                <TableCell className="px-2 py-1.5 text-[10px] font-mono tabular-nums">
+                  {formatDays(entry.remainingDays, entry.queued, entry.paused)}
+                </TableCell>
+                <TableCell className="px-2 py-1.5 whitespace-normal">
+                  <span
+                    className={`text-[10px] ${entry.paused ? 'text-muted-foreground/40' : 'text-foreground/70'}`}
+                  >
+                    {entry.name}
                   </span>
                 </TableCell>
-                <TableCell className="px-2 py-1.5 text-right">
-                  <span className="text-[10px] font-mono text-foreground/50">{task.amount}</span>
-                </TableCell>
                 <TableCell className="px-2 py-1.5">
-                  <ProgressBar percent={task.percentComplete} paused={task.paused} />
-                </TableCell>
-                <TableCell className="px-2 py-1.5">
-                  {task.paused ? (
-                    <Badge variant="outline" className="text-[7px] px-1.5 py-0 h-4 border-[var(--cic-amber-dim)]/40 text-[var(--cic-amber-dim)]">
-                      <Pause className="h-2 w-2 mr-0.5" />
-                      Paused
-                    </Badge>
-                  ) : task.percentComplete >= 100 ? (
-                    <Badge variant="outline" className="text-[7px] px-1.5 py-0 h-4 border-[var(--cic-green)]/40 text-[var(--cic-green)]">
-                      Done
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="text-[7px] px-1.5 py-0 h-4 border-[var(--cic-cyan-dim)]/30 text-[var(--cic-cyan-dim)]">
-                      Active
-                    </Badge>
-                  )}
+                  <span className="text-[10px] font-mono text-muted-foreground/50">{entry.annualRate}</span>
                 </TableCell>
               </TableRow>
             ))}
@@ -148,34 +284,131 @@ function ColonyGroup({
   )
 }
 
+/* ── Main page ─────────────────────────────────────────────────────── */
+
+const recapColumns: ColumnDef<RecapEntry>[] = [
+  {
+    accessorKey: 'type',
+    header: 'Type',
+    cell: ({ row }) => <TypeBadge badge={row.original.badge} type={row.original.type} />,
+    sortingFn: (a, b) => a.original.badge.localeCompare(b.original.badge),
+  },
+  {
+    accessorKey: 'remainingDays',
+    header: 'Remaining Days',
+    cell: ({ row }) => (
+      <span className="text-[10px] font-mono tabular-nums">
+        {formatDays(row.original.remainingDays, row.original.queued, row.original.paused)}
+      </span>
+    ),
+    sortingFn: (a, b) => (a.original.remainingDays ?? Infinity) - (b.original.remainingDays ?? Infinity),
+  },
+  {
+    accessorKey: 'system',
+    header: 'System',
+    cell: ({ row }) => <span className="text-[10px] text-foreground/40">{row.original.system}</span>,
+    size: 80,
+  },
+  {
+    accessorKey: 'colony',
+    header: 'Population',
+    cell: ({ row }) => <span className="text-[10px] text-foreground/50">{row.original.colony}</span>,
+  },
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ row }) => (
+      <span
+        className={`text-[10px] whitespace-normal ${
+          row.original.paused
+            ? 'text-muted-foreground/40'
+            : row.original.queued
+              ? 'text-muted-foreground/50'
+              : 'text-foreground/70'
+        }`}
+      >
+        {row.original.name}
+      </span>
+    ),
+  },
+  {
+    accessorKey: 'annualRate',
+    header: 'Annual Production',
+    cell: ({ row }) => (
+      <span className="text-[10px] font-mono text-muted-foreground/50">{row.original.annualRate}</span>
+    ),
+    sortingFn: (a, b) => (a.original.annualRateValue ?? 0) - (b.original.annualRateValue ?? 0),
+  },
+]
+
 export function ProductionPage() {
-  const { data: production, isLoading: loadingProd } = useProduction()
-  const { data: shipyards, isLoading: loadingYards } = useShipyards()
+  const { data: recapData, isLoading, isFetching } = useProductionRecap()
+  const [showQueues, setShowQueues] = useState(false)
+  const [activeTypes, setActiveTypes] = useState<Set<string>>(() => new Set(ALL_TYPES))
+  const [viewMode, setViewMode] = useState<ViewMode>('recap')
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'remainingDays', desc: false }])
+  const [filterSystems, setFilterSystems] = useState<Set<string> | null>(null)
+  const [filterColonies, setFilterColonies] = useState<Set<string> | null>(null)
+  const [locationFilterOpen, setLocationFilterOpen] = useState(false)
 
-  const tasks = useMemo(() => (production ?? []) as ProductionTask[], [production])
-  const yards = useMemo(() => (shipyards ?? []) as ShipyardInfo[], [shipyards])
+  const entries = useMemo(() => (recapData ?? []) as RecapEntry[], [recapData])
 
-  const colonyGroups = useMemo(() => {
-    const groups = new Map<string, ProductionTask[]>()
-    for (const task of tasks) {
-      const existing = groups.get(task.colony) ?? []
-      existing.push(task)
-      groups.set(task.colony, existing)
+  // Available systems and colonies for filter badges
+  const systems = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const e of entries) {
+      if (e.system) map.set(e.system, (map.get(e.system) ?? 0) + 1)
     }
-    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [tasks])
+    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b))
+  }, [entries])
 
-  const yardsByColony = useMemo(() => {
-    const groups = new Map<string, ShipyardInfo[]>()
-    for (const yard of yards) {
-      const existing = groups.get(yard.colony) ?? []
-      existing.push(yard)
-      groups.set(yard.colony, existing)
+  const colonies = useMemo(() => {
+    const map = new Map<string, { count: number; system: string }>()
+    for (const e of entries) {
+      if (!filterSystems || filterSystems.has(e.system)) {
+        const existing = map.get(e.colony)
+        if (existing) existing.count++
+        else map.set(e.colony, { count: 1, system: e.system })
+      }
     }
-    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [yards])
+    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b))
+  }, [entries, filterSystems])
 
-  const isLoading = loadingProd || loadingYards
+  const activeLocationFilters = (filterSystems?.size ?? 0) + (filterColonies?.size ?? 0)
+
+  const filtered = useMemo(() => {
+    return entries.filter((e) => {
+      if (!activeTypes.has(e.type)) return false
+      if (!showQueues && e.queued) return false
+      if (filterSystems && !filterSystems.has(e.system)) return false
+      if (filterColonies && !filterColonies.has(e.colony)) return false
+      return true
+    })
+  }, [entries, activeTypes, showQueues, filterSystems, filterColonies])
+
+  const table = useReactTable({
+    data: filtered,
+    columns: recapColumns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  })
+
+  const typeCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const e of entries) counts[e.type] = (counts[e.type] ?? 0) + 1
+    return counts
+  }, [entries])
+
+  const toggleType = (type: string) => {
+    setActiveTypes((prev) => {
+      const next = new Set(prev)
+      if (next.has(type)) next.delete(type)
+      else next.add(type)
+      return next
+    })
+  }
 
   return (
     <div className="flex h-full flex-col bg-[var(--cic-void)]">
@@ -183,146 +416,257 @@ export function ProductionPage() {
       <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
         <div className="flex items-center gap-3">
           <Factory className="h-4 w-4 text-[var(--cic-amber)]" />
-          <span className="text-xs font-semibold text-foreground/80">Production</span>
+          <span className="text-xs font-semibold text-foreground/80">Production Command</span>
           <span className="text-[9px] font-mono text-muted-foreground">
-            {tasks.length} projects &middot; {yards.length} shipyards
+            {filtered.length}/{entries.length} projects
           </span>
+          {isFetching && !isLoading && <Loader2 className="h-3 w-3 animate-spin text-[var(--cic-cyan-dim)]" />}
+        </div>
+
+        {/* View toggle */}
+        <div className="flex items-center gap-1 rounded border border-[var(--cic-panel-edge)] bg-[var(--cic-void)]/50 p-0.5">
+          <button
+            onClick={() => setViewMode('recap')}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] transition-all ${
+              viewMode === 'recap'
+                ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)]'
+                : 'text-muted-foreground/50 hover:text-muted-foreground/70'
+            }`}
+          >
+            <LayoutList className="h-3 w-3" />
+            Recap
+          </button>
+          <button
+            onClick={() => setViewMode('colony')}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] transition-all ${
+              viewMode === 'colony'
+                ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)]'
+                : 'text-muted-foreground/50 hover:text-muted-foreground/70'
+            }`}
+          >
+            <Building2 className="h-3 w-3" />
+            By Colony
+          </button>
         </div>
       </div>
 
+      {/* Filter bar */}
+      <div className="shrink-0 flex items-center gap-2 px-4 py-2 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]/80 overflow-x-auto">
+        {ALL_TYPES.map((type) => {
+          const colors = TYPE_COLORS[type]
+          const active = activeTypes.has(type)
+          const count = typeCounts[type] ?? 0
+          if (count === 0) return null
+          return (
+            <button
+              key={type}
+              onClick={() => toggleType(type)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-wider transition-all shrink-0"
+              style={{
+                background: active ? colors.bg : 'transparent',
+                color: active ? colors.text : colors.bg,
+                border: `1px solid ${active ? colors.bg : 'transparent'}`,
+                opacity: active ? 1 : 0.5,
+              }}
+            >
+              {type}
+              <span className="text-[8px] font-mono" style={{ opacity: 0.7 }}>
+                {count}
+              </span>
+            </button>
+          )
+        })}
+
+        <div className="ml-auto flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setLocationFilterOpen(!locationFilterOpen)}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider transition-all border ${
+              locationFilterOpen || activeLocationFilters > 0
+                ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)] border-[var(--cic-cyan-dim)]/30'
+                : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground/70'
+            }`}
+          >
+            <Building2 className="h-3 w-3" />
+            Location
+            {activeLocationFilters > 0 && (
+              <span className="text-[7px] bg-[var(--cic-cyan)] text-[var(--cic-void)] rounded-full px-1 ml-0.5">
+                {activeLocationFilters}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setShowQueues(!showQueues)}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] font-semibold uppercase tracking-wider transition-all border ${
+              showQueues
+                ? 'bg-[var(--cic-amber-glow)] text-[var(--cic-amber)] border-[var(--cic-amber-dim)]/30'
+                : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground/70'
+            }`}
+          >
+            <ListFilter className="h-3 w-3" />
+            Queues
+          </button>
+        </div>
+      </div>
+
+      {/* Location filter panel */}
+      {locationFilterOpen && (
+        <div className="shrink-0 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]/60 px-4 py-2 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/50">
+              Filter by Location
+            </span>
+            <button
+              className={`text-[8px] text-muted-foreground ${activeLocationFilters > 0 ? 'visible' : 'invisible'}`}
+              onClick={() => {
+                setFilterSystems(null)
+                setFilterColonies(null)
+              }}
+            >
+              Clear all
+            </button>
+          </div>
+
+          {/* Systems */}
+          {systems.length > 0 && (
+            <div>
+              <p className="text-[8px] text-[var(--cic-cyan-dim)] mb-1">Systems ({systems.length})</p>
+              <div className="flex flex-wrap gap-1">
+                {systems.map(([sys, count]) => {
+                  const active = filterSystems?.has(sys) ?? false
+                  return (
+                    <button
+                      key={sys}
+                      onClick={() => {
+                        setFilterSystems((prev) => {
+                          if (!prev) return new Set([sys])
+                          const next = new Set(prev)
+                          if (next.has(sys)) next.delete(sys)
+                          else next.add(sys)
+                          return next.size === 0 ? null : next
+                        })
+                      }}
+                      className={`text-[8px] px-2 py-0.5 rounded border transition-all ${
+                        active
+                          ? 'border-[var(--cic-cyan-dim)] text-[var(--cic-cyan)] bg-[var(--cic-cyan-glow)]'
+                          : 'border-[var(--cic-panel-edge)] text-muted-foreground/60 hover:text-foreground/70'
+                      }`}
+                    >
+                      {sys}
+                      <span className="text-[7px] ml-1 opacity-60">{count}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Colonies */}
+          {colonies.length > 0 && (
+            <div>
+              <p className="text-[8px] text-[var(--cic-amber-dim)] mb-1">
+                Colonies ({colonies.length})
+                {filterSystems && <span className="text-muted-foreground/40"> in selected systems</span>}
+              </p>
+              <div className="flex flex-wrap gap-1 max-h-[100px] overflow-y-auto">
+                {colonies.map(([col, info]) => {
+                  const active = filterColonies?.has(col) ?? false
+                  return (
+                    <button
+                      key={col}
+                      onClick={() => {
+                        setFilterColonies((prev) => {
+                          if (!prev) return new Set([col])
+                          const next = new Set(prev)
+                          if (next.has(col)) next.delete(col)
+                          else next.add(col)
+                          return next.size === 0 ? null : next
+                        })
+                      }}
+                      className={`text-[8px] px-2 py-0.5 rounded border transition-all ${
+                        active
+                          ? 'border-[var(--cic-amber-dim)] text-[var(--cic-amber)] bg-[var(--cic-amber-glow)]'
+                          : 'border-[var(--cic-panel-edge)] text-muted-foreground/50 hover:text-foreground/60'
+                      }`}
+                    >
+                      {col}
+                      <span className="text-[7px] ml-1 opacity-50">{info.count}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Content */}
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
         </div>
-      ) : tasks.length === 0 && yards.length === 0 ? (
+      ) : entries.length === 0 ? (
         <div className="flex flex-1 items-center justify-center text-muted-foreground text-[10px]">
           No production data found
         </div>
       ) : (
-        <div className="flex-1 overflow-auto p-4 space-y-6">
-          {/* Industrial Production */}
-          {colonyGroups.length > 0 && (
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <Factory className="h-3.5 w-3.5 text-[var(--cic-amber)]" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--cic-amber)]">
-                  Industrial Production
-                </span>
-                <div className="flex-1 h-px bg-gradient-to-r from-[var(--cic-amber-dim)]/30 to-transparent" />
-                <span className="text-[8px] font-mono text-[var(--cic-amber-dim)]/50">{tasks.length} projects</span>
-              </div>
-              <div className="space-y-2">
-                {colonyGroups.map(([colony, colonyTasks], i) => (
-                  <ColonyGroup key={colony} colony={colony} tasks={colonyTasks} defaultOpen={i === 0} />
-                ))}
-              </div>
-            </section>
+        <div className="flex-1 overflow-auto">
+          {/* Summary cards */}
+          <div className="px-4 pt-3 pb-2">
+            <SummaryCards entries={filtered} />
+          </div>
+
+          {/* Recap view (sortable table) */}
+          {viewMode === 'recap' && (
+            <div className="px-4 pb-4">
+              <Table>
+                <TableHeader className="sticky top-0 bg-[var(--cic-panel)] z-10">
+                  {table.getHeaderGroups().map((hg) => (
+                    <TableRow key={hg.id} className="border-b border-[var(--cic-panel-edge)] hover:bg-transparent">
+                      {hg.headers.map((header) => (
+                        <TableHead
+                          key={header.id}
+                          className={`text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 ${
+                            header.id === 'type' ? 'w-28 pl-3' : header.id === 'remainingDays' ? 'w-28' : header.id === 'system' ? 'w-20' : header.id === 'colony' ? 'w-28' : header.id === 'annualRate' ? 'w-40' : ''
+                          } ${header.column.getCanSort() ? 'cursor-pointer select-none hover:text-muted-foreground' : ''}`}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <div className="flex items-center gap-1">
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getCanSort() && (
+                              header.column.getIsSorted() === 'asc' ? (
+                                <ChevronUp className="h-2.5 w-2.5 text-[var(--cic-cyan)]" />
+                              ) : header.column.getIsSorted() === 'desc' ? (
+                                <ChevronDown className="h-2.5 w-2.5 text-[var(--cic-cyan)]" />
+                              ) : (
+                                <ArrowUpDown className="h-2.5 w-2.5 opacity-30" />
+                              )
+                            )}
+                          </div>
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      className="border-b border-[var(--cic-panel-edge)]/50 hover:bg-[var(--cic-panel)]/50"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className={`px-2 py-1.5 ${cell.column.id === 'type' ? 'pl-3' : ''}`}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
 
-          {/* Shipyards */}
-          {yardsByColony.length > 0 && (
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <Anchor className="h-3.5 w-3.5 text-[var(--cic-cyan)]" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--cic-cyan)]">
-                  Shipyards
-                </span>
-                <div className="flex-1 h-px bg-gradient-to-r from-[var(--cic-cyan-dim)]/30 to-transparent" />
-                <span className="text-[8px] font-mono text-[var(--cic-cyan-dim)]/50">{yards.length} yards</span>
-              </div>
-              <div className="space-y-2">
-                {yardsByColony.map(([colony, colonyYards]) => (
-                  <div
-                    key={colony}
-                    className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden"
-                  >
-                    <div className="px-3 py-2 bg-[var(--cic-void)]/40 border-b border-[var(--cic-panel-edge)]">
-                      <span className="text-[11px] font-semibold text-foreground/80">{colony}</span>
-                    </div>
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-b border-[var(--cic-panel-edge)] hover:bg-transparent">
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-3">
-                            Shipyard
-                          </TableHead>
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-16">
-                            Type
-                          </TableHead>
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-14 text-right">
-                            Slips
-                          </TableHead>
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-20 text-right">
-                            Capacity
-                          </TableHead>
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2">
-                            Current Task
-                          </TableHead>
-                          <TableHead className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2 w-36">
-                            Progress
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {colonyYards.map((yard) => (
-                          <TableRow
-                            key={yard.shipyardId}
-                            className="border-b border-[var(--cic-panel-edge)]/50 hover:bg-[var(--cic-panel)]/50"
-                          >
-                            <TableCell className="px-3 py-1.5">
-                              <span className="text-[10px] text-foreground/70">{yard.name}</span>
-                            </TableCell>
-                            <TableCell className="px-2 py-1.5">
-                              <Badge
-                                variant="outline"
-                                className={`text-[7px] px-1.5 py-0 h-4 ${
-                                  yard.type === 'Naval'
-                                    ? 'border-[var(--cic-red)]/30 text-[var(--cic-red)]'
-                                    : 'border-[var(--cic-green)]/30 text-[var(--cic-green)]'
-                                }`}
-                              >
-                                {yard.type}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="px-2 py-1.5 text-right">
-                              <span className="text-[10px] font-mono text-foreground/50">{yard.slipways}</span>
-                            </TableCell>
-                            <TableCell className="px-2 py-1.5 text-right">
-                              <span className="text-[10px] font-mono text-foreground/50">
-                                {yard.capacity.toLocaleString()}
-                              </span>
-                            </TableCell>
-                            <TableCell className="px-2 py-1.5">
-                              {yard.currentTask ? (
-                                <span className="text-[10px] text-foreground/70">
-                                  <span className="text-[var(--cic-amber-dim)]">{yard.currentTask.taskType}:</span>{' '}
-                                  {yard.currentTask.className}
-                                  {yard.currentTask.unitName && (
-                                    <span className="text-muted-foreground/50"> ({yard.currentTask.unitName})</span>
-                                  )}
-                                </span>
-                              ) : (
-                                <span className="text-[9px] text-muted-foreground/30 italic">Idle</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="px-2 py-1.5">
-                              {yard.currentTask ? (
-                                <ProgressBar
-                                  percent={yard.currentTask.percentComplete}
-                                  paused={yard.currentTask.paused}
-                                />
-                              ) : (
-                                <span className="text-[9px] text-muted-foreground/20">&mdash;</span>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+          {/* Colony view (grouped) */}
+          {viewMode === 'colony' && <ColonyView entries={filtered} />}
         </div>
       )}
     </div>

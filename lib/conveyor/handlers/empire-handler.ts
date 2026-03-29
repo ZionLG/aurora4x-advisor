@@ -233,6 +233,12 @@ export const registerEmpireHandlers = () => {
     return compute.getSpeciesRequirements(getQuery(), ctx)
   })
 
+  // Production recap
+  handle('empire:getProductionRecap', async () => {
+    const ctx = getGameCtx()
+    return compute.getProductionRecap(getQuery(), ctx)
+  })
+
   // Game log
   handle(
     'empire:getGameLog',
