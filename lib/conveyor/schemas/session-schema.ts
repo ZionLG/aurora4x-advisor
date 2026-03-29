@@ -39,4 +39,8 @@ export const sessionIpcSchema = {
       bridgeUrl: z.string().nullable(),
     }),
   },
+  'session:reconnect': {
+    args: z.tuple([]),
+    return: z.void(),
+  },
 }

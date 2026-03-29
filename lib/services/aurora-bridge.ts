@@ -34,6 +34,8 @@ class AuroraBridge {
   private _activeEmpireName: string | null = null
   private _lastTitleBarText: string | null = null
   private _auroraDbPath: string | null = null
+  private _protocolMismatch = false
+  private _bridgeProtocolVersion: number | null = null
 
   get isConnected(): boolean {
     return this._isConnected
@@ -52,6 +54,16 @@ class AuroraBridge {
   /** The last raw title bar text from Aurora (for replay on renderer mount). */
   get lastTitleBarText(): string | null {
     return this._lastTitleBarText
+  }
+
+  /** Whether the last connection had a protocol version mismatch. */
+  get protocolMismatch(): boolean {
+    return this._protocolMismatch
+  }
+
+  /** The bridge's reported protocol version (null if never connected). */
+  get bridgeProtocolVersion(): number | null {
+    return this._bridgeProtocolVersion
   }
 
   // ---------------------------------------------------------------------------
@@ -218,21 +230,29 @@ class AuroraBridge {
               this._auroraDbPath = pingData.auroraDbPath
               console.warn(`[AuroraBridge] Aurora DB path: ${this._auroraDbPath}`)
             }
+            this._bridgeProtocolVersion = version
             if (version !== EXPECTED_PROTOCOL_VERSION) {
+              this._protocolMismatch = true
+              // Slow down reconnects — bridge will likely drop us again
+              this.reconnectDelay = this.maxReconnectDelay
               console.warn(
-                `[AuroraBridge] Protocol mismatch: bridge=${version}, app=${EXPECTED_PROTOCOL_VERSION}`
+                `[AuroraBridge] Protocol mismatch: bridge=${version}, app=${EXPECTED_PROTOCOL_VERSION}. ` +
+                `Update your AdvisorBridge DLL. Reconnect delay set to ${this.maxReconnectDelay}ms.`
               )
-              // Delay to ensure renderer has mounted listeners
               setTimeout(() => {
                 this.broadcastToRenderers('bridge:versionMismatch', {
                   bridgeVersion: version,
                   appVersion: EXPECTED_PROTOCOL_VERSION
                 })
               }, 2000)
+            } else {
+              this._protocolMismatch = false
             }
           })
           .catch(() => {
-            // Old bridge without version support - that's a mismatch too
+            this._protocolMismatch = true
+            this._bridgeProtocolVersion = 0
+            this.reconnectDelay = this.maxReconnectDelay
             this.broadcastToRenderers('bridge:versionMismatch', {
               bridgeVersion: 0,
               appVersion: EXPECTED_PROTOCOL_VERSION

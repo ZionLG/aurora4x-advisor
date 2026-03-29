@@ -170,16 +170,16 @@ class GameSessionService extends EventEmitter {
    * Clear the running game lock (bridge disconnect).
    */
   /**
-   * Clear the running game lock (bridge disconnect).
-   * Keeps the current game selected — the user stays on their campaign.
-   * If the bridge reconnects to a different game, detectAndLock will switch.
+   * Clear the running game lock and deactivate game (bridge disconnect).
+   * The bridge detection will re-activate the correct game on reconnect.
    */
   clearRunningGame(): void {
     this._runningGameId = null
     this._runningGameName = null
     this._lockedCampaignId = null
-    // Keep _currentGame — don't kick the user out on disconnect
-    console.warn('[GameSession] Lock cleared (bridge disconnected), keeping current game')
+    this._currentGame = null
+    this.emit('gameChanged', null)
+    console.warn('[GameSession] Bridge disconnected — game deactivated')
     this.broadcastState()
   }
 
@@ -201,7 +201,7 @@ class GameSessionService extends EventEmitter {
 
   // ── Broadcasting ────────────────────────────────────────────
 
-  private broadcastState(): void {
+  broadcastState(): void {
     this.broadcast('gameSession:state', this.getState())
   }
 

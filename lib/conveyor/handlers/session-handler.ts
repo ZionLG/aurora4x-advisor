@@ -66,4 +66,8 @@ export const registerSessionHandlers = () => {
       bridgeUrl: auroraBridge.isConnected ? null : null,
     }
   })
+
+  handle('session:reconnect', () => {
+    auroraBridge.reconnectNow()
+  })
 }

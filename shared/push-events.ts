@@ -16,6 +16,7 @@ export interface SessionState {
   isConnected: boolean
   lockedCampaignId: string | null
   bridgeUrl: string | null
+  protocolMismatch: boolean
 }
 
 export interface EmpireTick {

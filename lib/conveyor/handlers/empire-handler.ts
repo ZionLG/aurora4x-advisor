@@ -9,7 +9,6 @@ import {
 } from '@/lib/services/route-persistence'
 import { loadSavedFilters, saveSavedFilters } from '@/lib/services/filter-persistence'
 import * as compute from '@/lib/compute'
-import { formatGameDate } from '@/lib/compute/utils'
 
 function getBridgeQuery(): compute.QueryFn {
   return <T = Record<string, unknown>>(sql: string) => auroraBridge.query<T>(sql)
@@ -100,27 +99,41 @@ export const registerEmpireHandlers = () => {
     return compute.getWaypoints(getBridgeQuery(), ctx)
   })
 
-  handle('empire:getGameDate', async () => {
-    const ctx = getGameCtx()
-    const rows = await getBridgeQuery()<{ GameTime: number; StartYear: number }>(
-      `SELECT GameTime, StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`,
-    )
-    if (rows.length === 0) return null
-    const { GameTime, StartYear } = rows[0]
-    const totalDays = GameTime / 86400
-    const yearsElapsed = Math.floor(totalDays / 365.25)
-    const remainingDays = totalDays - yearsElapsed * 365.25
-    return {
-      gameTime: GameTime,
-      startYear: StartYear,
-      year: StartYear + yearsElapsed,
-      month: Math.floor(remainingDays / 30.44) + 1,
-      day: Math.floor(remainingDays % 30.44) + 1,
-      hours: Math.floor((GameTime % 86400) / 3600),
-      minutes: Math.floor((GameTime % 3600) / 60),
-      seconds: Math.floor(GameTime % 60),
-      formatted: formatGameDate(GameTime, StartYear),
+  handle('empire:getGameDate', () => {
+    // Parse exact date from Aurora's title bar (pushed on every tick)
+    // Format: "EmpireName   15 July 0058 08:00:00   Racial Wealth 269,6"
+    const titleBar = auroraBridge.lastTitleBarText
+    if (titleBar) {
+      const match = titleBar.match(
+        /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})/,
+      )
+      if (match) {
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December',
+        ]
+        const day = parseInt(match[1])
+        const month = monthNames.indexOf(match[2]) + 1
+        const year = parseInt(match[3])
+        const hours = parseInt(match[4])
+        const minutes = parseInt(match[5])
+        const seconds = parseInt(match[6])
+        const m = month < 10 ? `0${month}` : `${month}`
+        const d = day < 10 ? `0${day}` : `${day}`
+        return {
+          gameTime: 0,
+          startYear: year,
+          year,
+          month,
+          day,
+          hours,
+          minutes,
+          seconds,
+          formatted: `${year}-${m}-${d}`,
+        }
+      }
     }
+    return null
   })
 
   // Route planning

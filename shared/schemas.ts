@@ -70,6 +70,7 @@ export const GameSessionSchema = z.object({
   personalityArchetype: z.string().nullable(),
   personalityName: z.string().nullable(),
   initialSnapshot: GameSnapshotSchema.optional(),
+  lastGameDate: z.string().nullable().optional(),
   createdAt: z.number(),
   lastAccessedAt: z.number(),
 })
