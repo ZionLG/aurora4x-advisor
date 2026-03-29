@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm ls:*)",
+      "mcp__octocode__localViewStructure",
+      "mcp__octocode__localGetFileContent",
+      "mcp__octocode__localSearchCode",
+      "Bash(grep -r \"zustand\\\\|useState\\\\|Context\" C:Programmingaurora4x-companionapp --include=*.tsx --include=*.ts)"
+    ]
+  }
+}
