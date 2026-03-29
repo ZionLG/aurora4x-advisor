@@ -1,417 +1,219 @@
-# Electron React App
+# Aurora 4X Companion
 
-A modern Electron application template with React, Vite, TypeScript, and TailwindCSS. This project provides a solid foundation for developing cross-platform desktop applications.
+A tactical companion and visualization tool for [Aurora 4X](https://aurora4x.com/). Connects to a running Aurora instance via a C# Harmony patch, providing real-time system maps, fleet overlays, context-aware data panels, and an AI-powered advisor — all while Aurora remains your primary interface.
 
-<br />
+> **Status:** Active refactor. Infrastructure complete (IPC, state management, data hooks, routing). Feature migration in progress.
 
-![Electron](https://img.shields.io/badge/v40.1.0-Electron-blue) &nbsp;
-![React](https://img.shields.io/badge/v19.2.4-React-blue) &nbsp;
-![TypeScript](https://img.shields.io/badge/v5.9.3-TypeScript-blue) &nbsp;
-![Vite](https://img.shields.io/badge/v7.3.1-Vite-blue) &nbsp;
-![Shadcn](https://img.shields.io/badge/Shadcn-UI-blue) &nbsp;
-![Tailwind](https://img.shields.io/badge/v4.1.18-Tailwind-blue)
+## Important Note
 
-<br />
+This project is a **companion tool**, not a replacement client. Aurora 4X must remain visible, usable, and the primary game interface. This tool assists, enhances, and accelerates your interaction with Aurora — it does not replace it. This distinction is important and reflects the wishes of Aurora's creator, Steve Walmsley.
 
-<p align="center">
-    <img src="app/assets/era-preview.png" target="_blank" />
-</p>
+## How It Works
 
-<p align="center">
-    <a href="https://imgur.com/B5pGkDk">Watch Video Preview</a>
-</p>
+Aurora 4X is a closed-source .NET WinForms application with obfuscated type names. This project works around that:
 
-<br />
+1. **AuroraPatch** loads as a launcher, applies [Harmony](https://github.com/pardeike/Harmony) patches to Aurora.exe at runtime
+2. **AdvisorBridge** (a patch plugin) starts a WebSocket server inside the Aurora process on `ws://localhost:47842`
+3. **MemoryReader** uses cached reflection to read game objects (stars, planets, fleets, ships) directly from Aurora's live memory
+4. **The Electron app** connects to the bridge, reads game state, and renders companion visualizations alongside Aurora
 
-## Stack
+```
+┌──────────────────────────────────────────────────────┐
+│        Companion App (Electron + React + TS)         │
+│                                                      │
+│  Tactical Map ─ Fleet Overlay ─ AI Advisor ─ Tools   │
+└──────────────────┬───────────────────────────────────┘
+                   │  WebSocket (ws://localhost:47842)
+┌──────────────────┴───────────────────────────────────┐
+│           AdvisorBridge (C# Harmony Patch)           │
+│                                                      │
+│  BridgeServer ─ MemoryReader ─ ActionExecutor        │
+│       │              │               │               │
+│   SQL queries   Live game state   UI automation      │
+│   via in-memory   via reflection   (triggers visible │
+│   SQLite mirror                    Aurora actions)   │
+└──────────────────────────────────────────────────────┘
+                   │  Harmony patches
+┌──────────────────────────────────────────────────────┐
+│        Aurora 4X (primary interface, always visible) │
+└──────────────────────────────────────────────────────┘
+```
 
-🔹 **[Electron](https://www.electronjs.org)** - Cross-platform desktop application framework.<br />
-🔹 **[React](https://react.dev)** - The library for web and native user interfaces.<br />
-🔹 **[TypeScript](https://www.typescriptlang.org)** - Type-safe JavaScript.<br />
-🔹 **[Shadcn UI](https://ui.shadcn.com)** - Beautiful and accessible component library.<br />
-🔹 **[TailwindCSS](https://tailwindcss.com)** - Utility-first CSS framework.<br />
-🔹 **[Electron Vite](https://electron-vite.org)** - Lightning-fast build tool based on **Vite** for fastest hot-reload.<br />
-🔹 **[Electron Builder](https://www.electron.build/index.html)** - Configured for packaging applications.<br />
+> **Note on AuroraPatch:** The `AuroraPatch-master/` directory is a **modified fork** of the original [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project. The **Lib** library has been significantly extended with new components (`DatabaseManager`, `SignatureManager`, `KnowledgeBase`, `UIManager`). **AdvisorBridge** is the new project added by this repo. The **Automation** project is from the original AuroraPatch and kept as a reference. The **Example** project has been modified into a dev tool for discovering Aurora's obfuscated types (F12 inspector).
 
-<br />
+## Features
 
-## In-Built Features
+### Real-Time Tactical Map Viewer
+- Canvas-based system map with orbital body rendering alongside Aurora's own map
+- Fleet position overlays with movement tracking
 
-| Feature                     | Description                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------ |
-| **Conveyor**                | Type-safe inter-process communication with Zod validation                      |
-| **Custom Titlebar & Menus** | Style the window titlebar and menus as you want                                |
-| **Clean Project Structure** | Separation of main and renderer processes                                      |
-| **Resources Protocol**      | Access local file resources via `res://` protocol                              |
-| **Import Path Aliases**     | Keep your imports organized and clean                                          |
-| **Theme Switcher**          | Built-in theme switching for dark and light mode                               |
-| **Error Boundary**          | Built-in React error boundary with detailed error reporting                    |
-| **Welcome Kit**             | Interactive showcase with Framer Motion animations                             |
-| **Code Formatting**         | Prettier and ESLint pre-configured for code quality                            |
-| **Hot Reload**              | Lightning-fast development with Vite's HMR                                     |
-| **VS Code Debugging**       | Pre-configured launch configurations for debugging main and renderer processes |
+### Unified Empire Data
+- Single data layer merging SQL and real-time memory — the client never knows the source
+- Fleet, ship, mineral, research, and route data through clean domain hooks
+- Automatic refresh on game ticks
 
-<br />
+### AI-Powered Advisor
+- LLM-driven advisor that speaks in character based on government archetype and ideology
+- Supports Claude (Anthropic), OpenAI, and local Ollama models via Vercel AI SDK
+- Interactive chat — ask your advisor about strategy, threats, priorities
+- Event-driven alerts — briefings, warnings, and alerts generated on game ticks
+- 8 personality archetypes: Nationalist, Technocrat, Communist, Monarchist, Military, Corporate, Diplomatic, Religious
 
-## Installation
+### Planning Tools
+- Fleet composition tables with filtering and search
+- Route planning engine with fuel burn calculations
+- Mineral tracking with historical charts
+- Research tree viewer
 
-Clone the repository:
+### Game Bridge
+- WebSocket server embedded in the Aurora process via Harmony patching
+- Direct memory reads of game objects — no file polling
+- **Smart SQL queries with selective save** — auto-detects `FCT_*` tables and only refreshes the relevant save methods
+- Push notifications on game tick
+- Protocol version handshake
+
+### Auto-Updater
+- Built-in auto-update via GitHub Releases (`electron-updater`)
+
+## Architecture
+
+The app uses a clean 4-domain IPC architecture:
+
+| Domain | Purpose |
+|--------|---------|
+| **SESSION** | Game lifecycle — campaign selection, bridge connection (hidden internally), game detection |
+| **EMPIRE** | All game data — fleets, ships, bodies, systems, minerals, research, routes. Source-agnostic |
+| **ADVISOR** | LLM chat, event-driven alerts, personality/archetype matching |
+| **SETTINGS** | App config, AI provider selection, DB path |
+
+IPC uses the **Conveyor** system — type-safe with Zod validation, organized as schema + handler + API per domain.
+
+## Project Structure
+
+```
+aurora4x-companion/
+├── app/                          # Renderer (React)
+│   ├── components/               # UI components (layout, window, shadcn)
+│   ├── hooks/data/               # Unified data hooks (useFleets, useBodies, etc.)
+│   ├── pages/                    # Route pages (dashboard, planning, advisor, settings)
+│   ├── stores/                   # Zustand stores (session, settings, advisor)
+│   └── router.tsx                # Hash router
+├── lib/                          # Main + Preload + Shared library
+│   ├── main/                     # Electron main process (app, bootstrap, broadcast)
+│   ├── preload/                  # Context bridge (Conveyor API exposure)
+│   ├── conveyor/                 # Type-safe IPC system
+│   │   ├── schemas/              # Zod schemas (session, empire, advisor, settings)
+│   │   ├── handlers/             # Main process handlers
+│   │   └── api/                  # Preload API classes
+│   ├── services/                 # Internal services (bridge, game session, persistence, AI)
+│   ├── compute/                  # Pure game calculations (routes, fleets, minerals)
+│   └── advisor/                  # Archetype definitions and ideology matching
+├── shared/                       # Shared types and schemas (main + renderer)
+├── AuroraPatch-master/           # C# codebase (.NET Framework 4.8)
+│   ├── AuroraPatch/              # Harmony patch loader and launcher
+│   ├── Lib/                      # Core library (type resolution, DB, UI helpers)
+│   ├── AdvisorBridge/            # WebSocket bridge plugin (Fleck)
+│   ├── Automation/               # Example automation patch
+│   └── Example/                  # Dev tool for type discovery
+└── resources/                    # Build assets and config
+```
+
+## Getting Started (User)
+
+### Prerequisites
+- **Aurora 4X** C# version installed
+
+### Setup
+1. Download the latest [companion app release](https://github.com/ZionLG/aurora4x-advisor/releases/latest) for your platform
+2. Download the latest C# bridge release
+3. Place `AuroraPatch.exe`, `0Harmony.dll`, and other root-level dependencies into your Aurora 4X installation directory (next to `Aurora.exe`)
+4. Place the `Lib` and `AdvisorBridge` patch folders into the `Patches/` directory
+5. Launch Aurora through `AuroraPatch.exe` instead of `Aurora.exe`
+6. Start the companion app — it connects to the bridge automatically
+
+```
+Your Aurora installation/
+├── Aurora.exe                  # The game (untouched)
+├── AuroraPatch.exe             # Launches Aurora with patches
+├── 0Harmony.dll
+├── Newtonsoft.Json.dll
+├── System.Data.SQLite.dll
+├── EntityFramework.dll
+├── AuroraDB.db
+├── Patches/
+│   ├── Lib/
+│   │   ├── Lib.dll
+│   │   └── signatures.json
+│   └── AdvisorBridge/
+│       ├── AdvisorBridge.dll
+│       └── Fleck.dll
+└── ...
+```
+
+### Linux (via Proton)
+Aurora runs through Steam Proton on Linux. The companion app runs natively. The bridge uses Fleck (raw TCP sockets) so WebSocket connections work across the Wine/Proton boundary.
+
+## Getting Started (Developer)
+
+### Prerequisites
+- **Node.js 18+** with npm
+- **Visual Studio 2022** (or MSBuild) with .NET Framework 4.8 targeting pack
+- **Aurora 4X** C# version installed
+
+### Electron Companion App
 
 ```bash
-# Clone the repository
-git clone https://github.com/guasam/electron-react-app
-
-# Change directory
-cd electron-react-app
-
-# Install dependencies (use any package manager: npm, yarn, pnpm, bun)
+git clone https://github.com/ZionLG/aurora4x-advisor.git
+cd aurora4x-advisor
+git checkout companion-refactor
 npm install
+npm run dev          # Start with hot reload
 ```
 
-<br />
+### C# Bridge
 
-## Development
+1. Open `AuroraPatch-master/AuroraPatch.sln` in Visual Studio
+2. Copy your Aurora 4X installation into `AuroraPatch-master/AuroraPatch/bin/Debug/`
+3. Build and deploy:
+   ```
+   cd AuroraPatch-master
+   build-deploy.bat
+   ```
+4. Run/debug `AuroraPatch.exe` from Visual Studio
 
-Start the development server:
+## Development Commands
 
-```bash
-npm run dev
-```
+| Command            | Description                         |
+|--------------------|-------------------------------------|
+| `npm run dev`      | Run with hot reload                 |
+| `npm run lint`     | Lint with ESLint                    |
+| `npm run format`   | Format with Prettier                |
+| `npm run build:win`| Package for Windows                 |
+| `npm run build:linux`| Package for Linux                 |
 
-This will start Electron with hot-reload enabled so you can see changes in real time.
+## Tech Stack
 
-<br />
+**Companion App:** Electron 40, React 19, TypeScript 5.9, Tailwind CSS 4, Radix UI / shadcn, TanStack Query, Zustand, Vercel AI SDK, Vite 7
 
-## Conveyor - Inter-Process Communication
+**C# Bridge:** .NET Framework 4.8, Harmony 2.2, Fleck 1.2, System.Data.SQLite, Newtonsoft.Json, EntityFramework 6
 
-**Conveyor** is a type-safe IPC system that enables secure communication between your React frontend and Electron's main process. It uses Zod schemas for runtime validation and provides full TypeScript support.
+## Contributing
 
-🔹 **Type-safe** - Full TypeScript support with compile-time and runtime validation<br />
-🔹 **Secure** - Validates all data using Zod schemas<br />
-🔹 **Modular** - Clean API structure with organized handlers<br />
-🔹 **Simple** - Easy-to-use React hooks and global APIs<br />
+Areas where help is needed:
 
-<br />
+- **Aurora Version Mappings** — Add obfuscated type/field mappings for new Aurora builds
+- **Visualizations** — New tactical overlays, analytics views, and data panels
+- **Advisor Events** — Additional game event detectors for the AI advisor
+- **Testing** — Test with various Aurora save files and game states
 
-### Quick Start
+## License
 
-Use the `useConveyor` hook in your React components:
+This project is source-available and free to use, modify, and distribute.
 
-```tsx
-import { useConveyor } from '@/app/hooks/use-conveyor'
+Please note: this is intended as a companion tool and not a replacement client for Aurora 4X. We aim to respect the original developer's work and boundaries, and ask that public distributions follow that spirit.
 
-function MyComponent() {
-  const { version } = useConveyor('app')
-  const { windowMinimize } = useConveyor('window')
+## Acknowledgments
 
-  const handleGetVersion = async () => {
-    console.log('App version:', await version())
-    console.log('App version:', await window.conveyor.app.version()) // OR
-  }
-
-  return (
-    <div>
-      <button onClick={handleGetVersion}>Get Version</button>
-      <button onClick={windowMinimize}>Minimize Window</button>
-    </div>
-  )
-}
-```
-
-### Available APIs
-
-Conveyor provides two ways to access IPC methods:
-
-```tsx
-// Method 1: React Hook (Recommended)
-const { version } = useConveyor('app')
-await version()
-
-// Method 2: React Hook Global Conveyor
-const conveyor = useConveyor()
-await conveyor.app.version()
-
-// Method 3: Global Window Object
-await window.conveyor.app.version()
-```
-
-### Built-in APIs
-
-| API      | Description                | Example                            |
-| -------- | -------------------------- | ---------------------------------- |
-| `app`    | App specfiic operations    | `conveyor.app.version()`           |
-| `window` | Window specific operations | `conveyor.window.windowMinimize()` |
-
-<br />
-
-### Creating Custom APIs
-
-Follow these 4 simple steps to add your own IPC methods:
-
-#### Step 1: Define Schema
-
-Create a schema in `lib/conveyor/schemas/app-schema.ts`:
-
-```ts
-import { z } from 'zod'
-
-export const appIpcSchema = {
-  // Simple method with no parameters
-  'get-app-info': {
-    args: z.tuple([]),
-    return: z.object({
-      name: z.string(),
-      version: z.string(),
-      platform: z.string(),
-    }),
-  },
-
-  // Method with parameters
-  'save-user-preference': {
-    args: z.tuple([
-      z.object({
-        key: z.string(),
-        value: z.string(),
-      }),
-    ]),
-    return: z.boolean(),
-  },
-} as const
-```
-
-#### Step 2: Add API Method
-
-Update `lib/conveyor/api/app-api.ts`:
-
-```ts
-export class AppApi extends ConveyorApi {
-  getAppInfo = () => this.invoke('get-app-info')
-  saveUserPreference = (key: string, value: string) => this.invoke('save-user-preference', { key, value })
-}
-```
-
-#### Step 3: Implement Handler
-
-Add handler in `lib/conveyor/handlers/app-handler.ts`:
-
-```ts
-import { handle } from '@/lib/main/shared'
-import { app } from 'electron'
-
-export const registerAppHandlers = () => {
-  handle('get-app-info', () => ({
-    name: app.getName(),
-    version: app.getVersion(),
-    platform: process.platform,
-  }))
-
-  handle('save-user-preference', async ({ key, value }) => {
-    // Save to file, database, etc.
-    console.log(`Saving ${key}: ${value}`)
-    return true
-  })
-}
-```
-
-#### Step 4: Register Handler
-
-In `lib/main/app.ts`:
-
-```ts
-import { registerAppHandlers } from '@/lib/conveyor/handlers/app-handler'
-
-// During app initialization
-registerAppHandlers()
-```
-
-### Usage in Components
-
-```tsx
-function SettingsComponent() {
-  const conveyor = useConveyor()
-  const [appInfo, setAppInfo] = useState(null)
-
-  useEffect(() => {
-    // Get app information
-    conveyor.app.getAppInfo().then(setAppInfo)
-  }, [])
-
-  const saveTheme = (theme: string) => {
-    conveyor.app.saveUserPreference('theme', theme)
-  }
-
-  return (
-    <div>
-      <h2>App Info</h2>
-      {appInfo && (
-        <p>
-          {appInfo.name} v{appInfo.version} on {appInfo.platform}
-        </p>
-      )}
-
-      <button onClick={() => saveTheme('dark')}>Set Dark Theme</button>
-    </div>
-  )
-}
-```
-
-### Error Handling
-
-```tsx
-const handleApiCall = async () => {
-  try {
-    const result = await conveyor.app.getAppInfo()
-    console.log('Success:', result)
-  } catch (error) {
-    console.error('API call failed:', error)
-    // Handle validation errors, network issues, etc.
-  }
-}
-```
-
-### Type Safety Benefits
-
-```tsx
-// ✅ TypeScript enforces correct types
-const info = await conveyor.app.getAppInfo() // Returns { name: string, version: string, platform: string }
-
-// ❌ TypeScript error - wrong parameter type
-const result = await conveyor.app.saveUserPreference(123, 'value') // Error: Expected string, got number
-
-// ✅ Runtime validation ensures data integrity
-const valid = await conveyor.app.saveUserPreference('theme', 'dark') // Validates at runtime
-```
-
-📖 **For advanced usage and detailed documentation, see [Conveyor README](lib/conveyor/README.md)**
-
-<br />
-
-## Custom Window Components
-
-This template includes a custom window implementation with:
-
-- Custom titlebar with app icon
-- Window control buttons (minimize, maximize, close)
-- Menu system with keyboard shortcuts
-- Dark/light mode toggle
-- Cross-platform support for Windows and macOS
-
-<br />
-
-### Titlebar Menu Toggle
-
-The titlebar menu can be toggled using:
-
-- **Windows**: Press the `Alt` key
-- **macOS**: Press the `Option (⌥)` key
-
-When you press the toggle key:
-
-- If the menu is hidden, it becomes visible
-- If the menu is already visible, it gets hidden
-- The menu only toggles if menu items are available
-
-<br />
-
-### Customizing Menu Items
-
-To add, remove or modify menu items, update the following file:
-
-- `app/components/window/menus.ts`
-
-<br />
-
-## Tailwind CSS
-
-The project supports **Tailwind** for styling:
-
-```ts
-// Example component with Tailwind classes
-const Button = () => (
-  <button className="px-4 py-2 text-white rounded-md">
-    Click me
-  </button>
-);
-```
-
-<br />
-
-## Key Directories Explained
-
-#### `app/` - Renderer Process
-
-- **React application** that runs in the browser window
-- Contains all UI components, styles, and client-side logic
-- Uses Vite for fast development and building
-
-#### `lib/conveyor/` - Conveyor - Inter-Process Communication
-
-- **Type-safe communication** between renderer and main processes
-- **API classes** provide clean interfaces for IPC calls
-- **Handlers** implement the actual logic in the main process
-- **Schemas** define data contracts with Zod validation
-
-#### `lib/main/` - Main Process
-
-- **Electron main process** code
-- Handles window creation, app lifecycle, and system integration
-- Registers IPC handlers and manages app state
-
-#### `lib/preload/` - Preload Scripts
-
-- **Security bridge** between renderer and main processes
-- Exposes safe APIs to the renderer process
-- Implements context isolation for security
-
-<br />
-
-## Development Workflow
-
-1. **UI Development**: Work in `app/` directory with React components
-2. **IPC Communication**: Define schemas, add API methods, implement handlers
-3. **Window Features**: Customize window behavior in `app/components/window/`
-4. **Prettier Formatting**: Use `npm run format` to format the code.
-5. **ESLint**: Use `npm run lint` to lint the code.
-
-<br />
-
-## Path Aliases
-
-The project uses TypeScript path aliases for clean imports:
-
-```ts
-// Instead of relative paths like:
-import { Button } from '../../../components/ui/button'
-
-// Use clean aliases:
-import { Button } from '@/app/components/ui/button'
-import { conveyor } from '@/lib/conveyor/api'
-```
-
-Configured aliases by default, customise as you want:
-
-- `@/` → `app/` (application code - renderer process)
-- `@/lib/` → `lib/` (shared library code containing conveyor, main, preload, etc.)
-- `@/resources/` → `resources/` (build resources for the application)
-
-<br />
-
-## Building for Production
-
-Build the application for your platform:
-
-```bash
-# For Windows
-npm run build:win
-
-# For macOS
-npm run build:mac
-
-# For Linux
-npm run build:linux
-
-# Unpacked for all platforms
-npm run build:unpack
-```
-
-Distribution files will be located in the `dist` directory.
+- Steve Walmsley for creating Aurora 4X
+- The [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project for the Harmony patching framework
+- The Aurora 4X modding community
