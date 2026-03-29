@@ -40,6 +40,6 @@ export const registerWindowHandlers = (window: BrowserWindow) => {
   handle('web-toggle-fullscreen', () => window.setFullScreen(!window.fullScreen))
   handle('web-open-url', (url: string) => shell.openExternal(url))
   handle('window-popout', (moduleId: string, route: string, x: number, y: number, title: string) =>
-    createPopoutWindow(moduleId, route, x, y, title),
+    createPopoutWindow(moduleId, route, x, y, title)
   )
 }

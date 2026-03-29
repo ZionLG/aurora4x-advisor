@@ -193,7 +193,7 @@ export const ActionRequestSchema: z.ZodType<ActionRequest> = z.lazy(() =>
     ControlName: z.string().optional(),
     Value: z.unknown().optional(),
     Steps: z.array(ActionRequestSchema).optional(),
-  }),
+  })
 )
 
 export const ActionResultSchema = z.object({
@@ -212,7 +212,7 @@ export const ControlInfoSchema: z.ZodType<ControlInfo> = z.lazy(() =>
     Visible: z.boolean(),
     ParentName: z.string(),
     Children: z.array(ControlInfoSchema).optional(),
-  }),
+  })
 )
 
 // ── Fleet / Ship Memory ────────────────────────────────────────────

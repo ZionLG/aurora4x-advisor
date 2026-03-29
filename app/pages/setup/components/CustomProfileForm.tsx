@@ -52,7 +52,10 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
       name: values.name,
       description: values.description,
       flavor: values.flavor,
-      keywords: values.keywords.split(',').map((s) => s.trim()).filter(Boolean),
+      keywords: values.keywords
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
     }
     onUpdate(profile, values.archetypeId as ArchetypeId)
   }
@@ -170,7 +173,10 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
                         name: values.name,
                         description: values.description,
                         flavor: values.flavor,
-                        keywords: values.keywords.split(',').map((s) => s.trim()).filter(Boolean),
+                        keywords: values.keywords
+                          .split(',')
+                          .map((s) => s.trim())
+                          .filter(Boolean),
                       }
                       onUpdate(profile, arch.id as ArchetypeId)
                     }}
@@ -199,10 +205,20 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
                 name: values.name,
                 description: values.description,
                 flavor: values.flavor,
-                keywords: values.keywords.split(',').map((s) => s.trim()).filter(Boolean),
+                keywords: values.keywords
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean),
               },
               archetype: values.archetypeId as ArchetypeId,
-              ideology: ideology ?? { xenophobia: 50, diplomacy: 50, militancy: 50, expansionism: 50, determination: 50, trade: 50 },
+              ideology: ideology ?? {
+                xenophobia: 50,
+                diplomacy: 50,
+                militancy: 50,
+                expansionism: 50,
+                determination: 50,
+                trade: 50,
+              },
               ministries: [],
             }
             saveProfileMutation.mutate(preset)

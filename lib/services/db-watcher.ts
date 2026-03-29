@@ -230,9 +230,7 @@ export class DatabaseWatcher {
       const gameYears = Math.floor(gameDays / 365)
       const currentYear = gameRow.StartYear + gameYears
 
-      console.warn(
-        `[DB Watcher] Game time: ${gameRow.GameTime} seconds (${gameDays.toFixed(1)} days)`
-      )
+      console.warn(`[DB Watcher] Game time: ${gameRow.GameTime} seconds (${gameDays.toFixed(1)} days)`)
       console.warn(`[DB Watcher] Start year: ${gameRow.StartYear}`)
       console.warn(`[DB Watcher] Current year: ${currentYear}`)
 
@@ -335,7 +333,7 @@ export class DatabaseWatcher {
     return {
       isWatching: this.watcher !== null,
       auroraDbPath: this.auroraDbPath,
-      currentGameId: this.currentGameId
+      currentGameId: this.currentGameId,
     }
   }
 }

@@ -22,5 +22,5 @@ ReactDOM.createRoot(document.getElementById('app') as HTMLElement).render(
         </WindowContextProvider>
       )}
     </ErrorBoundary>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

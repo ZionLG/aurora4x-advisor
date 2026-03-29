@@ -6,14 +6,7 @@ import { useTabStore } from '@/app/stores/tab-store'
 import { useGameDate } from '@/app/hooks/data/use-empire'
 import { Button } from '@/app/components/ui/button'
 import { ScrollArea } from '@/app/components/ui/scroll-area'
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  ChevronDown,
-  ChevronRight,
-  CircleDot,
-  Trash2,
-} from 'lucide-react'
+import { PanelLeftClose, PanelLeftOpen, ChevronDown, ChevronRight, CircleDot, Trash2 } from 'lucide-react'
 import { CATEGORY_LIST, type CategoryId } from '@/app/modules/categories'
 import { getModulesByCategory, findCategoryByRoute, type ModuleDefinition } from '@/app/modules/registry'
 
@@ -75,9 +68,7 @@ export function Sidebar() {
 
   const { data: gameDate } = useGameDate()
 
-  const sortedGames = savedGames
-    ? [...savedGames].sort((a, b) => b.lastAccessedAt - a.lastAccessedAt)
-    : []
+  const sortedGames = savedGames ? [...savedGames].sort((a, b) => b.lastAccessedAt - a.lastAccessedAt) : []
 
   const statusDotClass =
     connectionMode === 'bridge'
@@ -90,7 +81,9 @@ export function Sidebar() {
 
   const statusLabel =
     connectionMode === 'bridge'
-      ? protocolMismatch ? 'Mismatch' : 'Bridge'
+      ? protocolMismatch
+        ? 'Mismatch'
+        : 'Bridge'
       : connectionMode === 'offline'
         ? 'Offline'
         : 'Disconnected'
@@ -229,13 +222,21 @@ export function Sidebar() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`text-[10px] font-medium truncate ${isActive ? 'text-[var(--cic-cyan)]' : 'text-foreground/70'}`}>
+                    <span
+                      className={`text-[10px] font-medium truncate ${isActive ? 'text-[var(--cic-cyan)]' : 'text-foreground/70'}`}
+                    >
                       {game.gameInfo.gameName}
                     </span>
                     <div className="flex items-center gap-1">
                       {isActive && <CircleDot className="h-2 w-2 shrink-0 text-[var(--cic-green)]" />}
                       {!isActive && (
-                        <button className="opacity-0 group-hover/card:opacity-100 transition-opacity text-muted-foreground hover:text-[var(--cic-red)]" onClick={(e) => { e.stopPropagation(); handleDeleteGame(game.id, game.gameInfo.gameName) }}>
+                        <button
+                          className="opacity-0 group-hover/card:opacity-100 transition-opacity text-muted-foreground hover:text-[var(--cic-red)]"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteGame(game.id, game.gameInfo.gameName)
+                          }}
+                        >
                           <Trash2 className="h-2 w-2" />
                         </button>
                       )}
@@ -243,9 +244,10 @@ export function Sidebar() {
                   </div>
                   <div className="text-[8px] text-muted-foreground/40 mt-0.5">
                     {isActive && gameDate
-                      ? (gameDate as Record<string, unknown>).formatted as string
-                      : game.lastGameDate ?? `Year ${game.gameInfo.startingYear}`}
-                    {' — '}{formatRelativeTime(game.lastAccessedAt)}
+                      ? ((gameDate as Record<string, unknown>).formatted as string)
+                      : (game.lastGameDate ?? `Year ${game.gameInfo.startingYear}`)}
+                    {' — '}
+                    {formatRelativeTime(game.lastAccessedAt)}
                   </div>
                 </div>
               )
@@ -264,15 +266,43 @@ export function Sidebar() {
           <div className="flex items-center gap-1">
             {connectionMode === 'disconnected' && (
               <>
-                <Button size="xs" variant="ghost" className="text-[8px] text-muted-foreground hover:text-foreground/60 h-5 px-1.5" onClick={() => window.conveyor.session.goOffline()}>Offline</Button>
-                <Button size="xs" variant="ghost" className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5" onClick={() => window.conveyor.session.reconnect()}>Retry</Button>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  className="text-[8px] text-muted-foreground hover:text-foreground/60 h-5 px-1.5"
+                  onClick={() => window.conveyor.session.goOffline()}
+                >
+                  Offline
+                </Button>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                  onClick={() => window.conveyor.session.reconnect()}
+                >
+                  Retry
+                </Button>
               </>
             )}
             {connectionMode === 'offline' && (
-              <Button size="xs" variant="ghost" className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5" onClick={() => window.conveyor.session.goOnline()}>Reconnect</Button>
+              <Button
+                size="xs"
+                variant="ghost"
+                className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                onClick={() => window.conveyor.session.goOnline()}
+              >
+                Reconnect
+              </Button>
             )}
             {connectionMode === 'bridge' && protocolMismatch && (
-              <Button size="xs" variant="ghost" className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5" onClick={() => window.conveyor.session.reconnect()}>Retry</Button>
+              <Button
+                size="xs"
+                variant="ghost"
+                className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                onClick={() => window.conveyor.session.reconnect()}
+              >
+                Retry
+              </Button>
             )}
           </div>
         </div>

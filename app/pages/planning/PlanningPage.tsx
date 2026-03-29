@@ -59,7 +59,15 @@ export function PlanningPage() {
             <div className="flex items-center gap-2 text-[9px] font-mono text-muted-foreground/50">
               <span>{currentGame.gameInfo.gameName}</span>
               <span className="text-[7px]">·</span>
-              <span className={connectionMode === 'bridge' ? 'text-[var(--cic-green)]' : connectionMode === 'offline' ? 'text-muted-foreground' : 'text-[var(--cic-red)]'}>
+              <span
+                className={
+                  connectionMode === 'bridge'
+                    ? 'text-[var(--cic-green)]'
+                    : connectionMode === 'offline'
+                      ? 'text-muted-foreground'
+                      : 'text-[var(--cic-red)]'
+                }
+              >
                 {connectionMode === 'bridge' ? 'LIVE' : connectionMode === 'offline' ? 'OFFLINE' : 'NO DATA'}
               </span>
             </div>
@@ -68,12 +76,24 @@ export function PlanningPage() {
 
         {/* Tab content — each tab is absolutely positioned to fill the container */}
         <div className="flex-1 relative">
-          <TabsContent value="overview" className="absolute inset-0 m-0 overflow-auto"><OverviewTab /></TabsContent>
-          <TabsContent value="fleet" className="absolute inset-0 m-0 overflow-auto"><FleetTab /></TabsContent>
-          <TabsContent value="routes" className="absolute inset-0 m-0 overflow-auto"><RoutesTab /></TabsContent>
-          <TabsContent value="minerals" className="absolute inset-0 m-0 overflow-auto"><MineralsTab /></TabsContent>
-          <TabsContent value="research" className="absolute inset-0 m-0 overflow-auto"><ResearchTab /></TabsContent>
-          <TabsContent value="shipyard" className="absolute inset-0 m-0 overflow-auto"><ShipyardTab /></TabsContent>
+          <TabsContent value="overview" className="absolute inset-0 m-0 overflow-auto">
+            <OverviewTab />
+          </TabsContent>
+          <TabsContent value="fleet" className="absolute inset-0 m-0 overflow-auto">
+            <FleetTab />
+          </TabsContent>
+          <TabsContent value="routes" className="absolute inset-0 m-0 overflow-auto">
+            <RoutesTab />
+          </TabsContent>
+          <TabsContent value="minerals" className="absolute inset-0 m-0 overflow-auto">
+            <MineralsTab />
+          </TabsContent>
+          <TabsContent value="research" className="absolute inset-0 m-0 overflow-auto">
+            <ResearchTab />
+          </TabsContent>
+          <TabsContent value="shipyard" className="absolute inset-0 m-0 overflow-auto">
+            <ShipyardTab />
+          </TabsContent>
         </div>
       </Tabs>
     </div>

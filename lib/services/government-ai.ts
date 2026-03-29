@@ -36,11 +36,7 @@ export const EVENT_TAGS = [
   { id: 'economy', label: 'Economy', desc: 'Wealth, trade, population' },
 ]
 
-function buildSystemPrompt(
-  gov: Government,
-  ministry: Ministry | null,
-  gameState: GameStateSnapshot | null,
-): string {
+function buildSystemPrompt(gov: Government, ministry: Ministry | null, gameState: GameStateSnapshot | null): string {
   const archetype = getArchetype(gov.archetypeId)
 
   const profile = gov.profile
@@ -116,7 +112,7 @@ export async function generateBriefing(
   events: GameEvent[],
   gov: Government,
   ministry: Ministry | null,
-  gameState: GameStateSnapshot | null,
+  gameState: GameStateSnapshot | null
 ): Promise<Briefing | null> {
   if (events.length === 0) return null
 
@@ -158,7 +154,7 @@ export async function chat(
   ministryId: string,
   message: string,
   gov: Government,
-  gameState: GameStateSnapshot | null,
+  gameState: GameStateSnapshot | null
 ): Promise<string> {
   const model = await getModel()
   if (!model) {

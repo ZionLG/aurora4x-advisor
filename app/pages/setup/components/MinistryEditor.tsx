@@ -53,12 +53,10 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
         m.tempId === tempId
           ? {
               ...m,
-              tags: m.tags.includes(tag)
-                ? m.tags.filter((t) => t !== tag)
-                : [...m.tags, tag],
+              tags: m.tags.includes(tag) ? m.tags.filter((t) => t !== tag) : [...m.tags, tag],
             }
-          : m,
-      ),
+          : m
+      )
     )
   }
 
@@ -70,9 +68,7 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
     <div className="space-y-3">
       {/* Ministry cards */}
       {ministries.map((ministry, idx) => {
-        const takenTags = new Set(
-          ministries.filter((m) => m.tempId !== ministry.tempId).flatMap((m) => m.tags),
-        )
+        const takenTags = new Set(ministries.filter((m) => m.tempId !== ministry.tempId).flatMap((m) => m.tags))
         const activeTagCount = ministry.tags.length
         const accentColor = getMinistryAccent(ministry.tags)
         const deptNum = String(idx + 1).padStart(2, '0')
@@ -81,9 +77,7 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
           <div
             key={ministry.tempId}
             className={`rounded-md border bg-[var(--cic-panel)] overflow-hidden ${
-              activeTagCount === 0
-                ? 'border-[var(--cic-red)]/30'
-                : 'border-[var(--cic-panel-edge)]'
+              activeTagCount === 0 ? 'border-[var(--cic-red)]/30' : 'border-[var(--cic-panel-edge)]'
             }`}
             style={{
               animationDelay: `${idx * 50}ms`,
@@ -102,12 +96,8 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
                   className="h-3 w-3 transition-colors duration-200"
                   style={{ color: activeTagCount > 0 ? accentColor : 'var(--cic-amber-dim)' }}
                 />
-                <span className="text-[11px] font-semibold text-foreground/80">
-                  {ministry.name}
-                </span>
-                <span className="text-[7px] font-mono text-muted-foreground/25">
-                  DEPT-{deptNum}
-                </span>
+                <span className="text-[11px] font-semibold text-foreground/80">{ministry.name}</span>
+                <span className="text-[7px] font-mono text-muted-foreground/25">DEPT-{deptNum}</span>
               </div>
               <div className="flex items-center gap-2">
                 {activeTagCount > 0 ? (
@@ -132,9 +122,7 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             <div className="p-4 space-y-3">
               {/* Domain tags */}
               <div>
-                <p className="text-[7px] uppercase tracking-wider text-muted-foreground mb-1.5">
-                  Domain Assignments
-                </p>
+                <p className="text-[7px] uppercase tracking-wider text-muted-foreground mb-1.5">Domain Assignments</p>
                 <div className="flex flex-wrap gap-1.5">
                   {EVENT_TAGS.map((tag) => {
                     const active = ministry.tags.includes(tag.id)

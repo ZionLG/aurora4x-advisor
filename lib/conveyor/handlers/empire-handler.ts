@@ -2,12 +2,7 @@ import { handle } from '@/lib/main/shared'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { gameSession } from '@/lib/services/game-session'
 import { getOfflineQuery } from '@/lib/services/offline-query'
-import {
-  loadSavedRoutes,
-  addSavedRoute,
-  removeSavedRoute,
-  updateSavedRoute,
-} from '@/lib/services/route-persistence'
+import { loadSavedRoutes, addSavedRoute, removeSavedRoute, updateSavedRoute } from '@/lib/services/route-persistence'
 import { loadSavedFilters, saveSavedFilters } from '@/lib/services/filter-persistence'
 import * as compute from '@/lib/compute'
 import { formatGameDate } from '@/lib/compute/utils'
@@ -81,22 +76,12 @@ export const registerEmpireHandlers = () => {
 
   handle('empire:getMineralHistory', async (resolution: string, populationId: number | null) => {
     const ctx = getGameCtx()
-    return compute.getMineralHistory(
-      getQuery(),
-      ctx,
-      resolution as compute.Resolution,
-      populationId,
-    )
+    return compute.getMineralHistory(getQuery(), ctx, resolution as compute.Resolution, populationId)
   })
 
   handle('empire:getMineralBreakdown', async (mineralId: number, resolution: string) => {
     const ctx = getGameCtx()
-    return compute.getMineralBreakdown(
-      getQuery(),
-      ctx,
-      mineralId,
-      resolution as compute.Resolution,
-    )
+    return compute.getMineralBreakdown(getQuery(), ctx, mineralId, resolution as compute.Resolution)
   })
 
   handle('empire:getMineralColonies', async () => {
@@ -121,12 +106,22 @@ export const registerEmpireHandlers = () => {
     const titleBar = auroraBridge.lastTitleBarText
     if (titleBar) {
       const match = titleBar.match(
-        /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})/,
+        /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})/
       )
       if (match) {
         const monthNames = [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December',
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
         ]
         const day = parseInt(match[1])
         const month = monthNames.indexOf(match[2]) + 1
@@ -137,7 +132,14 @@ export const registerEmpireHandlers = () => {
         const m = month < 10 ? `0${month}` : `${month}`
         const d = day < 10 ? `0${day}` : `${day}`
         return {
-          gameTime: 0, startYear: year, year, month, day, hours, minutes, seconds,
+          gameTime: 0,
+          startYear: year,
+          year,
+          month,
+          day,
+          hours,
+          minutes,
+          seconds,
           formatted: `${year}-${m}-${d}`,
         }
       }
@@ -147,17 +149,25 @@ export const registerEmpireHandlers = () => {
     try {
       const ctx = getGameCtx()
       const rows = await getQuery()<{ GameTime: number; StartYear: number }>(
-        `SELECT GameTime, StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`,
+        `SELECT GameTime, StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`
       )
       if (rows.length > 0) {
         const { GameTime, StartYear } = rows[0]
         return {
-          gameTime: GameTime, startYear: StartYear,
-          year: 0, month: 0, day: 0, hours: 0, minutes: 0, seconds: 0,
+          gameTime: GameTime,
+          startYear: StartYear,
+          year: 0,
+          month: 0,
+          day: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
           formatted: formatGameDate(GameTime, StartYear),
         }
       }
-    } catch { /* no data available */ }
+    } catch {
+      /* no data available */
+    }
 
     return null
   })
@@ -224,10 +234,13 @@ export const registerEmpireHandlers = () => {
   })
 
   // Game log
-  handle('empire:getGameLog', async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) => {
-    const ctx = getGameCtx()
-    return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized, showHidden })
-  })
+  handle(
+    'empire:getGameLog',
+    async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) => {
+      const ctx = getGameCtx()
+      return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized, showHidden })
+    }
+  )
 
   handle('empire:getEventTypes', async () => {
     const ctx = getGameCtx()

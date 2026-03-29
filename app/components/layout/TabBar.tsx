@@ -1,17 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable'
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
+import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useTabStore, type AppTab } from '@/app/stores/tab-store'
 import { MODULES } from '@/app/modules/registry'
@@ -33,14 +22,7 @@ function SortableTab({
   const mod = MODULES.find((m) => m.id === tab.id)
   const Icon = mod?.icon
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: tab.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: tab.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -91,7 +73,7 @@ export function TabBar() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 }, // 5px drag threshold to distinguish from clicks
-    }),
+    })
   )
 
   if (tabs.length === 0) return null
@@ -134,9 +116,7 @@ export function TabBar() {
       const dropX = mouseEvent.clientX + (delta?.x ?? 0)
       const dropY = mouseEvent.clientY + (delta?.y ?? 0)
 
-      const isOutside =
-        dropX < 0 || dropX > window.innerWidth ||
-        dropY < 0 || dropY > window.innerHeight
+      const isOutside = dropX < 0 || dropX > window.innerWidth || dropY < 0 || dropY > window.innerHeight
 
       if (isOutside) {
         const tab = tabs.find((t) => t.id === active.id)
@@ -166,15 +146,8 @@ export function TabBar() {
 
   return (
     <div className="shrink-0 flex items-end border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-1 overflow-x-auto">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={tabs.map((t) => t.id)}
-          strategy={horizontalListSortingStrategy}
-        >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={tabs.map((t) => t.id)} strategy={horizontalListSortingStrategy}>
           {tabs.map((tab) => (
             <SortableTab
               key={tab.id}

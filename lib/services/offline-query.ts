@@ -69,7 +69,11 @@ export function getOfflineQuery(): QueryFn | null {
       return Promise.resolve(rows)
     } catch (err) {
       if (db) {
-        try { db.close() } catch { /* ignore */ }
+        try {
+          db.close()
+        } catch {
+          /* ignore */
+        }
       }
       return Promise.reject(err)
     }

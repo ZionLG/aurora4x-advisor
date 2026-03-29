@@ -6,23 +6,23 @@
  */
 
 export interface EngineParams {
-  enginePower: number       // EP per engine (from tech)
-  fuelConsumption: number   // Fuel consumption per EP per hour (from tech)
-  powerModifier: number     // 0.1 to 3.0 (affects fuel consumption exponentially)
-  engineSize: number        // HS (1 HS = 50 tons)
+  enginePower: number // EP per engine (from tech)
+  fuelConsumption: number // Fuel consumption per EP per hour (from tech)
+  powerModifier: number // 0.1 to 3.0 (affects fuel consumption exponentially)
+  engineSize: number // HS (1 HS = 50 tons)
   numberOfEngines: number
-  shipTonnage: number       // Total ship tonnage
-  fuelCapacity: number      // Total fuel capacity
+  shipTonnage: number // Total ship tonnage
+  fuelCapacity: number // Total fuel capacity
 }
 
 export interface EngineResult {
   totalEnginePower: number
-  speed: number             // km/s
+  speed: number // km/s
   fuelConsumptionPerHour: number
   rangeKm: number
   rangeDays: number
-  engineTonnage: number     // Total engine tonnage
-  enginePercentage: number  // % of ship that is engines
+  engineTonnage: number // Total engine tonnage
+  enginePercentage: number // % of ship that is engines
   modifiedFuelConsumption: number // After power modifier
 }
 
@@ -46,15 +46,7 @@ export interface DriveComparison {
  * - Range km = speed * range hours * 3600
  */
 export function calculateEngineStats(params: EngineParams): EngineResult {
-  const {
-    enginePower,
-    fuelConsumption,
-    powerModifier,
-    engineSize,
-    numberOfEngines,
-    shipTonnage,
-    fuelCapacity,
-  } = params
+  const { enginePower, fuelConsumption, powerModifier, engineSize, numberOfEngines, shipTonnage, fuelCapacity } = params
 
   const shipSizeHS = shipTonnage / 50
   const engineTonnage = engineSize * 50 * numberOfEngines
@@ -92,9 +84,7 @@ export function calculateEngineStats(params: EngineParams): EngineResult {
 /**
  * Compare multiple engine configurations side by side.
  */
-export function compareDriveConfigurations(
-  configs: Array<{ label: string; params: EngineParams }>,
-): DriveComparison {
+export function compareDriveConfigurations(configs: Array<{ label: string; params: EngineParams }>): DriveComparison {
   return {
     configs: configs.map(({ label, params }) => ({
       label,
@@ -115,7 +105,7 @@ export function findOptimalEngineCount(
   baseTonnage: number, // ship tonnage without engines
   fuelCapacity: number,
   fuelConsumption: number,
-  maxEngines: number = 20,
+  maxEngines: number = 20
 ): { engines: number; result: EngineResult } | null {
   for (let n = 1; n <= maxEngines; n++) {
     const totalTonnage = baseTonnage + n * engineSizeHS * 50

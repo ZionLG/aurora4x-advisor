@@ -43,24 +43,41 @@ export interface ModuleDefinition {
 }
 
 // Lazy-load all module pages
-const DashboardPage = lazy(() => import('@/app/pages/welcome/WelcomePage').then(m => ({ default: m.WelcomePage })))
-const GovernmentPage = lazy(() => import('@/app/pages/government/GovernmentPage').then(m => ({ default: m.GovernmentPage })))
-const SetupPage = lazy(() => import('@/app/pages/setup/SetupPage').then(m => ({ default: m.SetupPage })))
-const SettingsPage = lazy(() => import('@/app/pages/settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const DashboardPage = lazy(() => import('@/app/pages/welcome/WelcomePage').then((m) => ({ default: m.WelcomePage })))
+const GovernmentPage = lazy(() =>
+  import('@/app/pages/government/GovernmentPage').then((m) => ({ default: m.GovernmentPage }))
+)
+const SetupPage = lazy(() => import('@/app/pages/setup/SetupPage').then((m) => ({ default: m.SetupPage })))
+const SettingsPage = lazy(() => import('@/app/pages/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })))
+
+// Economy pages
+const ProductionPage = lazy(() =>
+  import('@/app/pages/economy/ProductionPage').then((m) => ({ default: m.ProductionPage }))
+)
 
 // System pages
-const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then(m => ({ default: m.GameLogPage })))
+const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then((m) => ({ default: m.GameLogPage })))
 
 // Planning pages (migrated from tabs to full pages)
-const FleetPage = lazy(() => import('@/app/pages/planning/tabs/FleetTab').then(m => ({ default: m.FleetTab })))
-const MineralsPage = lazy(() => import('@/app/pages/planning/tabs/MineralsTab').then(m => ({ default: m.MineralsTab })))
-const ResearchPage = lazy(() => import('@/app/pages/planning/tabs/ResearchTab').then(m => ({ default: m.ResearchTab })))
-const ShipyardPage = lazy(() => import('@/app/pages/planning/tabs/ShipyardTab').then(m => ({ default: m.ShipyardTab })))
-const RoutesPage = lazy(() => import('@/app/pages/planning/tabs/RoutesTab').then(m => ({ default: m.RoutesTab })))
-const OverviewPage = lazy(() => import('@/app/pages/planning/tabs/OverviewTab').then(m => ({ default: m.OverviewTab })))
+const FleetPage = lazy(() => import('@/app/pages/planning/tabs/FleetTab').then((m) => ({ default: m.FleetTab })))
+const MineralsPage = lazy(() =>
+  import('@/app/pages/planning/tabs/MineralsTab').then((m) => ({ default: m.MineralsTab }))
+)
+const ResearchPage = lazy(() =>
+  import('@/app/pages/planning/tabs/ResearchTab').then((m) => ({ default: m.ResearchTab }))
+)
+const ShipyardPage = lazy(() =>
+  import('@/app/pages/planning/tabs/ShipyardTab').then((m) => ({ default: m.ShipyardTab }))
+)
+const RoutesPage = lazy(() => import('@/app/pages/planning/tabs/RoutesTab').then((m) => ({ default: m.RoutesTab })))
+const OverviewPage = lazy(() =>
+  import('@/app/pages/planning/tabs/OverviewTab').then((m) => ({ default: m.OverviewTab }))
+)
 
 // Placeholder for coming-soon modules
-const ComingSoonPage = lazy(() => import('@/app/pages/common/ComingSoonPage').then(m => ({ default: m.ComingSoonPage })))
+const ComingSoonPage = lazy(() =>
+  import('@/app/pages/common/ComingSoonPage').then((m) => ({ default: m.ComingSoonPage }))
+)
 
 export const MODULES: ModuleDefinition[] = [
   // ── Home ────────────────────────────────────────
@@ -211,12 +228,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'economy',
     icon: Factory,
     route: '/economy/production',
-    component: ComingSoonPage,
+    component: ProductionPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['industry'],
     order: 0,
-    status: 'coming-soon',
+    status: 'active',
   },
   {
     id: 'minerals',

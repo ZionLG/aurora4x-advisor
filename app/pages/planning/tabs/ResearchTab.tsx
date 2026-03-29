@@ -50,13 +50,18 @@ export function ResearchTab() {
           </h3>
           <div className="space-y-2">
             {projects.map((project) => (
-              <div key={project.projectId} className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-3">
+              <div
+                key={project.projectId}
+                className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-3"
+              >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1.5">
                     <FlaskConical className="h-3 w-3 text-[var(--cic-cyan-dim)]" />
                     <span className="text-[10px] font-medium text-foreground/80">{project.techName}</span>
                     {project.paused && (
-                      <span className="text-[7px] px-1 py-0.5 rounded bg-[var(--cic-amber-glow)] text-[var(--cic-amber)]">PAUSED</span>
+                      <span className="text-[7px] px-1 py-0.5 rounded bg-[var(--cic-amber-glow)] text-[var(--cic-amber)]">
+                        PAUSED
+                      </span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -95,7 +100,10 @@ export function ResearchTab() {
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
             {categories.map((cat) => (
-              <div key={cat.id} className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-3 py-2">
+              <div
+                key={cat.id}
+                className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-3 py-2"
+              >
                 <span className="text-[9px] font-medium text-foreground/60">{cat.name}</span>
                 <div className="flex items-center gap-1 mt-0.5">
                   <CheckCircle className="h-2.5 w-2.5 text-[var(--cic-green)]" />

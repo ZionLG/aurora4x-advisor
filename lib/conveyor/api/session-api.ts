@@ -9,8 +9,7 @@ export class SessionApi extends ConveyorApi {
   removeGame = (id: string) => this.invoke('session:removeGame', id)
   updatePersonality = (id: string, archetype: string | null, name: string | null) =>
     this.invoke('session:updatePersonality', id, archetype, name)
-  updateSnapshot = (id: string, snapshot: GameSnapshot) =>
-    this.invoke('session:updateSnapshot', id, snapshot)
+  updateSnapshot = (id: string, snapshot: GameSnapshot) => this.invoke('session:updateSnapshot', id, snapshot)
   getState = () => this.invoke('session:getState')
   reconnect = () => this.invoke('session:reconnect')
   goOffline = () => this.invoke('session:goOffline')

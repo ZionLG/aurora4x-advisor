@@ -6,7 +6,7 @@ const TASK_TYPES: Record<number, string> = {
   2: 'Refit',
   3: 'Repair',
   4: 'Scrap',
-  5: 'Overhaul'
+  5: 'Overhaul',
 }
 
 export interface ProductionTask {
@@ -41,10 +41,7 @@ export interface ShipyardInfo {
   currentTask: ShipyardTaskInfo | null
 }
 
-export async function getProductionTasks(
-  query: QueryFn,
-  ctx: GameCtx
-): Promise<ProductionTask[]> {
+export async function getProductionTasks(query: QueryFn, ctx: GameCtx): Promise<ProductionTask[]> {
   const rows = await query<{
     ProjectID: number
     PopName: string
@@ -67,8 +64,7 @@ export async function getProductionTasks(
   return rows.map((r) => {
     const prodPerUnit = r.ProdPerUnit || 0
     const totalWork = prodPerUnit * r.Amount
-    const percentComplete =
-      totalWork > 0 ? Math.round((r.PartialCompletion / totalWork) * 100) : 0
+    const percentComplete = totalWork > 0 ? Math.round((r.PartialCompletion / totalWork) * 100) : 0
 
     return {
       projectId: r.ProjectID,
@@ -78,15 +74,12 @@ export async function getProductionTasks(
       amount: r.Amount,
       percentComplete: Math.min(percentComplete, 100),
       paused: !!r.Pause,
-      queue: r.Queue
+      queue: r.Queue,
     }
   })
 }
 
-export async function getShipyards(
-  query: QueryFn,
-  ctx: GameCtx
-): Promise<ShipyardInfo[]> {
+export async function getShipyards(query: QueryFn, ctx: GameCtx): Promise<ShipyardInfo[]> {
   const rows = await query<{
     ShipyardID: number
     ShipyardName: string
@@ -127,7 +120,7 @@ export async function getShipyards(
         totalBP,
         completedBP,
         percentComplete: totalBP > 0 ? Math.round((completedBP / totalBP) * 100) : 0,
-        paused: !!r.TaskPaused
+        paused: !!r.TaskPaused,
       }
     }
 
@@ -138,7 +131,7 @@ export async function getShipyards(
       type: r.SYType === 1 ? 'Naval' : 'Commercial',
       slipways: r.Slipways,
       capacity: r.Capacity,
-      currentTask
+      currentTask,
     }
   })
 }

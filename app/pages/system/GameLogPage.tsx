@@ -192,7 +192,11 @@ export function GameLogPage() {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(() => new Set(['customized']))
 
   const { data: eventTypes } = useEventTypes()
-  const { data: logData, isLoading, isFetching } = useGameLog(
+  const {
+    data: logData,
+    isLoading,
+    isFetching,
+  } = useGameLog(
     PAGE_SIZE,
     page * PAGE_SIZE,
     selectedTypes.length > 0 ? selectedTypes : undefined,
@@ -256,9 +260,7 @@ export function GameLogPage() {
             {totalCount.toLocaleString()} events
             {entries.length !== allEntries.length && ` (${entries.length} shown)`}
           </span>
-          {isFetching && !isLoading && (
-            <Loader2 className="h-3 w-3 animate-spin text-[var(--cic-cyan-dim)]" />
-          )}
+          {isFetching && !isLoading && <Loader2 className="h-3 w-3 animate-spin text-[var(--cic-cyan-dim)]" />}
         </div>
         <div className="flex items-center gap-2">
           <Input
@@ -357,9 +359,18 @@ export function GameLogPage() {
               <div className={expandedSections.has('customized') ? 'basis-full' : ''}>
                 <button
                   className="flex items-center gap-1 text-[8px] text-[var(--cic-amber-dim)] hover:text-[var(--cic-amber)] transition-colors"
-                  onClick={() => setExpandedSections((prev) => { const next = new Set(prev); next.has('customized') ? next.delete('customized') : next.add('customized'); return next })}
+                  onClick={() =>
+                    setExpandedSections((prev) => {
+                      const next = new Set(prev)
+                      if (next.has('customized')) next.delete('customized')
+                      else next.add('customized')
+                      return next
+                    })
+                  }
                 >
-                  <ChevronDown className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('customized') ? '' : '-rotate-90'}`} />
+                  <ChevronDown
+                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('customized') ? '' : '-rotate-90'}`}
+                  />
                   Customized ({customizedTypes.length})
                 </button>
                 {expandedSections.has('customized') && (
@@ -394,9 +405,18 @@ export function GameLogPage() {
               <div className={expandedSections.has('active') ? 'basis-full' : ''}>
                 <button
                   className="flex items-center gap-1 text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] transition-colors"
-                  onClick={() => setExpandedSections((prev) => { const next = new Set(prev); next.has('active') ? next.delete('active') : next.add('active'); return next })}
+                  onClick={() =>
+                    setExpandedSections((prev) => {
+                      const next = new Set(prev)
+                      if (next.has('active')) next.delete('active')
+                      else next.add('active')
+                      return next
+                    })
+                  }
                 >
-                  <ChevronDown className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('active') ? '' : '-rotate-90'}`} />
+                  <ChevronDown
+                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('active') ? '' : '-rotate-90'}`}
+                  />
                   Active in Log ({withEntries.length})
                 </button>
                 {expandedSections.has('active') && (
@@ -423,9 +443,18 @@ export function GameLogPage() {
               <div className={expandedSections.has('hidden') ? 'basis-full' : ''}>
                 <button
                   className="flex items-center gap-1 text-[8px] text-[var(--cic-red)]/60 hover:text-[var(--cic-red)] transition-colors"
-                  onClick={() => setExpandedSections((prev) => { const next = new Set(prev); next.has('hidden') ? next.delete('hidden') : next.add('hidden'); return next })}
+                  onClick={() =>
+                    setExpandedSections((prev) => {
+                      const next = new Set(prev)
+                      if (next.has('hidden')) next.delete('hidden')
+                      else next.add('hidden')
+                      return next
+                    })
+                  }
                 >
-                  <ChevronDown className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('hidden') ? '' : '-rotate-90'}`} />
+                  <ChevronDown
+                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('hidden') ? '' : '-rotate-90'}`}
+                  />
                   Hidden in Aurora ({hiddenTypesList.length})
                 </button>
                 {expandedSections.has('hidden') && (
@@ -453,9 +482,18 @@ export function GameLogPage() {
               <div className={expandedSections.has('all') ? 'basis-full' : ''}>
                 <button
                   className="flex items-center gap-1 text-[8px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-                  onClick={() => setExpandedSections((prev) => { const next = new Set(prev); next.has('all') ? next.delete('all') : next.add('all'); return next })}
+                  onClick={() =>
+                    setExpandedSections((prev) => {
+                      const next = new Set(prev)
+                      if (next.has('all')) next.delete('all')
+                      else next.add('all')
+                      return next
+                    })
+                  }
                 >
-                  <ChevronDown className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('all') ? '' : '-rotate-90'}`} />
+                  <ChevronDown
+                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('all') ? '' : '-rotate-90'}`}
+                  />
                   All Types ({noEntries.length})
                 </button>
                 {expandedSections.has('all') && (

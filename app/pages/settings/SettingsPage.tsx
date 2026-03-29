@@ -7,13 +7,7 @@ import { Button } from '@/app/components/ui/button'
 import { Input } from '@/app/components/ui/input'
 import { Label } from '@/app/components/ui/label'
 import { Switch } from '@/app/components/ui/switch'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/app/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select'
 import {
   ArrowLeft,
   Database,
@@ -64,15 +58,14 @@ function AiConnectionStatus() {
           <>
             <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-green)] shadow-[0_0_4px_var(--cic-green)]" />
             <span className="text-[10px] font-mono text-[var(--cic-green)]">
-              Connected: {status.provider}{status.model && ` / ${status.model}`}
+              Connected: {status.provider}
+              {status.model && ` / ${status.model}`}
             </span>
           </>
         ) : (
           <>
             <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-red)]" />
-            <span className="text-[10px] font-mono text-[var(--cic-red)]">
-              {status.error ?? 'Connection failed'}
-            </span>
+            <span className="text-[10px] font-mono text-[var(--cic-red)]">{status.error ?? 'Connection failed'}</span>
           </>
         )}
       </div>
@@ -105,15 +98,9 @@ function SectionHeader({
         <Icon className="h-4 w-4 text-[var(--cic-amber)]" />
       </div>
       <div className="flex items-center gap-2 flex-1">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">
-          {label}
-        </span>
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">{label}</span>
         <div className="flex-1 h-px bg-gradient-to-r from-[var(--cic-amber-dim)]/40 to-transparent" />
-        {tag && (
-          <span className="text-[10px] font-mono text-[var(--cic-amber-dim)]/60 uppercase">
-            {tag}
-          </span>
-        )}
+        {tag && <span className="text-[10px] font-mono text-[var(--cic-amber-dim)]/60 uppercase">{tag}</span>}
       </div>
     </div>
   )
@@ -163,8 +150,7 @@ export function SettingsPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ key, value }: { key: string; value: unknown }) =>
-      window.conveyor.settings.update(key, value),
+    mutationFn: ({ key, value }: { key: string; value: unknown }) => window.conveyor.settings.update(key, value),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
     },
@@ -193,17 +179,7 @@ export function SettingsPage() {
   }, [settings])
 
   const saveProviderMutation = useMutation({
-    mutationFn: ({
-      id,
-      model,
-      apiKey,
-      baseUrl,
-    }: {
-      id: string
-      model: string
-      apiKey: string
-      baseUrl: string
-    }) =>
+    mutationFn: ({ id, model, apiKey, baseUrl }: { id: string; model: string; apiKey: string; baseUrl: string }) =>
       window.conveyor.settings.setProvider(id, model || null, apiKey || null, baseUrl || null),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
@@ -245,9 +221,7 @@ export function SettingsPage() {
               System Configuration
             </span>
             <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
-            <span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">
-              v{settings?.bridgePort ?? '47842'}
-            </span>
+            <span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">v{settings?.bridgePort ?? '47842'}</span>
           </div>
         </div>
       </div>
@@ -258,10 +232,7 @@ export function SettingsPage() {
           <SectionHeader icon={Database} label="Aurora Database" tag="SYS.DB" />
 
           <SettingRow>
-            <DataReadout
-              label="Database Path"
-              value={settings?.auroraDbPath ?? 'No database path configured'}
-            />
+            <DataReadout label="Database Path" value={settings?.auroraDbPath ?? 'No database path configured'} />
 
             <div className="flex items-center gap-2 mt-4">
               <Button
@@ -288,8 +259,8 @@ export function SettingsPage() {
 
             <div className="mt-4 rounded border-l-2 border-[var(--cic-amber-dim)]/30 bg-[var(--cic-amber-glow)] px-3 py-2">
               <p className="text-[10px] leading-relaxed text-[var(--cic-amber-dim)]">
-                Locate <span className="font-mono text-[var(--cic-amber)]">AuroraDB.db</span> in
-                your Aurora 4X installation folder. The companion monitors this file for save events.
+                Locate <span className="font-mono text-[var(--cic-amber)]">AuroraDB.db</span> in your Aurora 4X
+                installation folder. The companion monitors this file for save events.
               </p>
             </div>
           </SettingRow>
@@ -303,9 +274,7 @@ export function SettingsPage() {
             <SettingRow>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">
-                    Provider
-                  </Label>
+                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Provider</Label>
                   <Select
                     value={settings?.aiProvider ?? ''}
                     onValueChange={(value) => {
@@ -332,9 +301,7 @@ export function SettingsPage() {
 
                 {selectedProvider?.requiresApiKey && (
                   <div>
-                    <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">
-                      API Key
-                    </Label>
+                    <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">API Key</Label>
                     <Input
                       type="password"
                       className="mt-1 font-mono text-xs bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
@@ -375,9 +342,7 @@ export function SettingsPage() {
                 )}
 
                 <div>
-                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">
-                    Model
-                  </Label>
+                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Model</Label>
                   <Input
                     className="mt-1 text-xs bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
                     value={aiModel}
@@ -414,30 +379,22 @@ export function SettingsPage() {
             <SettingRow className="flex items-center justify-between">
               <div>
                 <span className="text-sm text-foreground">Developer Tools</span>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                  Table Explorer and Memory Inspector
-                </p>
+                <p className="text-[10px] text-muted-foreground/60 mt-0.5">Table Explorer and Memory Inspector</p>
               </div>
               <Switch
                 checked={settings?.enableDevTools ?? false}
-                onCheckedChange={(checked) =>
-                  updateMutation.mutate({ key: 'enableDevTools', value: checked })
-                }
+                onCheckedChange={(checked) => updateMutation.mutate({ key: 'enableDevTools', value: checked })}
               />
             </SettingRow>
 
             <SettingRow className="flex items-center justify-between">
               <div>
                 <span className="text-sm text-foreground">Database Watcher</span>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                  Monitor Aurora database for save events
-                </p>
+                <p className="text-[10px] text-muted-foreground/60 mt-0.5">Monitor Aurora database for save events</p>
               </div>
               <Switch
                 checked={settings?.watchEnabled ?? true}
-                onCheckedChange={(checked) =>
-                  updateMutation.mutate({ key: 'watchEnabled', value: checked })
-                }
+                onCheckedChange={(checked) => updateMutation.mutate({ key: 'watchEnabled', value: checked })}
               />
             </SettingRow>
 
@@ -445,17 +402,13 @@ export function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-sm text-foreground">Bridge Port</span>
-                  <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                    Must match AdvisorBridge configuration
-                  </p>
+                  <p className="text-[10px] text-muted-foreground/60 mt-0.5">Must match AdvisorBridge configuration</p>
                 </div>
                 <Input
                   type="number"
                   className="w-28 text-xs text-center font-mono bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
                   value={settings?.bridgePort ?? 47842}
-                  onChange={(e) =>
-                    updateMutation.mutate({ key: 'bridgePort', value: Number(e.target.value) })
-                  }
+                  onChange={(e) => updateMutation.mutate({ key: 'bridgePort', value: Number(e.target.value) })}
                 />
               </div>
             </SettingRow>

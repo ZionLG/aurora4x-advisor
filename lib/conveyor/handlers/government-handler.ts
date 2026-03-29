@@ -50,9 +50,7 @@ export const registerGovernmentHandlers = () => {
 
   handle('government:getBriefings', () => governmentAi.getBriefings())
 
-  handle('government:getBriefingsForMinistry', (id: string) =>
-    governmentAi.getBriefingsForMinistry(id),
-  )
+  handle('government:getBriefingsForMinistry', (id: string) => governmentAi.getBriefingsForMinistry(id))
 
   handle('government:clearBriefings', () => governmentAi.clearBriefings())
 
@@ -63,13 +61,9 @@ export const registerGovernmentHandlers = () => {
     return governmentAi.chat(ministryId, message, game.government, gameState)
   })
 
-  handle('government:getConversation', (ministryId: string) =>
-    governmentAi.getConversation(ministryId),
-  )
+  handle('government:getConversation', (ministryId: string) => governmentAi.getConversation(ministryId))
 
-  handle('government:clearConversation', (ministryId: string) =>
-    governmentAi.clearConversation(ministryId),
-  )
+  handle('government:clearConversation', (ministryId: string) => governmentAi.clearConversation(ministryId))
 
   handle('government:getTags', () => governmentAi.EVENT_TAGS)
 
@@ -77,10 +71,8 @@ export const registerGovernmentHandlers = () => {
   handle('government:getCustomProfiles', () => profilePersistence.loadCustomProfiles())
 
   handle('government:saveCustomProfile', (preset: profilePersistence.ProfilePreset) =>
-    profilePersistence.saveCustomProfile(preset),
+    profilePersistence.saveCustomProfile(preset)
   )
 
-  handle('government:removeCustomProfile', (id: string) =>
-    profilePersistence.removeCustomProfile(id),
-  )
+  handle('government:removeCustomProfile', (id: string) => profilePersistence.removeCustomProfile(id))
 }

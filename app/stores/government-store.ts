@@ -30,28 +30,21 @@ export const useGovernmentStore = create<GovernmentState>((set) => ({
     set((state) => ({
       conversations: {
         ...state.conversations,
-        [ministryId]: [
-          ...(state.conversations[ministryId] ?? []),
-          { role: 'user' as const, content },
-        ],
+        [ministryId]: [...(state.conversations[ministryId] ?? []), { role: 'user' as const, content }],
       },
     })),
   addAssistantMessage: (ministryId, content) =>
     set((state) => ({
       conversations: {
         ...state.conversations,
-        [ministryId]: [
-          ...(state.conversations[ministryId] ?? []),
-          { role: 'assistant' as const, content },
-        ],
+        [ministryId]: [...(state.conversations[ministryId] ?? []), { role: 'assistant' as const, content }],
       },
     })),
   clearConversation: (ministryId) =>
     set((state) => ({
       conversations: { ...state.conversations, [ministryId]: [] },
     })),
-  addBriefing: (briefing) =>
-    set((state) => ({ briefings: [briefing, ...state.briefings] })),
+  addBriefing: (briefing) => set((state) => ({ briefings: [briefing, ...state.briefings] })),
   setBriefings: (briefings) => set({ briefings }),
   clearBriefings: () => set({ briefings: [] }),
   setStreaming: (streaming) => set({ isStreaming: streaming }),

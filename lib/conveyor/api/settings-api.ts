@@ -8,11 +8,7 @@ export class SettingsApi extends ConveyorApi {
   pickDbFile = () => this.invoke('settings:pickDbFile')
   getProviders = () => this.invoke('settings:getProviders')
   getActiveProvider = () => this.invoke('settings:getActiveProvider')
-  setProvider = (
-    id: string,
-    model: string | null,
-    apiKey: string | null,
-    baseUrl: string | null,
-  ) => this.invoke('settings:setProvider', id, model, apiKey, baseUrl)
+  setProvider = (id: string, model: string | null, apiKey: string | null, baseUrl: string | null) =>
+    this.invoke('settings:setProvider', id, model, apiKey, baseUrl)
   verifyAi = () => this.invoke('settings:verifyAi')
 }

@@ -139,7 +139,7 @@ export function estimateTravelToSol(
   return {
     jumpsToSol: jumps,
     routeToSol: route,
-    estimatedTravelDays: Math.round(travelDays * 10) / 10
+    estimatedTravelDays: Math.round(travelDays * 10) / 10,
   }
 }
 
@@ -203,6 +203,6 @@ export function findNearestTanker(
     fuel: best.fuel,
     sameSystem: bestSameSystem,
     jumpDistance: bestJumps,
-    inSystemKm: bestInSystemKm
+    inSystemKm: bestInSystemKm,
   }
 }

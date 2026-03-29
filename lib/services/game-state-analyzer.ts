@@ -46,10 +46,7 @@ export async function queryGameState(): Promise<GameStateSnapshot | null> {
     fleetCount: fleets.length,
     militaryFleetCount: playerFleets.length,
     civilianFleetCount: fleets.filter((f: Record<string, unknown>) => f.IsCivilian).length,
-    totalShipCount: fleets.reduce(
-      (sum: number, f: Record<string, unknown>) => sum + (Number(f.ShipCount) || 0),
-      0,
-    ),
+    totalShipCount: fleets.reduce((sum: number, f: Record<string, unknown>) => sum + (Number(f.ShipCount) || 0), 0),
   }
 }
 
@@ -61,9 +58,7 @@ export async function detectEvents(): Promise<GameEvent[]> {
   try {
     const fleets = await auroraBridge.getFleets().catch(() => [])
 
-    const idleFleets = fleets.filter(
-      (f: Record<string, unknown>) => Number(f.Speed) === 0 && !f.IsCivilian,
-    )
+    const idleFleets = fleets.filter((f: Record<string, unknown>) => Number(f.Speed) === 0 && !f.IsCivilian)
     if (idleFleets.length > 0) {
       events.push({
         id: 'idle-fleets',
@@ -77,9 +72,7 @@ export async function detectEvents(): Promise<GameEvent[]> {
       })
     }
 
-    const singleShipFleets = fleets.filter(
-      (f: Record<string, unknown>) => Number(f.ShipCount) === 1 && !f.IsCivilian,
-    )
+    const singleShipFleets = fleets.filter((f: Record<string, unknown>) => Number(f.ShipCount) === 1 && !f.IsCivilian)
     if (singleShipFleets.length >= 3) {
       events.push({
         id: 'scattered-ships',

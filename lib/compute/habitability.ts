@@ -21,7 +21,7 @@ const ATMOS_GAS_NAMES: Record<number, string> = {
   17: 'Argon',
   18: 'Aether',
   19: 'Boron',
-  20: 'Ozone'
+  20: 'Ozone',
 }
 
 // Dangerous levels (atm) from DIM_AtmosphericGas - 0 means no danger
@@ -45,7 +45,7 @@ const DANGEROUS_LEVELS: Record<number, number> = {
   17: 0, // Argon
   18: 0, // Aether
   19: 0.001, // Boron
-  20: 0.001 // Ozone
+  20: 0.001, // Ozone
 }
 
 // Gas giant BodyClass values to exclude
@@ -76,10 +76,7 @@ export interface SpeciesRequirements {
   maxPressure: number
 }
 
-export async function getSpeciesRequirements(
-  query: QueryFn,
-  ctx: GameCtx
-): Promise<SpeciesRequirements> {
+export async function getSpeciesRequirements(query: QueryFn, ctx: GameCtx): Promise<SpeciesRequirements> {
   const rows = await query<{
     SpeciesName: string
     BreatheID: number
@@ -104,7 +101,7 @@ export async function getSpeciesRequirements(
       temperatureTolerance: 22,
       idealGravity: 1.0,
       gravityTolerance: 0.5,
-      maxPressure: 4.0
+      maxPressure: 4.0,
     }
   }
 
@@ -116,14 +113,11 @@ export async function getSpeciesRequirements(
     temperatureTolerance: s.TempDev,
     idealGravity: s.Gravity,
     gravityTolerance: s.GravDev,
-    maxPressure: s.PressMax
+    maxPressure: s.PressMax,
   }
 }
 
-export async function getHabitability(
-  query: QueryFn,
-  ctx: GameCtx
-): Promise<BodyHabitability[]> {
+export async function getHabitability(query: QueryFn, ctx: GameCtx): Promise<BodyHabitability[]> {
   const species = await getSpeciesRequirements(query, ctx)
 
   // Query bodies in surveyed systems, excluding gas giants
@@ -175,7 +169,7 @@ export async function getHabitability(
     gasByBody.get(g.SystemBodyID)!.push({
       gasId: g.AtmosGasID,
       amount: g.AtmosGasAmount,
-      atm: g.GasAtm
+      atm: g.GasAtm,
     })
   }
 
@@ -314,7 +308,7 @@ export async function getHabitability(
       issues,
       hasPopulation: !!pop,
       populationName: pop?.name ?? null,
-      terraformStatus: pop?.terraformStatus ?? 0
+      terraformStatus: pop?.terraformStatus ?? 0,
     })
   }
 

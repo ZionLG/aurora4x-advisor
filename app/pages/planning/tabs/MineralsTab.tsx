@@ -45,39 +45,36 @@ export function MineralsTab() {
       </div>
 
       {/* Mineral grid */}
-      
-        <div className="p-4">
-          {mineralNames.length === 0 ? (
-            <p className="text-[10px] text-muted-foreground text-center py-8">No mineral data available</p>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-              {mineralNames.map((name) => {
-                const amount = totals[name] ?? 0
-                const isLow = amount < 1000
-                return (
-                  <div
-                    key={name}
-                    className={`rounded-md border bg-[var(--cic-panel)] p-3 ${
-                      isLow ? 'border-[var(--cic-red)]/30' : 'border-[var(--cic-panel-edge)]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <Gem className={`h-3 w-3 ${isLow ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber-dim)]'}`} />
-                        <span className="text-[10px] font-medium text-foreground/70">{name}</span>
-                      </div>
-                      {isLow && <span className="text-[7px] text-[var(--cic-red)]">LOW</span>}
+
+      <div className="p-4">
+        {mineralNames.length === 0 ? (
+          <p className="text-[10px] text-muted-foreground text-center py-8">No mineral data available</p>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {mineralNames.map((name) => {
+              const amount = totals[name] ?? 0
+              const isLow = amount < 1000
+              return (
+                <div
+                  key={name}
+                  className={`rounded-md border bg-[var(--cic-panel)] p-3 ${
+                    isLow ? 'border-[var(--cic-red)]/30' : 'border-[var(--cic-panel-edge)]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Gem className={`h-3 w-3 ${isLow ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber-dim)]'}`} />
+                      <span className="text-[10px] font-medium text-foreground/70">{name}</span>
                     </div>
-                    <p className="text-sm font-mono text-foreground/80 mt-1">
-                      {amount.toLocaleString()}
-                    </p>
+                    {isLow && <span className="text-[7px] text-[var(--cic-red)]">LOW</span>}
                   </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      
+                  <p className="text-sm font-mono text-foreground/80 mt-1">{amount.toLocaleString()}</p>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

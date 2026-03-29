@@ -16,7 +16,7 @@ export const registerSettingsHandlers = () => {
   handle('settings:save', (settings: AppSettings) => saveSettings(settings))
 
   handle('settings:update', (key: string, value: unknown) =>
-    updateSetting(key as keyof AppSettings, value as AppSettings[keyof AppSettings]),
+    updateSetting(key as keyof AppSettings, value as AppSettings[keyof AppSettings])
   )
 
   handle('settings:pickDbFile', async () => {
@@ -38,19 +38,17 @@ export const registerSettingsHandlers = () => {
     return { id: provider.id, name: provider.name, model: settings.aiModel }
   })
 
-  handle('settings:setProvider', async (
-    id: string,
-    model: string | null,
-    apiKey: string | null,
-    baseUrl: string | null,
-  ) => {
-    const settings = await loadSettings()
-    settings.aiProvider = id as AppSettings['aiProvider']
-    settings.aiModel = model
-    settings.aiApiKey = apiKey
-    settings.ollamaBaseUrl = baseUrl
-    await saveSettings(settings)
-  })
+  handle(
+    'settings:setProvider',
+    async (id: string, model: string | null, apiKey: string | null, baseUrl: string | null) => {
+      const settings = await loadSettings()
+      settings.aiProvider = id as AppSettings['aiProvider']
+      settings.aiModel = model
+      settings.aiApiKey = apiKey
+      settings.ollamaBaseUrl = baseUrl
+      await saveSettings(settings)
+    }
+  )
 
   handle('settings:verifyAi', () => verifyConnection())
 }

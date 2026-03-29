@@ -13,7 +13,7 @@ export function createSubscriber(ipcRenderer: {
 }) {
   return function subscribe<K extends keyof PushEvents>(
     channel: K,
-    callback: (data: PushEvents[K]) => void,
+    callback: (data: PushEvents[K]) => void
   ): Unsubscribe {
     const listener = (_event: unknown, data: PushEvents[K]) => callback(data)
     ipcRenderer.on(channel, listener as (...args: unknown[]) => void)

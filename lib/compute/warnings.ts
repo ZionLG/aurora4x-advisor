@@ -23,7 +23,7 @@ const MINERAL_COLUMNS = [
   'Sorium',
   'Uridium',
   'Corundium',
-  'Gallicite'
+  'Gallicite',
 ] as const
 
 export async function getWarnings(query: QueryFn, ctx: GameCtx): Promise<Warning[]> {
@@ -36,17 +36,13 @@ export async function getWarnings(query: QueryFn, ctx: GameCtx): Promise<Warning
     checkShipMaintenance(query, ctx, warnings),
     checkIdleShipyards(query, ctx, warnings),
     checkContacts(query, ctx, warnings),
-    checkDepletingDeposits(query, ctx, warnings)
+    checkDepletingDeposits(query, ctx, warnings),
   ])
 
   return warnings
 }
 
-async function checkLowMinerals(
-  query: QueryFn,
-  ctx: GameCtx,
-  warnings: Warning[]
-): Promise<void> {
+async function checkLowMinerals(query: QueryFn, ctx: GameCtx, warnings: Warning[]): Promise<void> {
   const rows = await query<Record<string, unknown>>(
     `SELECT PopulationID, PopName,
       Duranium, Neutronium, Corbomite, Tritanium, Boronide,
@@ -69,7 +65,7 @@ async function checkLowMinerals(
           severity: 'critical',
           title: `Critical ${mineral} shortage`,
           message: `${popName} has only ${Math.round(amount)} ${mineral} remaining.`,
-          data: { populationId: popId, populationName: popName, mineral, amount: Math.round(amount) }
+          data: { populationId: popId, populationName: popName, mineral, amount: Math.round(amount) },
         })
       } else if (amount < 500) {
         warnings.push({
@@ -78,7 +74,7 @@ async function checkLowMinerals(
           severity: 'warning',
           title: `Low ${mineral} stockpile`,
           message: `${popName} has only ${Math.round(amount)} ${mineral} remaining.`,
-          data: { populationId: popId, populationName: popName, mineral, amount: Math.round(amount) }
+          data: { populationId: popId, populationName: popName, mineral, amount: Math.round(amount) },
         })
       }
     }
@@ -104,16 +100,12 @@ async function checkLowFuel(query: QueryFn, ctx: GameCtx, warnings: Warning[]): 
       severity,
       title: `Low fuel stockpile`,
       message: `${popName} has only ${amount} fuel remaining.`,
-      data: { populationId: row.PopulationID, populationName: popName, fuel: amount }
+      data: { populationId: row.PopulationID, populationName: popName, fuel: amount },
     })
   }
 }
 
-async function checkLowMaintenanceSupplies(
-  query: QueryFn,
-  ctx: GameCtx,
-  warnings: Warning[]
-): Promise<void> {
+async function checkLowMaintenanceSupplies(query: QueryFn, ctx: GameCtx, warnings: Warning[]): Promise<void> {
   const rows = await query<{
     PopulationID: number
     PopName: string
@@ -139,17 +131,13 @@ async function checkLowMaintenanceSupplies(
       data: {
         populationId: row.PopulationID,
         populationName: popName,
-        maintenanceSupplies: amount
-      }
+        maintenanceSupplies: amount,
+      },
     })
   }
 }
 
-async function checkShipMaintenance(
-  query: QueryFn,
-  ctx: GameCtx,
-  warnings: Warning[]
-): Promise<void> {
+async function checkShipMaintenance(query: QueryFn, ctx: GameCtx, warnings: Warning[]): Promise<void> {
   const rows = await query<{
     ShipID: number
     ShipName: string
@@ -176,17 +164,13 @@ async function checkShipMaintenance(
         shipId: row.ShipID,
         shipName: row.ShipName,
         className: row.ClassName,
-        maintenanceState: row.MaintenanceState
-      }
+        maintenanceState: row.MaintenanceState,
+      },
     })
   }
 }
 
-async function checkIdleShipyards(
-  query: QueryFn,
-  ctx: GameCtx,
-  warnings: Warning[]
-): Promise<void> {
+async function checkIdleShipyards(query: QueryFn, ctx: GameCtx, warnings: Warning[]): Promise<void> {
   const rows = await query<{
     ShipyardID: number
     ShipyardName: string
@@ -211,8 +195,8 @@ async function checkIdleShipyards(
         shipyardId: row.ShipyardID,
         shipyardName: row.ShipyardName,
         slipways: row.Slipways,
-        capacity: row.Capacity
-      }
+        capacity: row.Capacity,
+      },
     })
   }
 }
@@ -250,8 +234,8 @@ async function checkContacts(query: QueryFn, ctx: GameCtx, warnings: Warning[]):
           contactName,
           contactType: row.ContactType,
           contactRaceId: row.ContactRaceID,
-          systemId: row.SystemID
-        }
+          systemId: row.SystemID,
+        },
       })
     } else if (row.DetectRaceID !== ctx.raceId) {
       warnings.push({
@@ -266,18 +250,14 @@ async function checkContacts(query: QueryFn, ctx: GameCtx, warnings: Warning[]):
           contactName,
           contactType: row.ContactType,
           detectRaceId: row.DetectRaceID,
-          systemId: row.SystemID
-        }
+          systemId: row.SystemID,
+        },
       })
     }
   }
 }
 
-async function checkDepletingDeposits(
-  query: QueryFn,
-  ctx: GameCtx,
-  warnings: Warning[]
-): Promise<void> {
+async function checkDepletingDeposits(query: QueryFn, ctx: GameCtx, warnings: Warning[]): Promise<void> {
   const rows = await query<{
     SystemBodyID: number
     MaterialID: number
@@ -301,7 +281,7 @@ async function checkDepletingDeposits(
     8: 'Sorium',
     9: 'Uridium',
     10: 'Corundium',
-    11: 'Gallicite'
+    11: 'Gallicite',
   }
 
   for (const row of rows) {
@@ -319,8 +299,8 @@ async function checkDepletingDeposits(
         materialId: row.MaterialID,
         mineralName,
         amount: Math.round(row.Amount),
-        accessibility: row.Accessibility
-      }
+        accessibility: row.Accessibility,
+      },
     })
   }
 }

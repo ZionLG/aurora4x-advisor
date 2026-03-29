@@ -26,7 +26,7 @@ export const settingsIpcSchema = {
         name: z.string(),
         requiresApiKey: z.boolean(),
         requiresBaseUrl: z.boolean(),
-      }),
+      })
     ),
   },
   'settings:getActiveProvider': {

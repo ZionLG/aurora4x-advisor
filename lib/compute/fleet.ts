@@ -1,10 +1,7 @@
 import type { QueryFn, GameCtx, Ship } from './types'
 import { buildJumpNetwork, estimateTravelToSol, findNearestTanker } from './distances'
 
-export async function getShips(
-  query: QueryFn,
-  ctx: GameCtx
-): Promise<{ ships: Ship[]; gameTime: number }> {
+export async function getShips(query: QueryFn, ctx: GameCtx): Promise<{ ships: Ship[]; gameTime: number }> {
   const rows = await query<Record<string, unknown>>(
     `SELECT s.ShipID, s.ShipName, s.ShipClassID, s.Fuel, s.LastOverhaul, s.LastShoreLeave,
       s.MaintenanceState, s.CrewMorale,
@@ -23,9 +20,7 @@ export async function getShips(
     ORDER BY sc.MilitaryEngines DESC, sc.FighterClass DESC, sc.ClassName, s.ShipName`
   )
 
-  const gameRows = await query<{ GameTime: number }>(
-    `SELECT GameTime FROM FCT_Game WHERE GameID = ${ctx.gameId}`
-  )
+  const gameRows = await query<{ GameTime: number }>(`SELECT GameTime FROM FCT_Game WHERE GameID = ${ctx.gameId}`)
   const gameTime = gameRows[0]?.GameTime || 0
 
   const network = await buildJumpNetwork(query, ctx)
@@ -38,7 +33,7 @@ export async function getShips(
     systemId: (s.FleetSystemID as number) || 0,
     x: (s.FleetX as number) || 0,
     y: (s.FleetY as number) || 0,
-    fuel: Math.round(s.Fuel as number)
+    fuel: Math.round(s.Fuel as number),
   }))
 
   const ships: Ship[] = rows.map((s) => {
@@ -47,10 +42,8 @@ export async function getShips(
     const fuelCapacity = s.FuelCapacity as number
     const rangeDays = burnRate > 0 ? fuel / burnRate / 3600 / 24 : null
     const fuelPct = fuelCapacity > 0 ? Math.round((fuel / fuelCapacity) * 100) : null
-    const monthsSinceOverhaul =
-      Math.abs(gameTime - ((s.LastOverhaul as number) || 0)) / (30.44 * 24 * 3600)
-    const monthsSinceShoreLeave =
-      Math.abs(gameTime - ((s.LastShoreLeave as number) || 0)) / (30.44 * 24 * 3600)
+    const monthsSinceOverhaul = Math.abs(gameTime - ((s.LastOverhaul as number) || 0)) / (30.44 * 24 * 3600)
+    const monthsSinceShoreLeave = Math.abs(gameTime - ((s.LastShoreLeave as number) || 0)) / (30.44 * 24 * 3600)
     const plannedDeployment = s.PlannedDeployment as number
     const deploymentRemaining = plannedDeployment ? plannedDeployment - monthsSinceShoreLeave : null
 
@@ -102,9 +95,9 @@ export async function getShips(
             name: nearTanker.name,
             fuel: nearTanker.fuel,
             sameSystem: nearTanker.sameSystem,
-            jumps: nearTanker.jumpDistance
+            jumps: nearTanker.jumpDistance,
           }
-        : null
+        : null,
     }
   })
 

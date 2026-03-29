@@ -2,10 +2,10 @@ import { create } from 'zustand'
 import type { ModuleDefinition } from '@/app/modules/registry'
 
 export interface AppTab {
-  id: string           // module id
-  route: string        // module route
-  name: string         // display name
-  icon: string         // lucide icon name (for serialization)
+  id: string // module id
+  route: string // module route
+  name: string // display name
+  icon: string // lucide icon name (for serialization)
 }
 
 interface TabState {

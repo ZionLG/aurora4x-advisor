@@ -17,7 +17,7 @@ export function validateIdeology(ideology: unknown): ValidationResult {
   if (result.success) {
     return {
       valid: true,
-      errors: []
+      errors: [],
     }
   }
 
@@ -29,6 +29,6 @@ export function validateIdeology(ideology: unknown): ValidationResult {
 
   return {
     valid: false,
-    errors
+    errors,
   }
 }

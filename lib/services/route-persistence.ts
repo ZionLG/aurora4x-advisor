@@ -60,10 +60,7 @@ export async function removeSavedRoute(routeId: string): Promise<SavedRoute[]> {
   return filtered
 }
 
-export async function updateSavedRoute(
-  routeId: string,
-  patch: Partial<SavedRoute>
-): Promise<SavedRoute[]> {
+export async function updateSavedRoute(routeId: string, patch: Partial<SavedRoute>): Promise<SavedRoute[]> {
   const routes = await loadSavedRoutes()
   const idx = routes.findIndex((r) => r.id === routeId)
   if (idx !== -1) {

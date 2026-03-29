@@ -28,20 +28,31 @@ export async function verifyConnection(): Promise<AiStatus> {
   }
 
   const providerName = settings.aiProvider
-  const modelName = settings.aiModel ?? (
-    providerName === 'anthropic' ? 'claude-sonnet-4-20250514' :
-    providerName === 'openai' ? 'gpt-4o' : 'llama3.2'
-  )
+  const modelName =
+    settings.aiModel ??
+    (providerName === 'anthropic' ? 'claude-sonnet-4-20250514' : providerName === 'openai' ? 'gpt-4o' : 'llama3.2')
 
   // Check basic config
   if ((providerName === 'anthropic' || providerName === 'openai') && !settings.aiApiKey) {
-    return { configured: true, provider: providerName, model: modelName, connected: false, error: 'No API key configured' }
+    return {
+      configured: true,
+      provider: providerName,
+      model: modelName,
+      connected: false,
+      error: 'No API key configured',
+    }
   }
 
   try {
     const model = await getModel()
     if (!model) {
-      return { configured: true, provider: providerName, model: modelName, connected: false, error: 'Failed to create model' }
+      return {
+        configured: true,
+        provider: providerName,
+        model: modelName,
+        connected: false,
+        error: 'Failed to create model',
+      }
     }
 
     // Send a minimal test request

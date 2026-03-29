@@ -19,7 +19,12 @@ export function IdeologySliders({ ideology, onChange }: IdeologySlidersProps) {
             <span
               className="text-[11px] font-mono font-bold tabular-nums w-7 text-right"
               style={{
-                color: ideology[key] >= 75 ? 'var(--cic-amber)' : ideology[key] >= 50 ? 'var(--cic-cyan)' : 'var(--foreground)',
+                color:
+                  ideology[key] >= 75
+                    ? 'var(--cic-amber)'
+                    : ideology[key] >= 50
+                      ? 'var(--cic-cyan)'
+                      : 'var(--foreground)',
                 opacity: ideology[key] >= 50 ? 1 : 0.4,
               }}
             >

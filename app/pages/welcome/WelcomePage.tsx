@@ -23,15 +23,7 @@ const STATUS_LABELS: Record<BootStatus, string> = {
   wait: '[ .... ]',
 }
 
-function BootLine({
-  children,
-  status,
-  delay = 0,
-}: {
-  children: React.ReactNode
-  status: BootStatus
-  delay?: number
-}) {
+function BootLine({ children, status, delay = 0 }: { children: React.ReactNode; status: BootStatus; delay?: number }) {
   const [visible, setVisible] = useState(delay === 0)
 
   useEffect(() => {
@@ -47,10 +39,7 @@ function BootLine({
       className="flex items-center gap-3 h-[18px]"
       style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.2s ease-out' }}
     >
-      <span
-        className="shrink-0 font-mono text-[10px] w-[60px]"
-        style={{ color: STATUS_COLORS[status] }}
-      >
+      <span className="shrink-0 font-mono text-[10px] w-[60px]" style={{ color: STATUS_COLORS[status] }}>
         {STATUS_LABELS[status]}
       </span>
       <span className="text-[10px] font-mono text-foreground/50">{children}</span>
@@ -81,7 +70,6 @@ export function WelcomePage() {
     queryFn: () => window.conveyor.session.detectGame(),
     enabled: !!settings?.auroraDbPath,
   })
-
 
   // Boot sequence completion
   useEffect(() => {
@@ -145,18 +133,21 @@ export function WelcomePage() {
               Core systems loaded
             </BootLine>
             <BootLine status={hasDbPath ? 'ok' : 'fail'} delay={300}>
-              Aurora database:{' '}
-              {hasDbPath ? settings?.auroraDbPath?.split(/[\\/]/).pop() : 'NOT CONFIGURED'}
-            </BootLine>
-            <BootLine status={connectionMode === 'bridge' ? 'ok' : connectionMode === 'offline' ? 'warn' : 'wait'} delay={450}>
-              Bridge: {connectionMode === 'bridge' ? 'LINK ACTIVE' : connectionMode === 'offline' ? 'OFFLINE MODE' : 'Awaiting Aurora'}
+              Aurora database: {hasDbPath ? settings?.auroraDbPath?.split(/[\\/]/).pop() : 'NOT CONFIGURED'}
             </BootLine>
             <BootLine
-              status={hasDbPath ? (dbGames && dbGames.length > 0 ? 'ok' : 'warn') : 'wait'}
-              delay={600}
+              status={connectionMode === 'bridge' ? 'ok' : connectionMode === 'offline' ? 'warn' : 'wait'}
+              delay={450}
             >
-              Games in Aurora DB:{' '}
-              {hasDbPath ? (dbGames ? String(dbGames.length) : 'scanning...') : 'N/A'}
+              Bridge:{' '}
+              {connectionMode === 'bridge'
+                ? 'LINK ACTIVE'
+                : connectionMode === 'offline'
+                  ? 'OFFLINE MODE'
+                  : 'Awaiting Aurora'}
+            </BootLine>
+            <BootLine status={hasDbPath ? (dbGames && dbGames.length > 0 ? 'ok' : 'warn') : 'wait'} delay={600}>
+              Games in Aurora DB: {hasDbPath ? (dbGames ? String(dbGames.length) : 'scanning...') : 'N/A'}
             </BootLine>
             <BootLine status={campaignCount > 0 ? 'ok' : 'warn'} delay={750}>
               Tracked campaigns: {campaignCount}
@@ -185,8 +176,8 @@ export function WelcomePage() {
                       First-Time Setup Required
                     </p>
                     <p className="text-[10px] text-foreground/40 leading-relaxed mb-3">
-                      Configure the path to your Aurora 4X database to begin.
-                      The companion reads this file to track your game state.
+                      Configure the path to your Aurora 4X database to begin. The companion reads this file to track
+                      your game state.
                     </p>
                     <Button
                       size="sm"
@@ -206,9 +197,7 @@ export function WelcomePage() {
                       + Initialize New Campaign
                     </Button>
                     {campaignCount > 0 && (
-                      <span className="text-[9px] font-mono text-foreground/20">
-                        or select from sidebar
-                      </span>
+                      <span className="text-[9px] font-mono text-foreground/20">or select from sidebar</span>
                     )}
                   </div>
                 )}
@@ -222,9 +211,7 @@ export function WelcomePage() {
                     Ready for input
                     <span className="cic-cursor ml-1">_</span>
                   </span>
-                  <span className="text-[8px] font-mono text-foreground/10">
-                    Aurora 4X Companion
-                  </span>
+                  <span className="text-[8px] font-mono text-foreground/10">Aurora 4X Companion</span>
                 </div>
               </div>
             )}

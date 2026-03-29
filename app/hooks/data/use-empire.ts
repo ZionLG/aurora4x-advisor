@@ -200,7 +200,13 @@ export function useSpeciesRequirements() {
   })
 }
 
-export function useGameLog(limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) {
+export function useGameLog(
+  limit?: number,
+  offset?: number,
+  eventTypes?: number[],
+  onlyCustomized?: boolean,
+  showHidden?: boolean
+) {
   const enabled = useEmpireEnabled()
   return useQuery({
     queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized, showHidden],

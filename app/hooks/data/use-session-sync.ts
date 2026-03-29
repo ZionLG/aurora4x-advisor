@@ -13,16 +13,18 @@ export function useSessionSync(): void {
 
   useEffect(() => {
     // Fetch initial state immediately (critical for pop-out windows)
-    window.conveyor.session.getState().then((state) => {
-      syncFromMain(state)
-    }).catch(() => {})
+    window.conveyor.session
+      .getState()
+      .then((state) => {
+        syncFromMain(state)
+      })
+      .catch(() => {})
 
     const unsubscribe = window.conveyor.subscribe('session:stateChanged', (state) => {
       if (state.isConnected && state.protocolMismatch) {
         toast.warning('Bridge version mismatch', {
           id: 'protocol-mismatch',
-          description:
-            'Your AdvisorBridge DLL is outdated. Update it to match the companion app.',
+          description: 'Your AdvisorBridge DLL is outdated. Update it to match the companion app.',
           duration: 10000,
         })
       }

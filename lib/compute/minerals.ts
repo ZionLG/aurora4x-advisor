@@ -6,7 +6,7 @@ import type {
   MineralTotalsResult,
   MineralHistoryResult,
   MineralBreakdownResult,
-  MineralColony
+  MineralColony,
 } from './types'
 
 const MINERAL_NAMES: Record<number, string> = {
@@ -20,7 +20,7 @@ const MINERAL_NAMES: Record<number, string> = {
   8: 'Sorium',
   9: 'Uridium',
   10: 'Corundium',
-  11: 'Gallicite'
+  11: 'Gallicite',
 }
 
 const SECONDS_PER_MONTH = 2_592_000
@@ -50,7 +50,7 @@ const MINERAL_DATA_TYPES: Record<number, { income: boolean; desc: string }> = {
   19: { income: true, desc: 'Scrapped Ordnance' },
   20: { income: true, desc: 'Starting Stockpile' },
   40: { income: false, desc: 'Ship Component Production' },
-  45: { income: false, desc: 'Space Station Construction' }
+  45: { income: false, desc: 'Space Station Construction' },
 }
 
 function bucketSize(res: Resolution): number {
@@ -67,9 +67,7 @@ function bucketSize(res: Resolution): number {
 }
 
 async function getStartYear(query: QueryFn, ctx: GameCtx): Promise<number> {
-  const rows = await query<{ StartYear: number }>(
-    `SELECT StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`
-  )
+  const rows = await query<{ StartYear: number }>(`SELECT StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`)
   return rows[0]?.StartYear || 2050
 }
 
@@ -95,7 +93,7 @@ export async function getMineralTotals(query: QueryFn, ctx: GameCtx): Promise<Mi
     'Sorium',
     'Uridium',
     'Corundium',
-    'Gallicite'
+    'Gallicite',
   ]
 
   const totals: Record<string, number> = {}
@@ -114,7 +112,7 @@ export async function getMineralTotals(query: QueryFn, ctx: GameCtx): Promise<Mi
       populationId: r.PopulationID as number,
       name: r.PopName as string,
       system: '',
-      minerals
+      minerals,
     })
   }
 
@@ -184,7 +182,7 @@ export async function getMineralHistory(
     series.push({
       time: bt,
       gameDate: formatGameDate(bt, startYear),
-      minerals
+      minerals,
     })
   }
 
@@ -248,7 +246,7 @@ export async function getMineralBreakdown(
       gameDate: formatGameDate(bt, startYear),
       income,
       expense,
-      net: Math.round(totalIncome - totalExpense)
+      net: Math.round(totalIncome - totalExpense),
     }
   })
 
@@ -256,7 +254,7 @@ export async function getMineralBreakdown(
     mineralId,
     mineralName: MINERAL_NAMES[mineralId] || `Mineral ${mineralId}`,
     resolution,
-    series
+    series,
   }
 }
 
@@ -274,6 +272,6 @@ export async function getMineralColonies(query: QueryFn, ctx: GameCtx): Promise<
   return rows.map((r) => ({
     populationId: r.PopulationID,
     name: r.PopName || 'Unknown',
-    system: ''
+    system: '',
   }))
 }

@@ -1,8 +1,5 @@
 import { z } from 'zod'
-import {
-  ActionRequestSchema,
-  ReadCollectionParamsSchema,
-} from '@/shared/schemas'
+import { ActionRequestSchema, ReadCollectionParamsSchema } from '@/shared/schemas'
 
 // Pass-through: compute module and bridge return strongly typed data.
 // We use z.any() here to avoid forcing index signatures on typed interfaces.
@@ -74,7 +71,13 @@ export const empireIpcSchema = {
 
   // Game log
   'empire:getGameLog': {
-    args: z.tuple([z.number().optional(), z.number().optional(), z.array(z.number()).optional(), z.boolean().optional(), z.boolean().optional()]),
+    args: z.tuple([
+      z.number().optional(),
+      z.number().optional(),
+      z.array(z.number()).optional(),
+      z.boolean().optional(),
+      z.boolean().optional(),
+    ]),
     return: z.any(),
   },
   'empire:getEventTypes': { args: z.tuple([]), return: z.any() },

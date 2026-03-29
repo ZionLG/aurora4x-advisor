@@ -43,7 +43,7 @@ class GameSessionService extends EventEmitter {
     if (!this._currentGame) return null
     return {
       gameId: this._currentGame.gameInfo.auroraGameId,
-      raceId: this._currentGame.gameInfo.auroraRaceId
+      raceId: this._currentGame.gameInfo.auroraRaceId,
     }
   }
 
@@ -52,7 +52,7 @@ class GameSessionService extends EventEmitter {
       currentGame: this._currentGame,
       runningGameId: this._runningGameId,
       runningGameName: this._runningGameName,
-      lockedCampaignId: this._lockedCampaignId
+      lockedCampaignId: this._lockedCampaignId,
     }
   }
 
@@ -98,9 +98,7 @@ class GameSessionService extends EventEmitter {
     this._currentGame = game
     this.emit('gameChanged', game)
     await updateGameLastAccessed(gameId)
-    console.warn(
-      `[GameSession] Selected: "${game.gameInfo.gameName}" (GameID=${game.gameInfo.auroraGameId})`
-    )
+    console.warn(`[GameSession] Selected: "${game.gameInfo.gameName}" (GameID=${game.gameInfo.auroraGameId})`)
     this.broadcastState()
     return { accepted: true, state: this.getState() }
   }
@@ -132,16 +130,12 @@ class GameSessionService extends EventEmitter {
       this._runningGameId = auroraGame.GameID
       this._runningGameName = auroraGame.GameName
 
-      console.warn(
-        `[GameSession] Aurora running: "${auroraGame.GameName}" (ID=${auroraGame.GameID})`
-      )
+      console.warn(`[GameSession] Aurora running: "${auroraGame.GameName}" (ID=${auroraGame.GameID})`)
 
       // Find matching campaign (GameID + GameName to handle different DB installations)
       const games = await loadGames()
       const match = games.find(
-        (g) =>
-          g.gameInfo.auroraGameId === auroraGame.GameID &&
-          g.gameInfo.gameName === auroraGame.GameName
+        (g) => g.gameInfo.auroraGameId === auroraGame.GameID && g.gameInfo.gameName === auroraGame.GameName
       )
 
       if (match) {
@@ -190,12 +184,10 @@ class GameSessionService extends EventEmitter {
     if (!bridgeDbPath || !configuredDbPath) return
     const normalize = (p: string): string => p.replace(/\\/g, '/').toLowerCase()
     if (normalize(bridgeDbPath) !== normalize(configuredDbPath)) {
-      console.warn(
-        `[GameSession] DB path mismatch: bridge="${bridgeDbPath}" config="${configuredDbPath}"`
-      )
+      console.warn(`[GameSession] DB path mismatch: bridge="${bridgeDbPath}" config="${configuredDbPath}"`)
       this.broadcast('bridge:dbPathMismatch', {
         bridgePath: bridgeDbPath,
-        configPath: configuredDbPath
+        configPath: configuredDbPath,
       })
     }
   }

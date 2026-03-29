@@ -12,16 +12,12 @@ import type {
   FleetRouteResult,
   FleetShip,
   Fleet,
-  RouteWaypoint
+  RouteWaypoint,
 } from './types'
 import { buildJumpNetwork, type JumpNetwork } from './distances'
 import { euclidean } from './utils'
 
-function bfsPath(
-  from: number,
-  to: number,
-  edges: { fromSystem: number; toSystem: number }[]
-): number[] | null {
+function bfsPath(from: number, to: number, edges: { fromSystem: number; toSystem: number }[]): number[] | null {
   const neighbors = new Map<number, Set<number>>()
   for (const e of edges) {
     if (!neighbors.has(e.fromSystem)) neighbors.set(e.fromSystem, new Set())
@@ -103,7 +99,7 @@ async function buildRouteLegs(
           type: 'in-system',
           distanceKm: dist,
           travelSeconds: travelSec,
-          travelDays: travelSec / 86400
+          travelDays: travelSec / 86400,
         })
       }
       continue
@@ -146,7 +142,7 @@ async function buildRouteLegs(
           type: 'in-system',
           distanceKm: inSystemDist,
           travelSeconds: travelSec,
-          travelDays: travelSec / 86400
+          travelDays: travelSec / 86400,
         })
       }
 
@@ -156,7 +152,7 @@ async function buildRouteLegs(
         type: 'jump',
         distanceKm: 0,
         travelSeconds: 0,
-        travelDays: 0
+        travelDays: 0,
       })
     }
 
@@ -175,13 +171,13 @@ async function buildRouteLegs(
         legs.push({
           from: {
             systemId: destSys,
-            systemName: `JP from ${sysName(path[path.length - 2])}`
+            systemName: `JP from ${sysName(path[path.length - 2])}`,
           },
           to: { systemId: destSys, systemName: sysName(destSys) },
           type: 'in-system',
           distanceKm: dist,
           travelSeconds: travelSec,
-          travelDays: travelSec / 86400
+          travelDays: travelSec / 86400,
         })
       }
     }
@@ -190,11 +186,7 @@ async function buildRouteLegs(
   return { legs, network, sysName }
 }
 
-export async function computeRoute(
-  query: QueryFn,
-  ctx: GameCtx,
-  req: RouteRequest
-): Promise<RouteResult> {
+export async function computeRoute(query: QueryFn, ctx: GameCtx, req: RouteRequest): Promise<RouteResult> {
   const classRows = await query<{
     ClassName: string
     MaxSpeed: number
@@ -223,12 +215,12 @@ export async function computeRoute(
     startX: req.startX,
     startY: req.startY,
     endX: req.endX,
-    endY: req.endY
+    endY: req.endY,
   })
 
   const legs: RouteLeg[] = geoLegs.map((l) => ({
     ...l,
-    fuelBurn: burnRate * (l.travelSeconds / 3600)
+    fuelBurn: burnRate * (l.travelSeconds / 3600),
   }))
 
   const totalDistanceKm = legs.reduce((s, l) => s + l.distanceKm, 0)
@@ -240,7 +232,7 @@ export async function computeRoute(
       ...l,
       distanceKm: Math.round(l.distanceKm),
       travelDays: Math.round(l.travelDays * 100) / 100,
-      fuelBurn: Math.round(l.fuelBurn)
+      fuelBurn: Math.round(l.fuelBurn),
     })),
     totalDistanceKm: Math.round(totalDistanceKm),
     totalTravelDays: Math.round(totalTravelDays * 100) / 100,
@@ -249,7 +241,7 @@ export async function computeRoute(
     fuelRemaining: Math.round(fuelCapacity - totalFuelBurn),
     sufficient: totalFuelBurn <= fuelCapacity,
     speed,
-    className
+    className,
   }
 }
 
@@ -316,7 +308,7 @@ export async function computeFleetRoute(
     fuelEfficiency: s.FuelEfficiency,
     isTanker: s.FuelTanker > 0,
     jumpCapable: (s.JumpDistance || 0) > 0,
-    burnRate: s.EnginePower * s.FuelEfficiency
+    burnRate: s.EnginePower * s.FuelEfficiency,
   }))
 
   // 3. Fleet speed = minimum of all ships with engines
@@ -343,7 +335,7 @@ export async function computeFleetRoute(
   const { legs: geoLegs } = await buildRouteLegs(query, ctx, systemSequence, {
     speed: fleetSpeed,
     startX: fleetRow.Xcor,
-    startY: fleetRow.Ycor
+    startY: fleetRow.Ycor,
   })
 
   // 6. Track per-ship fuel across legs
@@ -376,7 +368,7 @@ export async function computeFleetRoute(
           name: ship.name,
           className: ship.className,
           runsOutOnLeg: li,
-          shortfall: Math.round(Math.abs(remaining))
+          shortfall: Math.round(Math.abs(remaining)),
         }
       }
 
@@ -387,11 +379,8 @@ export async function computeFleetRoute(
         burnRate: Math.round(ship.burnRate * 100) / 100,
         fuelBurn: Math.round(fuelBurn),
         fuelRemaining: Math.round(remaining),
-        fuelPct:
-          ship.fuelCapacity > 0
-            ? Math.round((Math.max(0, remaining) / ship.fuelCapacity) * 100)
-            : 0,
-        sufficient: remaining >= 0
+        fuelPct: ship.fuelCapacity > 0 ? Math.round((Math.max(0, remaining) / ship.fuelCapacity) * 100) : 0,
+        sufficient: remaining >= 0,
       })
     }
 
@@ -400,7 +389,7 @@ export async function computeFleetRoute(
       distanceKm: Math.round(geo.distanceKm),
       travelDays: Math.round(geo.travelDays * 100) / 100,
       shipFuel: shipFuelEntries,
-      refuelStop: isRefuelStop
+      refuelStop: isRefuelStop,
     })
 
     if (isRefuelStop) {
@@ -417,7 +406,7 @@ export async function computeFleetRoute(
       shipId: primaryTanker.shipId,
       name: primaryTanker.name,
       fuelCapacity: primaryTanker.fuelCapacity,
-      fuelRemaining: Math.round(fuelState.get(primaryTanker.shipId)!)
+      fuelRemaining: Math.round(fuelState.get(primaryTanker.shipId)!),
     }
   }
 
@@ -432,7 +421,7 @@ export async function computeFleetRoute(
     totalDistanceKm: Math.round(totalDistanceKm),
     totalTravelDays: Math.round(totalTravelDays * 100) / 100,
     bottleneck,
-    tankerInFleet: tankerSummary
+    tankerInFleet: tankerSummary,
   }
 }
 
@@ -501,7 +490,7 @@ export async function getFleets(query: QueryFn, ctx: GameCtx): Promise<Fleet[]> 
       jumpCapable: (s.JumpDistance || 0) > 0,
       jumpDriveInfo: null, // populated after classJD is built
       isMilitary: !!s.MilitaryEngines,
-      isCommercial: !!s.Commercial
+      isCommercial: !!s.Commercial,
     })
   }
 
@@ -560,7 +549,7 @@ export async function getFleets(query: QueryFn, ctx: GameCtx): Promise<Fleet[]> 
           type: jd.isMilJD ? 'Military' : jd.isCommJD ? 'Commercial' : 'Unknown',
           maxTonnage: jd.maxTonnage,
           squadMax: jd.squadMax,
-          radius: jd.radius
+          radius: jd.radius,
         }
       }
     }
@@ -579,7 +568,7 @@ export async function getFleets(query: QueryFn, ctx: GameCtx): Promise<Fleet[]> 
         x: f.Xcor || 0,
         y: f.Ycor || 0,
         ships,
-        jumpAnalysis: analyzeFleetJump(ships, classJD)
+        jumpAnalysis: analyzeFleetJump(ships, classJD),
       }
     })
 }
@@ -608,7 +597,7 @@ function analyzeFleetJump(
       commTender: null,
       uncoveredShips: [],
       squadCapWarning: null,
-      status: 'ok'
+      status: 'ok',
     }
   }
 
@@ -628,7 +617,7 @@ function analyzeFleetJump(
         shipName: s.shipName,
         className: s.className,
         maxTonnage: jd.maxTonnage,
-        squadMax: jd.squadMax
+        squadMax: jd.squadMax,
       }
       milSquadMax = jd.squadMax
     }
@@ -637,7 +626,7 @@ function analyzeFleetJump(
         shipName: s.shipName,
         className: s.className,
         maxTonnage: jd.maxTonnage,
-        squadMax: jd.squadMax
+        squadMax: jd.squadMax,
       }
       commSquadMax = jd.squadMax
     }
@@ -659,7 +648,7 @@ function analyzeFleetJump(
         uncoveredShips.push({
           shipName: s.shipName,
           className: s.className,
-          reason: 'No mil squad jump'
+          reason: 'No mil squad jump',
         })
     } else {
       // Check tonnage per ship
@@ -668,16 +657,14 @@ function analyzeFleetJump(
           uncoveredShips.push({
             shipName: s.shipName,
             className: s.className,
-            reason: `Too heavy (${s.tonnage.toLocaleString()}t > ${milTender.maxTonnage.toLocaleString()}t)`
+            reason: `Too heavy (${s.tonnage.toLocaleString()}t > ${milTender.maxTonnage.toLocaleString()}t)`,
           })
         }
       }
       // Check squad count
       const fittingMil = milNeeding.filter((s) => s.tonnage <= milTender!.maxTonnage)
       if (milSquadMax > 0 && fittingMil.length > milSquadMax) {
-        squadWarnings.push(
-          `${fittingMil.length} mil ships need jump, squad max ${milSquadMax} per jump`
-        )
+        squadWarnings.push(`${fittingMil.length} mil ships need jump, squad max ${milSquadMax} per jump`)
       }
     }
   }
@@ -689,7 +676,7 @@ function analyzeFleetJump(
         uncoveredShips.push({
           shipName: s.shipName,
           className: s.className,
-          reason: 'No comm squad jump'
+          reason: 'No comm squad jump',
         })
     } else {
       for (const s of commNeeding) {
@@ -697,15 +684,13 @@ function analyzeFleetJump(
           uncoveredShips.push({
             shipName: s.shipName,
             className: s.className,
-            reason: `Too heavy (${s.tonnage.toLocaleString()}t > ${commTender.maxTonnage.toLocaleString()}t)`
+            reason: `Too heavy (${s.tonnage.toLocaleString()}t > ${commTender.maxTonnage.toLocaleString()}t)`,
           })
         }
       }
       const fittingComm = commNeeding.filter((s) => s.tonnage <= commTender!.maxTonnage)
       if (commSquadMax > 0 && fittingComm.length > commSquadMax) {
-        squadWarnings.push(
-          `${fittingComm.length} comm ships need jump, squad max ${commSquadMax} per jump`
-        )
+        squadWarnings.push(`${fittingComm.length} comm ships need jump, squad max ${commSquadMax} per jump`)
       }
     }
   }
@@ -716,13 +701,13 @@ function analyzeFleetJump(
       shipName: s.shipName,
       className: s.className,
       isMilitary: s.isMilitary,
-      isCommercial: s.isCommercial
+      isCommercial: s.isCommercial,
     })),
     milTender,
     commTender,
     uncoveredShips,
     squadCapWarning: squadWarnings.length > 0 ? squadWarnings.join('; ') : null,
-    status: uncoveredShips.length === 0 ? 'covered' : 'warning'
+    status: uncoveredShips.length === 0 ? 'covered' : 'warning',
   }
 }
 
@@ -756,7 +741,7 @@ export async function getWaypoints(query: QueryFn, ctx: GameCtx): Promise<RouteW
     waypoints.push({
       systemId: s.SystemID,
       systemName: s.Name,
-      label: `${s.Name} (system)`
+      label: `${s.Name} (system)`,
     })
   }
 
@@ -766,7 +751,7 @@ export async function getWaypoints(query: QueryFn, ctx: GameCtx): Promise<RouteW
       systemName: c.SystemName || 'Unknown',
       x: c.Xcor,
       y: c.Ycor,
-      label: `${c.PopName} (${c.SystemName})`
+      label: `${c.PopName} (${c.SystemName})`,
     })
   }
 

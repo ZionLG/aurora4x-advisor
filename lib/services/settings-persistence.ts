@@ -39,10 +39,7 @@ export async function saveSettings(settings: AppSettings): Promise<void> {
   await writeFile(getSettingsPath(), JSON.stringify(settings, null, 2), 'utf-8')
 }
 
-export async function updateSetting<K extends keyof AppSettings>(
-  key: K,
-  value: AppSettings[K],
-): Promise<AppSettings> {
+export async function updateSetting<K extends keyof AppSettings>(key: K, value: AppSettings[K]): Promise<AppSettings> {
   const settings = await loadSettings()
   settings[key] = value
   await saveSettings(settings)

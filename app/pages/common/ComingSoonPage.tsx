@@ -13,13 +13,9 @@ export function ComingSoonPage() {
       <div className="text-center space-y-3">
         <Construction className="h-8 w-8 text-[var(--cic-amber-dim)] mx-auto" />
         <div>
-          <h2 className="text-sm font-semibold text-foreground/80">
-            {mod?.name ?? 'Module'}
-          </h2>
+          <h2 className="text-sm font-semibold text-foreground/80">{mod?.name ?? 'Module'}</h2>
           {category && (
-            <p className="text-[9px] uppercase tracking-wider text-[var(--cic-amber-dim)] mt-0.5">
-              {category.label}
-            </p>
+            <p className="text-[9px] uppercase tracking-wider text-[var(--cic-amber-dim)] mt-0.5">{category.label}</p>
           )}
         </div>
         <p className="text-[10px] text-muted-foreground max-w-xs">

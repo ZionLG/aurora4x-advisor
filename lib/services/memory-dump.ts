@@ -58,7 +58,7 @@ export async function dumpMemoryToFiles(outputDir: string): Promise<DumpResult> 
           collectionType: c.collectionType,
           count: c.count,
           fieldCount: c.fieldCount,
-          file: `${c.field}_${c.itemType}_${c.count}.json`
+          file: `${c.field}_${c.itemType}_${c.count}.json`,
         })),
         null,
         2
@@ -79,7 +79,7 @@ export async function dumpMemoryToFiles(outputDir: string): Promise<DumpResult> 
       const items = await auroraBridge.readCollection({
         Field: col.field,
         Limit: col.count + 10, // ensure we get everything
-        IncludeRefs: true
+        IncludeRefs: true,
       })
 
       const fileData = {
@@ -89,7 +89,7 @@ export async function dumpMemoryToFiles(outputDir: string): Promise<DumpResult> 
         _count: col.count,
         _dumped: (items as unknown[]).length,
         _schema: col.schema,
-        items
+        items,
       }
 
       await writeFile(join(outputDir, fileName), JSON.stringify(fileData, null, 2))
@@ -106,6 +106,6 @@ export async function dumpMemoryToFiles(outputDir: string): Promise<DumpResult> 
     totalItems,
     elapsedMs: Date.now() - start,
     files,
-    errors
+    errors,
   }
 }

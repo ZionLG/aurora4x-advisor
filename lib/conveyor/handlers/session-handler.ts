@@ -1,12 +1,7 @@
 import { handle } from '@/lib/main/shared'
 import { gameSession } from '@/lib/services/game-session'
 import { listGames } from '@/lib/services/game-detection'
-import {
-  loadGames,
-  addOrUpdateGame,
-  removeGame,
-  updateGamePersonality,
-} from '@/lib/services/game-persistence'
+import { loadGames, addOrUpdateGame, removeGame, updateGamePersonality } from '@/lib/services/game-persistence'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { openOfflineDb, closeOfflineDb, isOfflineReady } from '@/lib/services/offline-query'
 import { loadSettings } from '@/lib/services/settings-persistence'
@@ -47,11 +42,7 @@ export const registerSessionHandlers = () => {
     await removeGame(id)
   })
 
-  handle('session:updatePersonality', async (
-    id: string,
-    archetype: string | null,
-    name: string | null,
-  ) => {
+  handle('session:updatePersonality', async (id: string, archetype: string | null, name: string | null) => {
     await updateGamePersonality(id, archetype ?? '', name ?? '')
   })
 
@@ -61,11 +52,7 @@ export const registerSessionHandlers = () => {
 
   handle('session:getState', () => {
     const state = gameSession.getState()
-    const connectionMode = auroraBridge.isConnected
-      ? 'bridge'
-      : isOfflineReady()
-        ? 'offline'
-        : 'disconnected'
+    const connectionMode = auroraBridge.isConnected ? 'bridge' : isOfflineReady() ? 'offline' : 'disconnected'
     return {
       currentGame: state.currentGame,
       isConnected: auroraBridge.isConnected,

@@ -34,8 +34,18 @@ Perspective:
     archetype: 'military-strategist',
     ideology: { xenophobia: 60, diplomacy: 30, militancy: 85, expansionism: 70, determination: 80, trade: 25 },
     ministries: [
-      { name: 'Ministry of Defense', tags: ['military', 'fleet'], description: 'Military operations and fleet deployment', toneOverride: null },
-      { name: 'War Industry Board', tags: ['industry', 'minerals'], description: 'War materiel production', toneOverride: null },
+      {
+        name: 'Ministry of Defense',
+        tags: ['military', 'fleet'],
+        description: 'Military operations and fleet deployment',
+        toneOverride: null,
+      },
+      {
+        name: 'War Industry Board',
+        tags: ['industry', 'minerals'],
+        description: 'War materiel production',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -64,8 +74,18 @@ Perspective:
     archetype: 'corporate-executive',
     ideology: { xenophobia: 20, diplomacy: 60, militancy: 25, expansionism: 50, determination: 40, trade: 90 },
     ministries: [
-      { name: 'Trade Commission', tags: ['economy', 'trade'], description: 'Interstellar commerce', toneOverride: null },
-      { name: 'Resource Bureau', tags: ['minerals', 'industry'], description: 'Supply chain optimization', toneOverride: null },
+      {
+        name: 'Trade Commission',
+        tags: ['economy', 'trade'],
+        description: 'Interstellar commerce',
+        toneOverride: null,
+      },
+      {
+        name: 'Resource Bureau',
+        tags: ['minerals', 'industry'],
+        description: 'Supply chain optimization',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -95,8 +115,18 @@ Perspective:
     archetype: 'diplomatic-envoy',
     ideology: { xenophobia: 15, diplomacy: 90, militancy: 20, expansionism: 40, determination: 60, trade: 75 },
     ministries: [
-      { name: 'Diplomatic Corps', tags: ['diplomacy'], description: 'Alien relations and treaties', toneOverride: null },
-      { name: 'Exploration Agency', tags: ['exploration'], description: 'Survey and first contact', toneOverride: null },
+      {
+        name: 'Diplomatic Corps',
+        tags: ['diplomacy'],
+        description: 'Alien relations and treaties',
+        toneOverride: null,
+      },
+      {
+        name: 'Exploration Agency',
+        tags: ['exploration'],
+        description: 'Survey and first contact',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -126,7 +156,12 @@ Perspective:
     archetype: 'monarchist-advisor',
     ideology: { xenophobia: 50, diplomacy: 55, militancy: 45, expansionism: 60, determination: 70, trade: 50 },
     ministries: [
-      { name: 'Imperial Guard', tags: ['military', 'fleet'], description: 'Protection of the realm', toneOverride: 'formal and deferential' },
+      {
+        name: 'Imperial Guard',
+        tags: ['military', 'fleet'],
+        description: 'Protection of the realm',
+        toneOverride: 'formal and deferential',
+      },
       { name: 'Royal Treasury', tags: ['economy', 'minerals'], description: 'Crown finances', toneOverride: null },
     ],
   },
@@ -157,8 +192,18 @@ Perspective:
     archetype: 'technocrat-admin',
     ideology: { xenophobia: 30, diplomacy: 50, militancy: 35, expansionism: 55, determination: 65, trade: 60 },
     ministries: [
-      { name: 'Research Directorate', tags: ['research'], description: 'R&D and tech advancement', toneOverride: 'analytical' },
-      { name: 'Operations Center', tags: ['industry', 'minerals', 'fleet'], description: 'Logistics optimization', toneOverride: null },
+      {
+        name: 'Research Directorate',
+        tags: ['research'],
+        description: 'R&D and tech advancement',
+        toneOverride: 'analytical',
+      },
+      {
+        name: 'Operations Center',
+        tags: ['industry', 'minerals', 'fleet'],
+        description: 'Logistics optimization',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -188,8 +233,18 @@ Perspective:
     archetype: 'religious-zealot',
     ideology: { xenophobia: 65, diplomacy: 25, militancy: 75, expansionism: 80, determination: 85, trade: 20 },
     ministries: [
-      { name: 'Crusade Command', tags: ['military', 'fleet'], description: 'Holy warfare and fleet consecration', toneOverride: 'righteous and fervent' },
-      { name: 'Missionary Office', tags: ['diplomacy', 'exploration'], description: 'Spreading the faith', toneOverride: null },
+      {
+        name: 'Crusade Command',
+        tags: ['military', 'fleet'],
+        description: 'Holy warfare and fleet consecration',
+        toneOverride: 'righteous and fervent',
+      },
+      {
+        name: 'Missionary Office',
+        tags: ['diplomacy', 'exploration'],
+        description: 'Spreading the faith',
+        toneOverride: null,
+      },
     ],
   },
   {
@@ -218,8 +273,18 @@ Perspective:
     archetype: 'religious-zealot',
     ideology: { xenophobia: 90, diplomacy: 10, militancy: 70, expansionism: 75, determination: 95, trade: 10 },
     ministries: [
-      { name: 'Inquisition', tags: ['military', 'fleet'], description: 'Xeno purification operations', toneOverride: 'fanatical and absolute' },
-      { name: 'Ministry of Faith', tags: ['economy', 'industry'], description: 'Tithing and devotional industry', toneOverride: null },
+      {
+        name: 'Inquisition',
+        tags: ['military', 'fleet'],
+        description: 'Xeno purification operations',
+        toneOverride: 'fanatical and absolute',
+      },
+      {
+        name: 'Ministry of Faith',
+        tags: ['economy', 'industry'],
+        description: 'Tithing and devotional industry',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -228,7 +293,7 @@ Perspective:
     profile: {
       id: 'revolutionary-vanguard',
       name: 'Revolutionary Vanguard',
-      description: 'Revolutionary communist spreading workers\' liberation across the galaxy',
+      description: "Revolutionary communist spreading workers' liberation across the galaxy",
       flavor: `You are the Commissar of the People's Interstellar Republic. The revolution that freed your species from the chains of capital must now liberate the galaxy. Every worker on every world deserves the fruits of collective labor, not the scraps of oligarchs.
 
 Voice & Style:
@@ -250,8 +315,18 @@ Perspective:
     archetype: 'communist-commissar',
     ideology: { xenophobia: 40, diplomacy: 35, militancy: 55, expansionism: 65, determination: 85, trade: 15 },
     ministries: [
-      { name: "People's Defense", tags: ['military', 'fleet'], description: 'Revolutionary armed forces', toneOverride: null },
-      { name: 'Central Planning', tags: ['industry', 'minerals', 'economy'], description: 'State resource allocation', toneOverride: null },
+      {
+        name: "People's Defense",
+        tags: ['military', 'fleet'],
+        description: 'Revolutionary armed forces',
+        toneOverride: null,
+      },
+      {
+        name: 'Central Planning',
+        tags: ['industry', 'minerals', 'economy'],
+        description: 'State resource allocation',
+        toneOverride: null,
+      },
     ],
   },
 
@@ -282,8 +357,18 @@ Perspective:
     archetype: 'staunch-nationalist',
     ideology: { xenophobia: 95, diplomacy: 10, militancy: 80, expansionism: 90, determination: 85, trade: 10 },
     ministries: [
-      { name: 'Extermination Bureau', tags: ['military', 'fleet'], description: 'Alien threat elimination', toneOverride: 'cold and ruthless' },
-      { name: 'Colonial Authority', tags: ['exploration', 'economy'], description: 'Territorial expansion', toneOverride: null },
+      {
+        name: 'Extermination Bureau',
+        tags: ['military', 'fleet'],
+        description: 'Alien threat elimination',
+        toneOverride: 'cold and ruthless',
+      },
+      {
+        name: 'Colonial Authority',
+        tags: ['exploration', 'economy'],
+        description: 'Territorial expansion',
+        toneOverride: null,
+      },
     ],
   },
   {
@@ -312,8 +397,18 @@ Perspective:
     archetype: 'staunch-nationalist',
     ideology: { xenophobia: 70, diplomacy: 20, militancy: 85, expansionism: 95, determination: 75, trade: 30 },
     ministries: [
-      { name: 'Conquest Command', tags: ['military', 'fleet'], description: 'Expansion operations', toneOverride: 'aggressive and bold' },
-      { name: 'Colonial Ministry', tags: ['exploration', 'industry'], description: 'Settlement and exploitation', toneOverride: null },
+      {
+        name: 'Conquest Command',
+        tags: ['military', 'fleet'],
+        description: 'Expansion operations',
+        toneOverride: 'aggressive and bold',
+      },
+      {
+        name: 'Colonial Ministry',
+        tags: ['exploration', 'industry'],
+        description: 'Settlement and exploitation',
+        toneOverride: null,
+      },
     ],
   },
 ]

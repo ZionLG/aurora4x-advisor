@@ -36,7 +36,7 @@ export async function listGames(dbPath: string): Promise<GameInfo[]> {
         auroraRaceId: row.RaceID,
         startingYear: row.StartYear,
         techLevel: row.RaceStartingLevel === 0 ? 'TN' : 'Industrial',
-        empireName: row.RaceName
+        empireName: row.RaceName,
       })
     }
 
@@ -90,9 +90,7 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
 
     // Query 2: Get player race (NPR = 0 means player-controlled)
     console.warn('[Game Detection] --- Query 2: Getting player race ---')
-    console.warn(
-      '[Game Detection] SQL: SELECT RaceName, RaceStartingLevel FROM FCT_Race WHERE GameID = ? AND NPR = 0'
-    )
+    console.warn('[Game Detection] SQL: SELECT RaceName, RaceStartingLevel FROM FCT_Race WHERE GameID = ? AND NPR = 0')
     console.warn(`[Game Detection] Parameter: GameID = ${gameRow.GameID}`)
 
     const raceQuery = db.prepare(`
@@ -121,9 +119,7 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
     // Map RaceStartingLevel to tech level
     // 0 = TN (Trans-Newtonian), 1 = Industrial/Conventional Start
     const techLevel = raceRow.RaceStartingLevel === 0 ? 'TN' : 'Industrial'
-    console.warn(
-      `[Game Detection] Tech Level: ${techLevel} (RaceStartingLevel: ${raceRow.RaceStartingLevel})`
-    )
+    console.warn(`[Game Detection] Tech Level: ${techLevel} (RaceStartingLevel: ${raceRow.RaceStartingLevel})`)
 
     const gameInfo: GameInfo = {
       gameName,
@@ -131,7 +127,7 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
       auroraRaceId: raceRow.RaceID,
       startingYear: gameRow.StartYear,
       techLevel,
-      empireName: raceRow.RaceName
+      empireName: raceRow.RaceName,
     }
 
     console.warn('[Game Detection] ========================================')
@@ -151,9 +147,7 @@ export async function detectGame(gameName: string, dbPath: string): Promise<Game
     }
 
     // If database doesn't exist or query fails, return error
-    throw new Error(
-      `Failed to detect game: ${error instanceof Error ? error.message : 'Unknown error'}`
-    )
+    throw new Error(`Failed to detect game: ${error instanceof Error ? error.message : 'Unknown error'}`)
   } finally {
     // Always close the database connection
     if (db) {

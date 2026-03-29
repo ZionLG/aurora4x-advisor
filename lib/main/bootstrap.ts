@@ -120,13 +120,23 @@ export async function bootstrap(): Promise<void> {
     // Parse game date from title bar and persist it
     const titleBar = auroraBridge.lastTitleBarText
     const dateMatch = titleBar?.match(
-      /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/,
+      /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/
     )
     let gameDateStr: string | null = null
     if (dateMatch) {
       const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
       ]
       const day = parseInt(dateMatch[1])
       const month = monthNames.indexOf(dateMatch[2]) + 1

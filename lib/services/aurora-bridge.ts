@@ -99,7 +99,7 @@ class AuroraBridge {
     return {
       isConnected: this._isConnected,
       url: this._url,
-      lastError: this._lastError
+      lastError: this._lastError,
     }
   }
 
@@ -193,7 +193,7 @@ class AuroraBridge {
     const request = {
       Id: id,
       Type: type,
-      Payload: payload != null ? JSON.stringify(payload) : null
+      Payload: payload != null ? JSON.stringify(payload) : null,
     }
     return this.sendRequest(id, request, timeoutMs)
   }
@@ -237,12 +237,12 @@ class AuroraBridge {
               this.reconnectDelay = this.maxReconnectDelay
               console.warn(
                 `[AuroraBridge] Protocol mismatch: bridge=${version}, app=${EXPECTED_PROTOCOL_VERSION}. ` +
-                `Update your AdvisorBridge DLL. Reconnect delay set to ${this.maxReconnectDelay}ms.`
+                  `Update your AdvisorBridge DLL. Reconnect delay set to ${this.maxReconnectDelay}ms.`
               )
               setTimeout(() => {
                 this.broadcastToRenderers('bridge:versionMismatch', {
                   bridgeVersion: version,
-                  appVersion: EXPECTED_PROTOCOL_VERSION
+                  appVersion: EXPECTED_PROTOCOL_VERSION,
                 })
               }, 2000)
             } else {
@@ -255,7 +255,7 @@ class AuroraBridge {
             this.reconnectDelay = this.maxReconnectDelay
             this.broadcastToRenderers('bridge:versionMismatch', {
               bridgeVersion: 0,
-              appVersion: EXPECTED_PROTOCOL_VERSION
+              appVersion: EXPECTED_PROTOCOL_VERSION,
             })
           })
 
@@ -312,9 +312,7 @@ class AuroraBridge {
             `[AuroraBridge] Active empire: "${this._activeEmpireName}" (from: "${payload.data.raw.substring(0, 60)}")`
           )
         } else {
-          console.warn(
-            `[AuroraBridge] Could not parse empire name from title: "${payload.data.raw.substring(0, 60)}"`
-          )
+          console.warn(`[AuroraBridge] Could not parse empire name from title: "${payload.data.raw.substring(0, 60)}"`)
         }
       }
 

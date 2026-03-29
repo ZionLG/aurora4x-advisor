@@ -4,7 +4,19 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '@/app/components/ui/button'
 import { Switch } from '@/app/components/ui/switch'
-import { ArrowLeft, ArrowRight, Check, Loader2, RefreshCw, Target, Crown, Scroll, Landmark, BrainCog, AlertTriangle } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Loader2,
+  RefreshCw,
+  Target,
+  Crown,
+  Scroll,
+  Landmark,
+  BrainCog,
+  AlertTriangle,
+} from 'lucide-react'
 import type { GameInfo, ArchetypeId, GovernmentProfile, Ministry } from '@/shared/types'
 import { ProfileSelector } from './components/ProfileSelector'
 import { IdeologySliders } from './components/IdeologySliders'
@@ -25,12 +37,31 @@ function StepIndicator({ current }: { current: Step }) {
         const isPast = current === 'government' && i === 0
         return (
           <div key={s.id} className="flex items-center gap-1">
-            {i > 0 && <div className="w-8 h-px mx-1" style={{ background: isPast ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)' }} />}
+            {i > 0 && (
+              <div
+                className="w-8 h-px mx-1"
+                style={{ background: isPast ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)' }}
+              />
+            )}
             <div className="flex items-center gap-1.5">
-              <div className="flex items-center justify-center w-5 h-5 rounded text-[8px] font-mono font-bold" style={{ background: isActive || isPast ? 'var(--cic-cyan-glow)' : 'transparent', border: `1px solid ${isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)'}`, color: isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)' }}>
+              <div
+                className="flex items-center justify-center w-5 h-5 rounded text-[8px] font-mono font-bold"
+                style={{
+                  background: isActive || isPast ? 'var(--cic-cyan-glow)' : 'transparent',
+                  border: `1px solid ${isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)'}`,
+                  color: isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)',
+                }}
+              >
                 {isPast ? <Check className="w-2.5 h-2.5" /> : s.num}
               </div>
-              <span className="text-[8px] font-semibold tracking-[0.15em]" style={{ color: isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)' }}>{s.label}</span>
+              <span
+                className="text-[8px] font-semibold tracking-[0.15em]"
+                style={{
+                  color: isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)',
+                }}
+              >
+                {s.label}
+              </span>
             </div>
           </div>
         )
@@ -39,7 +70,15 @@ function StepIndicator({ current }: { current: Step }) {
   )
 }
 
-function SectionDivider({ icon: Icon, label, tag }: { icon: React.ComponentType<{ className?: string }>; label: string; tag: string }) {
+function SectionDivider({
+  icon: Icon,
+  label,
+  tag,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  tag: string
+}) {
   return (
     <div className="flex items-center gap-3 mb-4">
       <div className="flex h-7 w-7 items-center justify-center rounded bg-[var(--cic-amber-glow)] border border-[var(--cic-amber-dim)]/30">
@@ -82,14 +121,30 @@ export function SetupPage() {
   const [customArchetype, setCustomArchetype] = useState<ArchetypeId | null>(null)
   const [creatingCustom, setCreatingCustom] = useState(false)
   const [ideology, setIdeology] = useState<Record<string, number>>({
-    xenophobia: 50, diplomacy: 50, militancy: 50, expansionism: 50, determination: 50, trade: 50,
+    xenophobia: 50,
+    diplomacy: 50,
+    militancy: 50,
+    expansionism: 50,
+    determination: 50,
+    trade: 50,
   })
   const [ministries, setMinistries] = useState<TempMinistry[]>([])
 
   // Queries
-  const { data: dbGames, isLoading, error, refetch } = useQuery({ queryKey: ['session', 'detectGame'], queryFn: () => window.conveyor.session.detectGame() })
-  const { data: savedGames } = useQuery({ queryKey: ['session', 'games'], queryFn: () => window.conveyor.session.listGames() })
-  const { data: archetypes } = useQuery({ queryKey: ['government', 'archetypes'], queryFn: () => window.conveyor.government.getArchetypes() })
+  const {
+    data: dbGames,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({ queryKey: ['session', 'detectGame'], queryFn: () => window.conveyor.session.detectGame() })
+  const { data: savedGames } = useQuery({
+    queryKey: ['session', 'games'],
+    queryFn: () => window.conveyor.session.listGames(),
+  })
+  const { data: archetypes } = useQuery({
+    queryKey: ['government', 'archetypes'],
+    queryFn: () => window.conveyor.government.getArchetypes(),
+  })
 
   const trackedNames = new Set((savedGames ?? []).map((g: { gameInfo: { gameName: string } }) => g.gameInfo.gameName))
   const availableGames = dbGames?.filter((g: GameInfo) => !trackedNames.has(g.gameName)) ?? []
@@ -99,7 +154,7 @@ export function SetupPage() {
     ? (customArchetype ?? 'military-strategist')
     : (selectedProfile?.archetype ?? 'military-strategist')
   const resolvedArchetypeInfo = archetypes?.find((a) => a.id === resolvedArchetype)
-  const activeProfile = creatingCustom ? customProfile : selectedProfile?.profile ?? null
+  const activeProfile = creatingCustom ? customProfile : (selectedProfile?.profile ?? null)
   // All tags must be assigned, and every ministry must have at least one tag
   const allAssignedTags = new Set(ministries.flatMap((m) => m.tags))
   const allTagsCovered = EVENT_TAGS.every((t) => allAssignedTags.has(t.id))
@@ -137,7 +192,16 @@ export function SetupPage() {
         archetypeOverride: false,
         profile: activeProfile,
         ideology: ideology as Parameters<typeof window.conveyor.government.matchPersonality>[0],
-        ministries: ministries.map((m) => ({ id: crypto.randomUUID(), name: m.name, tags: m.tags, description: m.description, toneOverride: m.toneOverride } as Ministry)),
+        ministries: ministries.map(
+          (m) =>
+            ({
+              id: crypto.randomUUID(),
+              name: m.name,
+              tags: m.tags,
+              description: m.description,
+              toneOverride: m.toneOverride,
+            }) as Ministry
+        ),
       })
     } else if (newGame && noAi && ministries.length > 0) {
       // No AI mode — save ministries only (for event routing), no profile/ideology
@@ -146,7 +210,16 @@ export function SetupPage() {
         archetypeOverride: false,
         profile: null,
         ideology: { xenophobia: 50, diplomacy: 50, militancy: 50, expansionism: 50, determination: 50, trade: 50 },
-        ministries: ministries.map((m) => ({ id: crypto.randomUUID(), name: m.name, tags: m.tags, description: m.description, toneOverride: m.toneOverride } as Ministry)),
+        ministries: ministries.map(
+          (m) =>
+            ({
+              id: crypto.randomUUID(),
+              name: m.name,
+              tags: m.tags,
+              description: m.description,
+              toneOverride: m.toneOverride,
+            }) as Ministry
+        ),
       })
     }
     queryClient.invalidateQueries({ queryKey: ['session', 'games'] })
@@ -166,12 +239,19 @@ export function SetupPage() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-[var(--cic-amber)] cic-glow-pulse" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">New Campaign</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">
+                New Campaign
+              </span>
             </div>
             <div className="h-4 w-px bg-[var(--cic-panel-edge)]" />
             <StepIndicator current={step} />
           </div>
-          <Button size="xs" variant="ghost" className="text-foreground/30 hover:text-foreground/60" onClick={() => navigate('/')}>
+          <Button
+            size="xs"
+            variant="ghost"
+            className="text-foreground/30 hover:text-foreground/60"
+            onClick={() => navigate('/')}
+          >
             <ArrowLeft className="h-3 w-3" /> Abort
           </Button>
         </div>
@@ -183,13 +263,43 @@ export function SetupPage() {
           <div className="flex h-full items-center justify-center p-8">
             <div className="w-full max-w-xl cic-slide-up">
               <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-[var(--cic-cyan-glow)] border border-[var(--cic-cyan-dim)]/30"><Target className="h-4 w-4 text-[var(--cic-cyan)]" /></div>
-                <div><h2 className="text-sm font-semibold text-foreground/90">Target Selection</h2><p className="text-[9px] text-foreground/40">Select a campaign from Aurora&apos;s database</p></div>
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-[var(--cic-cyan-glow)] border border-[var(--cic-cyan-dim)]/30">
+                  <Target className="h-4 w-4 text-[var(--cic-cyan)]" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-foreground/90">Target Selection</h2>
+                  <p className="text-[9px] text-foreground/40">Select a campaign from Aurora&apos;s database</p>
+                </div>
               </div>
               <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
-                {isLoading && <div className="flex flex-col items-center gap-3 py-12"><Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" /><span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">Scanning...</span></div>}
-                {error && <div className="p-5 space-y-3"><div className="rounded border-l-2 border-[var(--cic-red)] bg-[var(--cic-red)]/5 p-3"><p className="text-[10px] text-foreground/40">Check database path in Settings.</p></div><Button size="sm" variant="outline" onClick={() => refetch()}><RefreshCw className="h-3 w-3" />Retry</Button></div>}
-                {!isLoading && !error && availableGames.length === 0 && <div className="p-5 space-y-3"><p className="text-[10px] text-foreground/40">{dbGames?.length === 0 ? 'No campaigns detected.' : 'All campaigns tracked.'}</p><Button size="sm" variant="outline" onClick={() => refetch()}><RefreshCw className="h-3 w-3" />Rescan</Button></div>}
+                {isLoading && (
+                  <div className="flex flex-col items-center gap-3 py-12">
+                    <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+                    <span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">Scanning...</span>
+                  </div>
+                )}
+                {error && (
+                  <div className="p-5 space-y-3">
+                    <div className="rounded border-l-2 border-[var(--cic-red)] bg-[var(--cic-red)]/5 p-3">
+                      <p className="text-[10px] text-foreground/40">Check database path in Settings.</p>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => refetch()}>
+                      <RefreshCw className="h-3 w-3" />
+                      Retry
+                    </Button>
+                  </div>
+                )}
+                {!isLoading && !error && availableGames.length === 0 && (
+                  <div className="p-5 space-y-3">
+                    <p className="text-[10px] text-foreground/40">
+                      {dbGames?.length === 0 ? 'No campaigns detected.' : 'All campaigns tracked.'}
+                    </p>
+                    <Button size="sm" variant="outline" onClick={() => refetch()}>
+                      <RefreshCw className="h-3 w-3" />
+                      Rescan
+                    </Button>
+                  </div>
+                )}
                 {availableGames.length > 0 && (
                   <div className="divide-y divide-[var(--cic-panel-edge)]">
                     {availableGames.map((game: GameInfo) => {
@@ -199,17 +309,13 @@ export function SetupPage() {
                           key={game.auroraGameId}
                           onClick={() => setSelectedGame(game)}
                           className={`w-full text-left px-4 py-3 relative group transition-[background-color,box-shadow] duration-300 ease-out ${
-                            isSel
-                              ? 'bg-[var(--cic-cyan-glow)]'
-                              : 'hover:bg-[var(--cic-cyan-glow)]'
+                            isSel ? 'bg-[var(--cic-cyan-glow)]' : 'hover:bg-[var(--cic-cyan-glow)]'
                           }`}
                         >
                           {/* Left accent bar */}
                           <div
                             className={`absolute left-0 top-0 bottom-0 transition-all duration-300 ease-out ${
-                              isSel
-                                ? 'w-[3px]'
-                                : 'w-[2px] group-hover:w-[3px]'
+                              isSel ? 'w-[3px]' : 'w-[2px] group-hover:w-[3px]'
                             }`}
                             style={{
                               background: isSel ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)',
@@ -237,27 +343,64 @@ export function SetupPage() {
                                   boxShadow: isSel ? '0 0 6px var(--cic-cyan)' : 'none',
                                 }}
                               />
-                              <span className={`text-[11px] font-medium transition-colors duration-300 ease-out ${
-                                isSel ? 'text-[var(--cic-cyan)]' : 'text-foreground/50 group-hover:text-foreground'
-                              }`}>{game.gameName}</span>
+                              <span
+                                className={`text-[11px] font-medium transition-colors duration-300 ease-out ${
+                                  isSel ? 'text-[var(--cic-cyan)]' : 'text-foreground/50 group-hover:text-foreground'
+                                }`}
+                              >
+                                {game.gameName}
+                              </span>
                             </div>
-                            <span className="rounded px-1.5 py-0.5 text-[7px] font-bold uppercase bg-[var(--cic-amber-glow)] text-[var(--cic-amber-dim)] border border-[var(--cic-amber-dim)]/20">{game.techLevel}</span>
+                            <span className="rounded px-1.5 py-0.5 text-[7px] font-bold uppercase bg-[var(--cic-amber-glow)] text-[var(--cic-amber-dim)] border border-[var(--cic-amber-dim)]/20">
+                              {game.techLevel}
+                            </span>
                           </div>
-                          <p className={`mt-1 ml-3.5 text-[9px] transition-colors duration-300 ease-out ${
-                            isSel ? 'text-foreground/40' : 'text-foreground/30 group-hover:text-foreground/50'
-                          }`}>{game.empireName} — Year {game.startingYear}</p>
+                          <p
+                            className={`mt-1 ml-3.5 text-[9px] transition-colors duration-300 ease-out ${
+                              isSel ? 'text-foreground/40' : 'text-foreground/30 group-hover:text-foreground/50'
+                            }`}
+                          >
+                            {game.empireName} — Year {game.startingYear}
+                          </p>
                         </button>
                       )
                     })}
                   </div>
                 )}
-                {alreadyTracked.length > 0 && <div className="border-t border-[var(--cic-panel-edge)] px-4 py-3 bg-[var(--cic-void)]/50"><p className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1.5">Already Tracked ({alreadyTracked.length})</p>{alreadyTracked.map((g: GameInfo) => <p key={g.auroraGameId} className="text-[9px] text-muted-foreground/70 py-0.5 ml-3.5">{g.gameName}</p>)}</div>}
+                {alreadyTracked.length > 0 && (
+                  <div className="border-t border-[var(--cic-panel-edge)] px-4 py-3 bg-[var(--cic-void)]/50">
+                    <p className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1.5">
+                      Already Tracked ({alreadyTracked.length})
+                    </p>
+                    {alreadyTracked.map((g: GameInfo) => (
+                      <p key={g.auroraGameId} className="text-[9px] text-muted-foreground/70 py-0.5 ml-3.5">
+                        {g.gameName}
+                      </p>
+                    ))}
+                  </div>
+                )}
                 <div className="flex items-center justify-between border-t border-[var(--cic-panel-edge)] bg-[var(--cic-void)]/30 px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => navigate('/')}><ArrowLeft className="h-3 w-3" />Cancel</Button>
-                    <Button size="xs" variant="ghost" className="text-muted-foreground hover:text-[var(--cic-cyan-dim)]" onClick={() => refetch()}><RefreshCw className="h-3 w-3" />Rescan</Button>
+                    <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => navigate('/')}>
+                      <ArrowLeft className="h-3 w-3" />
+                      Cancel
+                    </Button>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      className="text-muted-foreground hover:text-[var(--cic-cyan-dim)]"
+                      onClick={() => refetch()}
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      Rescan
+                    </Button>
                   </div>
-                  <Button size="sm" disabled={!selectedGame} className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 disabled:opacity-20 transition-all" onClick={() => setStep('government')}>
+                  <Button
+                    size="sm"
+                    disabled={!selectedGame}
+                    className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 disabled:opacity-20 transition-all"
+                    onClick={() => setStep('government')}
+                  >
                     Form Government <ArrowRight className="h-3 w-3" />
                   </Button>
                 </div>
@@ -274,14 +417,23 @@ export function SetupPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-foreground/90">Form Government <span className="ml-2 text-[11px] font-normal text-[var(--cic-cyan)]">{selectedGame?.gameName}</span></h2>
-                <p className="text-[10px] text-foreground/35 mt-0.5">Select a government profile — this defines how your AI government speaks and thinks.</p>
+                <h2 className="text-base font-semibold text-foreground/90">
+                  Form Government{' '}
+                  <span className="ml-2 text-[11px] font-normal text-[var(--cic-cyan)]">{selectedGame?.gameName}</span>
+                </h2>
+                <p className="text-[10px] text-foreground/35 mt-0.5">
+                  Select a government profile — this defines how your AI government speaks and thinks.
+                </p>
               </div>
               <div className="flex items-center gap-3">
-                <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => setStep('pick-game')}><ArrowLeft className="h-3 w-3" /> Back</Button>
+                <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => setStep('pick-game')}>
+                  <ArrowLeft className="h-3 w-3" /> Back
+                </Button>
                 <div className="flex items-center gap-2 rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-2.5 py-1.5">
                   <BrainCog className={`h-3 w-3 ${noAi ? 'text-[var(--cic-amber)]' : 'text-muted-foreground'}`} />
-                  <span className={`text-[9px] font-medium ${noAi ? 'text-[var(--cic-amber)]' : 'text-foreground/30'}`}>No AI</span>
+                  <span className={`text-[9px] font-medium ${noAi ? 'text-[var(--cic-amber)]' : 'text-foreground/30'}`}>
+                    No AI
+                  </span>
                   <Switch
                     checked={noAi}
                     onCheckedChange={(val) => {
@@ -296,22 +448,27 @@ export function SetupPage() {
 
             {/* No AI warning banner */}
             {noAi && (
-              <div className={`rounded-md border px-4 py-3 flex items-start gap-3 ${
-                aiUnavailable
-                  ? 'border-[var(--cic-red)]/30 bg-[var(--cic-red)]/5'
-                  : 'border-[var(--cic-amber-dim)]/40 bg-[var(--cic-amber-glow)]'
-              }`}>
-                <AlertTriangle className={`h-4 w-4 shrink-0 mt-0.5 ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`} />
+              <div
+                className={`rounded-md border px-4 py-3 flex items-start gap-3 ${
+                  aiUnavailable
+                    ? 'border-[var(--cic-red)]/30 bg-[var(--cic-red)]/5'
+                    : 'border-[var(--cic-amber-dim)]/40 bg-[var(--cic-amber-glow)]'
+                }`}
+              >
+                <AlertTriangle
+                  className={`h-4 w-4 shrink-0 mt-0.5 ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`}
+                />
                 <div>
-                  <p className={`text-[10px] font-semibold ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`}>
+                  <p
+                    className={`text-[10px] font-semibold ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`}
+                  >
                     {aiUnavailable ? 'AI Provider Not Available' : 'AI Advisor Disabled'}
                   </p>
                   <p className="text-[9px] text-foreground/40 mt-0.5 leading-relaxed">
                     {aiUnavailable
                       ? 'No AI provider is configured or reachable. Configure one in Settings to enable AI-generated briefings. You can still create ministries for event routing.'
-                      : 'Events will display as raw data only — no AI-generated briefings, analysis, or in-character responses. You can still create ministries for event routing and categorization.'
-                    }
-                    {' '}This can be changed later in government settings.
+                      : 'Events will display as raw data only — no AI-generated briefings, analysis, or in-character responses. You can still create ministries for event routing and categorization.'}{' '}
+                    This can be changed later in government settings.
                   </p>
                 </div>
               </div>
@@ -326,7 +483,10 @@ export function SetupPage() {
               )}
               <SectionDivider icon={Scroll} label="Ideology" tag="GOV.IDL" />
               <div className={noAi ? 'opacity-30' : ''}>
-                <IdeologySliders ideology={ideology} onChange={(key, value) => setIdeology((prev) => ({ ...prev, [key]: value }))} />
+                <IdeologySliders
+                  ideology={ideology}
+                  onChange={(key, value) => setIdeology((prev) => ({ ...prev, [key]: value }))}
+                />
               </div>
             </section>
 
@@ -362,8 +522,12 @@ export function SetupPage() {
               <div className="rounded-md border border-[var(--cic-red)]/20 bg-[var(--cic-red)]/5 px-4 py-2.5 flex items-start gap-2">
                 <AlertTriangle className="h-3 w-3 text-[var(--cic-red)] shrink-0 mt-0.5" />
                 <p className="text-[9px] text-[var(--cic-red)]/70">
-                  {ministries.filter((m) => m.tags.length === 0).map((m) => m.name).join(', ')}
-                  {' '}{ministries.filter((m) => m.tags.length === 0).length === 1 ? 'has' : 'have'} no domains assigned. Every ministry needs at least one domain.
+                  {ministries
+                    .filter((m) => m.tags.length === 0)
+                    .map((m) => m.name)
+                    .join(', ')}{' '}
+                  {ministries.filter((m) => m.tags.length === 0).length === 1 ? 'has' : 'have'} no domains assigned.
+                  Every ministry needs at least one domain.
                 </p>
               </div>
             )}
@@ -392,7 +556,8 @@ export function SetupPage() {
                 {noAi
                   ? 'Raw Data Mode'
                   : `${resolvedArchetypeInfo?.name ?? 'Custom'} Government${activeProfile?.name ? ` — ${activeProfile.name}` : ''}`}
-                {ministries.length > 0 && ` — ${ministries.length} ${ministries.length === 1 ? 'ministry' : 'ministries'}`}
+                {ministries.length > 0 &&
+                  ` — ${ministries.length} ${ministries.length === 1 ? 'ministry' : 'ministries'}`}
               </p>
               <Button
                 size="sm"

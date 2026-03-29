@@ -56,8 +56,13 @@ export class EmpireApi extends ConveyorApi {
   getSpeciesRequirements = () => this.invoke('empire:getSpeciesRequirements')
 
   // Game log
-  getGameLog = (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) =>
-    this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden)
+  getGameLog = (
+    limit?: number,
+    offset?: number,
+    eventTypes?: number[],
+    onlyCustomized?: boolean,
+    showHidden?: boolean
+  ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden)
   getEventTypes = () => this.invoke('empire:getEventTypes')
 
   // Raw SQL (dev tools)

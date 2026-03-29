@@ -10,11 +10,7 @@ export async function getShipClasses(query: QueryFn, ctx: GameCtx): Promise<Ship
   )
 }
 
-export async function getShipClassDetail(
-  query: QueryFn,
-  ctx: GameCtx,
-  classId: number
-): Promise<ShipClassDetail> {
+export async function getShipClassDetail(query: QueryFn, ctx: GameCtx, classId: number): Promise<ShipClassDetail> {
   const classRows = await query<Record<string, unknown>>(
     `SELECT ShipClassID, ClassName, RaceID, Size * 50 as Tonnage, MaxSpeed, FuelCapacity, Crew,
       PlannedDeployment, CargoCapacity, MagazineCapacity, JumpDistance, Cost as BuildPointCost,

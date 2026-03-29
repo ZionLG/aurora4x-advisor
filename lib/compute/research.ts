@@ -11,7 +11,7 @@ const RESEARCH_FIELDS: Record<number, string> = {
   6: 'Logistics',
   7: 'Defensive Systems',
   8: 'Biology / Genetics',
-  9: 'Ground Combat'
+  9: 'Ground Combat',
   // 10 = Component Creation -DoNotDisplay
 }
 
@@ -221,7 +221,7 @@ const TECH_TYPE_TO_FIELD: Record<number, number> = {
   244: 9,
   246: 9,
   249: 9,
-  273: 9
+  273: 9,
   // Field 10: Component Creation -hidden
 }
 
@@ -300,9 +300,7 @@ export async function getResearchOverview(query: QueryFn, ctx: GameCtx): Promise
   }
 
   // Get start year for date formatting
-  const gameRows = await query<{ StartYear: number }>(
-    `SELECT StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`
-  )
+  const gameRows = await query<{ StartYear: number }>(`SELECT StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`)
   const startYear = gameRows[0]?.StartYear || 2050
 
   // Get research completion dates from game log (EventType 60)
@@ -339,8 +337,7 @@ export async function getResearchOverview(query: QueryFn, ctx: GameCtx): Promise
       const prereq1Met = t.Prerequisite1 === 0 || researchedSet.has(t.Prerequisite1)
       const prereq2Met = t.Prerequisite2 === 0 || researchedSet.has(t.Prerequisite2)
       const isStarting = !!(t.StartingSystem || t.ConventionalSystem)
-      const completedTime =
-        !isStarting && t.Researched ? (completionByName.get(t.Name) ?? null) : null
+      const completedTime = !isStarting && t.Researched ? (completionByName.get(t.Name) ?? null) : null
       return {
         id: t.TechSystemID,
         name: t.Name,
@@ -355,7 +352,7 @@ export async function getResearchOverview(query: QueryFn, ctx: GameCtx): Promise
         raceDesigned: false,
         isStarting,
         completedTime,
-        completedDate: completedTime ? formatGameDate(completedTime, startYear) : null
+        completedDate: completedTime ? formatGameDate(completedTime, startYear) : null,
       }
     })
 
@@ -389,12 +386,9 @@ export async function getResearchOverview(query: QueryFn, ctx: GameCtx): Promise
       totalCost: p.DevelopCost,
       labs: p.Labs,
       pointsRemaining: Math.round(p.PointsRemaining),
-      percentComplete:
-        p.DevelopCost > 0
-          ? Math.round(((p.DevelopCost - p.PointsRemaining) / p.DevelopCost) * 100)
-          : 0,
+      percentComplete: p.DevelopCost > 0 ? Math.round(((p.DevelopCost - p.PointsRemaining) / p.DevelopCost) * 100) : 0,
       paused: p.Pause,
-      colony: p.Colony || 'Unknown'
+      colony: p.Colony || 'Unknown',
     }
   })
 
@@ -413,7 +407,7 @@ export async function getResearchOverview(query: QueryFn, ctx: GameCtx): Promise
       id,
       name: RESEARCH_FIELDS[id] || `Field ${id}`,
       total: c.total,
-      researched: c.researched
+      researched: c.researched,
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 

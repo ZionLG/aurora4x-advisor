@@ -1,13 +1,4 @@
-import {
-  Home,
-  Landmark,
-  Swords,
-  Coins,
-  FlaskConical,
-  Palette,
-  Settings,
-  type LucideIcon,
-} from 'lucide-react'
+import { Home, Landmark, Swords, Coins, FlaskConical, Palette, Settings, type LucideIcon } from 'lucide-react'
 
 export type CategoryId = 'home' | 'strategic' | 'military' | 'economy' | 'science' | 'creative' | 'system'
 

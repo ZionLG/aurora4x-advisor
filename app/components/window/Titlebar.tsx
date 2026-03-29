@@ -42,9 +42,7 @@ export const Titlebar = () => {
       >
         {title}
         {!menusVisible && menuItems?.length && (
-          <span style={{ marginLeft: 8, fontSize: '0.7em', opacity: 0.4 }}>
-            Press Alt for menu
-          </span>
+          <span style={{ marginLeft: 8, fontSize: '0.7em', opacity: 0.4 }}>Press Alt for menu</span>
         )}
       </div>
       {menusVisible && <TitlebarMenu />}
