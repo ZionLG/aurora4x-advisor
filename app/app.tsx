@@ -1,5 +1,22 @@
+import { QueryClientProvider } from '@tanstack/react-query'
+import { RouterProvider } from 'react-router-dom'
+import { queryClient } from './lib/query-client'
+import { router } from './router'
+import { useEmpireTick, useSessionSync, useAdvisorSync } from './hooks/data'
 import './styles/app.css'
 
+function AppSyncHooks() {
+  useEmpireTick()
+  useSessionSync()
+  useAdvisorSync()
+  return null
+}
+
 export default function App() {
-  return <div className="flex items-center justify-center h-full text-muted-foreground">Aurora 4X Companion</div>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppSyncHooks />
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  )
 }

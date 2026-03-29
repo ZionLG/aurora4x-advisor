@@ -11,62 +11,12 @@ export const menuItems: TitlebarMenu[] = [
     ],
   },
   {
-    name: 'Edit',
-    items: [
-      {
-        name: 'Undo',
-        action: 'web-undo',
-        shortcut: 'Ctrl+Z',
-      },
-      {
-        name: 'Redo',
-        action: 'web-redo',
-        shortcut: 'Ctrl+Y',
-      },
-      {
-        name: '---',
-      },
-      {
-        name: 'Cut',
-        action: 'web-cut',
-        shortcut: 'Ctrl+X',
-      },
-      {
-        name: 'Copy',
-        action: 'web-copy',
-        shortcut: 'Ctrl+C',
-      },
-      {
-        name: 'Paste',
-        action: 'web-paste',
-        shortcut: 'Ctrl+V',
-      },
-      {
-        name: 'Delete',
-        action: 'web-delete',
-      },
-      {
-        name: '---',
-      },
-      {
-        name: 'Select All',
-        action: 'web-select-all',
-        shortcut: 'Ctrl+A',
-      },
-    ],
-  },
-  {
     name: 'View',
     items: [
       {
         name: 'Reload',
         action: 'web-reload',
         shortcut: 'Ctrl+R',
-      },
-      {
-        name: 'Force Reload',
-        action: 'web-force-reload',
-        shortcut: 'Ctrl+Shift+R',
       },
       {
         name: 'Toggle Developer Tools',
@@ -77,11 +27,6 @@ export const menuItems: TitlebarMenu[] = [
         name: '---',
       },
       {
-        name: 'Actual Size',
-        action: 'web-actual-size',
-        shortcut: 'Ctrl+0',
-      },
-      {
         name: 'Zoom In',
         action: 'web-zoom-in',
         shortcut: 'Ctrl++',
@@ -90,6 +35,11 @@ export const menuItems: TitlebarMenu[] = [
         name: 'Zoom Out',
         action: 'web-zoom-out',
         shortcut: 'Ctrl+-',
+      },
+      {
+        name: 'Actual Size',
+        action: 'web-actual-size',
+        shortcut: 'Ctrl+0',
       },
       {
         name: '---',
@@ -123,12 +73,10 @@ export const menuItems: TitlebarMenu[] = [
       {
         name: 'Minimize',
         action: 'window-minimize',
-        shortcut: 'Ctrl+M',
       },
       {
         name: 'Close',
         action: 'window-close',
-        shortcut: 'Ctrl+W',
       },
     ],
   },
@@ -136,10 +84,10 @@ export const menuItems: TitlebarMenu[] = [
     name: 'Credits',
     items: [
       {
-        name: 'Guasam',
+        name: 'GitHub Repository',
         action: 'web-open-url',
-        actionParams: ['https://github.com/guasam'],
-        shortcut: '@guasam',
+        actionParams: ['https://github.com/ZionLG/aurora4x-advisor'],
+        shortcut: '@ZionLG',
       },
     ],
   },

@@ -3,6 +3,8 @@
  * Pure types — no runtime code, safe to import from any process.
  */
 
+import type { GameSession } from './types'
+
 export interface PushEvents {
   'session:stateChanged': SessionState
   'empire:tick': EmpireTick
@@ -10,7 +12,7 @@ export interface PushEvents {
 }
 
 export interface SessionState {
-  currentGame: unknown // GameSession | null
+  currentGame: GameSession | null
   isConnected: boolean
   lockedCampaignId: string | null
   bridgeUrl: string | null

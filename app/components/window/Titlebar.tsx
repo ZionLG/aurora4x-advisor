@@ -41,6 +41,11 @@ export const Titlebar = () => {
         style={{ visibility: menusVisible ? 'hidden' : 'visible' }}
       >
         {title}
+        {!menusVisible && menuItems?.length && (
+          <span style={{ marginLeft: 8, fontSize: '0.7em', opacity: 0.4 }}>
+            Press Alt for menu
+          </span>
+        )}
       </div>
       {menusVisible && <TitlebarMenu />}
       {wcontext?.platform === 'win32' && <TitlebarControls />}

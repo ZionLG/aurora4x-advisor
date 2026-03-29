@@ -12,7 +12,7 @@ const TitlebarContext = createContext<TitlebarContextProps | undefined>(undefine
 
 export const TitlebarContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null)
-  const [menusVisible, setMenusVisible] = useState(true)
+  const [menusVisible, setMenusVisible] = useState(false)
   const closeActiveMenu = () => setActiveMenuIndex(null)
 
   return (
