@@ -1,38 +1,24 @@
 import { IdeologyProfile } from './types'
-import { ArchetypeId } from '../archetypes/types'
-import { loadAllProfiles, Profile } from '../profiles'
+import { ArchetypeId, ARCHETYPES } from '../archetypes/types'
 
-/**
- * Weight values for profile matching
- */
 export enum MatchWeight {
   Critical = 3,
   Important = 2,
-  Secondary = 1
+  Secondary = 1,
 }
 
-/**
- * Matcher rule for a single ideology stat (includes weight for scoring)
- */
 export interface MatcherRule {
   min?: number
   max?: number
-  weight?: MatchWeight // Optional: default to Important if not specified
+  weight?: MatchWeight
 }
 
-/**
- * Match result for a single profile
- */
 export interface MatchResult {
-  profileId: string
-  profileName: string
+  archetypeId: ArchetypeId
+  archetypeName: string
   confidence: number
-  failedRules: string[]
 }
 
-/**
- * Overall personality match result
- */
 export interface PersonalityMatch {
   archetype: ArchetypeId
   primary: MatchResult
@@ -40,105 +26,96 @@ export interface PersonalityMatch {
 }
 
 /**
- * Calculate distance from value to required range
+ * Ideology affinity rules per archetype.
+ * Defines which ideology stats each archetype favors.
  */
-function calculateDistance(value: number, min?: number, max?: number): number {
-  if (min !== undefined && value < min) return min - value
-  if (max !== undefined && value > max) return value - max
-  return 0
+const ARCHETYPE_AFFINITIES: Record<ArchetypeId, Partial<Record<keyof IdeologyProfile, MatcherRule>>> = {
+  'staunch-nationalist': {
+    xenophobia: { min: 60, weight: MatchWeight.Critical },
+    expansionism: { min: 50, weight: MatchWeight.Important },
+    determination: { min: 50, weight: MatchWeight.Secondary },
+  },
+  'technocrat-admin': {
+    trade: { min: 40, weight: MatchWeight.Important },
+    diplomacy: { min: 40, weight: MatchWeight.Important },
+    determination: { min: 50, weight: MatchWeight.Secondary },
+  },
+  'communist-commissar': {
+    trade: { max: 40, weight: MatchWeight.Important },
+    determination: { min: 60, weight: MatchWeight.Critical },
+    expansionism: { min: 40, weight: MatchWeight.Secondary },
+  },
+  'monarchist-advisor': {
+    diplomacy: { min: 40, weight: MatchWeight.Important },
+    determination: { min: 50, weight: MatchWeight.Important },
+    xenophobia: { min: 30, max: 70, weight: MatchWeight.Secondary },
+  },
+  'military-strategist': {
+    militancy: { min: 60, weight: MatchWeight.Critical },
+    determination: { min: 50, weight: MatchWeight.Important },
+    expansionism: { min: 40, weight: MatchWeight.Secondary },
+  },
+  'corporate-executive': {
+    trade: { min: 60, weight: MatchWeight.Critical },
+    diplomacy: { min: 40, weight: MatchWeight.Important },
+    militancy: { max: 50, weight: MatchWeight.Secondary },
+  },
+  'diplomatic-envoy': {
+    diplomacy: { min: 60, weight: MatchWeight.Critical },
+    xenophobia: { max: 40, weight: MatchWeight.Important },
+    trade: { min: 40, weight: MatchWeight.Secondary },
+  },
+  'religious-zealot': {
+    determination: { min: 70, weight: MatchWeight.Critical },
+    xenophobia: { min: 50, weight: MatchWeight.Important },
+    militancy: { min: 40, weight: MatchWeight.Secondary },
+  },
 }
 
-/**
- * Calculate match score for a single profile
- */
-function calculateProfileMatch(ideology: IdeologyProfile, profile: Profile): MatchResult {
+function scoreArchetype(ideology: IdeologyProfile, archetypeId: ArchetypeId): MatchResult {
+  const rules = ARCHETYPE_AFFINITIES[archetypeId]
   let totalScore = 0
-  let maxPossibleScore = 0
-  const failedRules: string[] = []
+  let maxScore = 0
 
-  // If profile has no matcher, return 50% confidence (neutral match)
-  if (!profile.matcher || Object.keys(profile.matcher).length === 0) {
-    return {
-      profileId: profile.id,
-      profileName: profile.name,
-      confidence: 50,
-      failedRules: []
-    }
-  }
+  for (const [stat, rule] of Object.entries(rules)) {
+    const value = ideology[stat as keyof IdeologyProfile]
+    const weight = rule.weight ?? MatchWeight.Important
+    maxScore += weight
 
-  for (const [stat, rule] of Object.entries(profile.matcher)) {
-    const value = ideology[stat as keyof IdeologyProfile] as number
-    const weight = rule.weight || MatchWeight.Important // Default to Important
-
-    maxPossibleScore += weight
-
-    // Check if value is within required range
     const meetsMin = rule.min === undefined || value >= rule.min
     const meetsMax = rule.max === undefined || value <= rule.max
 
     if (meetsMin && meetsMax) {
-      // Full points if within range
       totalScore += weight
     } else {
-      // Partial points based on how close
-      const distance = calculateDistance(value, rule.min, rule.max)
-      const partial = weight * Math.max(0, 1 - distance / 25) // 25 = threshold
-      totalScore += partial
-
-      if (distance > 10) {
-        failedRules.push(stat)
-      }
+      const distance =
+        rule.min !== undefined && value < rule.min
+          ? rule.min - value
+          : rule.max !== undefined && value > rule.max
+            ? value - rule.max
+            : 0
+      totalScore += weight * Math.max(0, 1 - distance / 25)
     }
   }
 
-  const confidence = (totalScore / maxPossibleScore) * 100
-
   return {
-    profileId: profile.id,
-    profileName: profile.name,
-    confidence: Math.round(confidence),
-    failedRules
+    archetypeId,
+    archetypeName: ARCHETYPES[archetypeId].name,
+    confidence: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 50,
   }
 }
 
 /**
- * Match ideology profile to best-fit personality profile within archetype
+ * Match ideology scores to the best-fit archetype.
  */
-export function matchPersonality(
-  archetype: ArchetypeId,
-  ideology: IdeologyProfile
-): PersonalityMatch {
-  console.log('[Matcher] Matching personality for archetype:', archetype)
-  const allProfiles = loadAllProfiles()
-  console.log('[Matcher] Total profiles loaded:', allProfiles.length)
-
-  // Filter profiles by archetype
-  const archetypeProfiles = allProfiles.filter((p) => p.archetype === archetype)
-  console.log('[Matcher] Profiles matching archetype:', archetypeProfiles.length)
-
-  if (archetypeProfiles.length === 0) {
-    console.error('[Matcher] ERROR: No profiles found for archetype:', archetype)
-    console.error('[Matcher] Available archetypes:', [
-      ...new Set(allProfiles.map((p) => p.archetype))
-    ])
-    throw new Error(`No personality profiles found for archetype: ${archetype}`)
-  }
-
-  // Calculate match scores and sort by confidence
-  const results = archetypeProfiles
-    .map((profile) => calculateProfileMatch(ideology, profile))
+export function matchPersonality(ideology: IdeologyProfile): PersonalityMatch {
+  const results = (Object.keys(ARCHETYPES) as ArchetypeId[])
+    .map((id) => scoreArchetype(ideology, id))
     .sort((a, b) => b.confidence - a.confidence)
 
-  console.log(
-    '[Matcher] Best match:',
-    results[0].profileName,
-    'with confidence:',
-    results[0].confidence
-  )
-
   return {
-    archetype,
+    archetype: results[0].archetypeId,
     primary: results[0],
-    allMatches: results
+    allMatches: results,
   }
 }

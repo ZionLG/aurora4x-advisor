@@ -4,6 +4,10 @@ import appIcon from '@/resources/build/icon.png?asset'
 import { registerResourcesProtocol } from './protocols'
 import { registerWindowHandlers } from '@/lib/conveyor/handlers/window-handler'
 import { registerAppHandlers } from '@/lib/conveyor/handlers/app-handler'
+import { registerSessionHandlers } from '@/lib/conveyor/handlers/session-handler'
+import { registerEmpireHandlers } from '@/lib/conveyor/handlers/empire-handler'
+import { registerAdvisorHandlers } from '@/lib/conveyor/handlers/advisor-handler'
+import { registerSettingsHandlers } from '@/lib/conveyor/handlers/settings-handler'
 
 export function createAppWindow(): void {
   // Register custom protocol for resources
@@ -29,9 +33,13 @@ export function createAppWindow(): void {
     },
   })
 
-  // Register IPC events for the main window.
+  // Register IPC handlers for all domains
   registerWindowHandlers(mainWindow)
   registerAppHandlers(app)
+  registerSessionHandlers()
+  registerEmpireHandlers()
+  registerAdvisorHandlers()
+  registerSettingsHandlers()
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

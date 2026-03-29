@@ -222,7 +222,7 @@ export const ReadCollectionParamsSchema = z.object({
 
 // ── Forward type declarations for recursive schemas ────────────────
 
-type ActionRequest = {
+export type ActionRequest = {
   Action: z.infer<typeof ActionTypeSchema>
   Target?: string
   FormName?: string
@@ -231,7 +231,7 @@ type ActionRequest = {
   Steps?: ActionRequest[]
 }
 
-type ControlInfo = {
+export type ControlInfo = {
   Name: string
   Type: string
   Text: string
