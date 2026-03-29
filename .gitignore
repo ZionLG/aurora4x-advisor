@@ -4,3 +4,12 @@ out
 .DS_Store
 *.log*
 temp
+Dump
+
+# C# AuroraPatch build artifacts
+AuroraPatch/**/[Bb]in/
+AuroraPatch/**/[Oo]bj/
+AuroraPatch/.vs/
+AuroraPatch/packages/
+AuroraPatch/**/*.user
+AuroraPatch/**/*.suo
