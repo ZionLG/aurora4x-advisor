@@ -2,6 +2,7 @@ import type { BrowserWindow } from 'electron'
 import { shell } from 'electron'
 import { handle } from '@/lib/main/shared'
 import { electronAPI } from '@electron-toolkit/preload'
+import { createPopoutWindow } from '@/lib/main/app'
 
 export const registerWindowHandlers = (window: BrowserWindow) => {
   // Window operations
@@ -38,4 +39,7 @@ export const registerWindowHandlers = (window: BrowserWindow) => {
   handle('web-zoom-out', () => webContents.setZoomLevel(webContents.zoomLevel - 0.5))
   handle('web-toggle-fullscreen', () => window.setFullScreen(!window.fullScreen))
   handle('web-open-url', (url: string) => shell.openExternal(url))
+  handle('window-popout', (moduleId: string, route: string, x: number, y: number, title: string) =>
+    createPopoutWindow(moduleId, route, x, y, title),
+  )
 }

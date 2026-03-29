@@ -163,7 +163,7 @@ export function Sidebar() {
 
   // ── Expanded sidebar ───────────────────────────────
   return (
-    <aside className="flex w-52 h-full flex-col border-r border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] transition-all duration-200">
+    <aside className="flex w-52 h-full flex-col overflow-hidden border-r border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] transition-all duration-200">
       {/* Collapse button */}
       <div className="flex justify-end px-2 pt-2">
         <button
@@ -176,7 +176,7 @@ export function Sidebar() {
       </div>
 
       {/* Module categories */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="px-2 pb-2">
           {CATEGORY_LIST.map((cat) => {
             const modules = modulesByCategory[cat.id] ?? []

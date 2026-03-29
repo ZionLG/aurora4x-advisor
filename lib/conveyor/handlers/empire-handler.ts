@@ -224,9 +224,9 @@ export const registerEmpireHandlers = () => {
   })
 
   // Game log
-  handle('empire:getGameLog', async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean) => {
+  handle('empire:getGameLog', async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) => {
     const ctx = getGameCtx()
-    return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized })
+    return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized, showHidden })
   })
 
   handle('empire:getEventTypes', async () => {

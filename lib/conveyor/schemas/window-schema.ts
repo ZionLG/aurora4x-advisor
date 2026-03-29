@@ -97,4 +97,8 @@ export const windowIpcSchema = {
     args: z.tuple([z.string()]),
     return: z.void(),
   },
+  'window-popout': {
+    args: z.tuple([z.string(), z.string(), z.number(), z.number(), z.string()]),
+    return: z.void(),
+  },
 }

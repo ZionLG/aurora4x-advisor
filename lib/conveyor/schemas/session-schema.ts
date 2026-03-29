@@ -35,8 +35,9 @@ export const sessionIpcSchema = {
     return: z.object({
       currentGame: GameSessionSchema.nullable(),
       isConnected: z.boolean(),
+      connectionMode: z.enum(['bridge', 'offline', 'disconnected']),
       lockedCampaignId: z.string().nullable(),
-      bridgeUrl: z.string().nullable(),
+      protocolMismatch: z.boolean(),
     }),
   },
   'session:reconnect': {

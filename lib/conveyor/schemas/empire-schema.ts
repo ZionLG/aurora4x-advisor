@@ -74,7 +74,7 @@ export const empireIpcSchema = {
 
   // Game log
   'empire:getGameLog': {
-    args: z.tuple([z.number().optional(), z.number().optional(), z.array(z.number()).optional(), z.boolean().optional()]),
+    args: z.tuple([z.number().optional(), z.number().optional(), z.array(z.number()).optional(), z.boolean().optional(), z.boolean().optional()]),
     return: z.any(),
   },
   'empire:getEventTypes': { args: z.tuple([]), return: z.any() },

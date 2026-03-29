@@ -200,12 +200,13 @@ export function useSpeciesRequirements() {
   })
 }
 
-export function useGameLog(limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean) {
+export function useGameLog(limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) {
   const enabled = useEmpireEnabled()
   return useQuery({
-    queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized],
-    queryFn: () => window.conveyor.empire.getGameLog(limit, offset, eventTypes, onlyCustomized),
+    queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized, showHidden],
+    queryFn: () => window.conveyor.empire.getGameLog(limit, offset, eventTypes, onlyCustomized, showHidden),
     enabled,
+    placeholderData: (prev) => prev,
   })
 }
 

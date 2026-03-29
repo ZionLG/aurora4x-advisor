@@ -61,11 +61,17 @@ export const registerSessionHandlers = () => {
 
   handle('session:getState', () => {
     const state = gameSession.getState()
+    const connectionMode = auroraBridge.isConnected
+      ? 'bridge'
+      : isOfflineReady()
+        ? 'offline'
+        : 'disconnected'
     return {
       currentGame: state.currentGame,
       isConnected: auroraBridge.isConnected,
+      connectionMode,
       lockedCampaignId: state.lockedCampaignId,
-      bridgeUrl: auroraBridge.isConnected ? null : null,
+      protocolMismatch: auroraBridge.protocolMismatch,
     }
   })
 

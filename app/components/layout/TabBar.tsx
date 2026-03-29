@@ -125,7 +125,36 @@ export function TabBar() {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over, activatorEvent, delta } = event
+
+    // Check if dropped outside the window — must check BEFORE `over`,
+    // because closestCenter always returns a match even when pointer is outside
+    const mouseEvent = activatorEvent as MouseEvent
+    if (mouseEvent) {
+      const dropX = mouseEvent.clientX + (delta?.x ?? 0)
+      const dropY = mouseEvent.clientY + (delta?.y ?? 0)
+
+      const isOutside =
+        dropX < 0 || dropX > window.innerWidth ||
+        dropY < 0 || dropY > window.innerHeight
+
+      if (isOutside) {
+        const tab = tabs.find((t) => t.id === active.id)
+        if (tab) {
+          const screenX = mouseEvent.screenX + (delta?.x ?? 0)
+          const screenY = mouseEvent.screenY + (delta?.y ?? 0)
+
+          window.conveyor.window.windowPopout(tab.id, tab.route, screenX, screenY, tab.name)
+
+          closeTab(tab.id)
+          const remaining = tabs.filter((t) => t.id !== tab.id)
+          if (remaining.length === 0) navigate('/')
+        }
+        return
+      }
+    }
+
+    // Normal reorder
     if (!over || active.id === over.id) return
 
     const fromIndex = tabs.findIndex((t) => t.id === active.id)
