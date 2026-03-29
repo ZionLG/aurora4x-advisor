@@ -1,35 +1,33 @@
 import { handle } from '@/lib/main/shared'
 import { getAllArchetypes } from '@/lib/advisor'
 import { matchPersonality } from '@/lib/advisor/ideology/profile-matcher'
-import type { IdeologyProfile } from '@/shared/types'
+import * as advisorAi from '@/lib/services/advisor-ai'
+import { queryGameState } from '@/lib/services/game-state-analyzer'
+import { gameSession } from '@/lib/services/game-session'
+import type { IdeologyProfile, ArchetypeId } from '@/shared/types'
 
 export const registerAdvisorHandlers = () => {
-  handle('advisor:getArchetypes', () => {
-    return getAllArchetypes()
+  handle('advisor:getArchetypes', () => getAllArchetypes())
+
+  handle('advisor:matchPersonality', (ideology: IdeologyProfile) => matchPersonality(ideology))
+
+  handle('advisor:chat', async (message: string) => {
+    const game = gameSession.currentGame
+    const archetypeId = game?.personalityArchetype as ArchetypeId | null
+    if (!archetypeId) {
+      return 'No advisor personality configured. Set one up in your game session.'
+    }
+
+    const gameState = await queryGameState()
+    // TODO: pass ideology from game session when stored
+    return advisorAi.chat(message, archetypeId, null, gameState)
   })
 
-  handle('advisor:matchPersonality', (ideology: IdeologyProfile) => {
-    return matchPersonality(ideology)
-  })
+  handle('advisor:getAlerts', () => advisorAi.getAlerts())
 
-  handle('advisor:chat', (_message: string) => {
-    // Will wire to LLM service in Phase 3
-    return 'Advisor not configured. Set up an AI provider in Settings.'
-  })
+  handle('advisor:clearAlerts', () => advisorAi.clearAlerts())
 
-  handle('advisor:getAlerts', () => {
-    return []
-  })
+  handle('advisor:getConversation', () => advisorAi.getConversation())
 
-  handle('advisor:clearAlerts', () => {
-    // Will wire to advisor store in Phase 3
-  })
-
-  handle('advisor:getConversation', () => {
-    return []
-  })
-
-  handle('advisor:clearConversation', () => {
-    // Will wire to advisor store in Phase 3
-  })
+  handle('advisor:clearConversation', () => advisorAi.clearConversation())
 }

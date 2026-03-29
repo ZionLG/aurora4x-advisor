@@ -1,57 +1,11 @@
 /**
- * Typed push event system for main-to-renderer communication.
- *
- * Main process uses `broadcast()` to send events.
- * Renderer uses `subscribe()` (exposed via preload) to listen.
+ * Preload-safe push event subscriber.
+ * Uses only ipcRenderer — no Electron main process imports.
  */
 
-// ── Event definitions ──────────────────────────────────────────────
+import type { PushEvents, Unsubscribe } from '@/shared/push-events'
 
-export interface PushEvents {
-  'session:stateChanged': SessionState
-  'empire:tick': EmpireTick
-  'advisor:alert': AdvisorAlert
-}
-
-export interface SessionState {
-  currentGame: unknown // GameSession | null
-  isConnected: boolean
-  lockedCampaignId: string | null
-  bridgeUrl: string | null
-}
-
-export interface EmpireTick {
-  gameDate: string | null
-  bodies?: unknown[]
-  fleets?: unknown[]
-}
-
-export interface AdvisorAlert {
-  id: string
-  severity: 'briefing' | 'warning' | 'alert'
-  title: string
-  content: string
-  timestamp: number
-}
-
-// ── Main process: broadcast to all windows ─────────────────────────
-
-export function broadcast<K extends keyof PushEvents>(
-  channel: K,
-  data: PushEvents[K],
-): void {
-  // Dynamic import to avoid pulling Electron into preload bundle
-  const { BrowserWindow } = require('electron') as { BrowserWindow: typeof import('electron').BrowserWindow }
-  for (const win of BrowserWindow.getAllWindows()) {
-    if (!win.isDestroyed()) {
-      win.webContents.send(channel, data)
-    }
-  }
-}
-
-// ── Preload: subscribe helper (used by API classes) ────────────────
-
-export type Unsubscribe = () => void
+export type { PushEvents, Unsubscribe }
 
 export function createSubscriber(ipcRenderer: {
   on: (channel: string, listener: (...args: unknown[]) => void) => void
