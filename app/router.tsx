@@ -4,7 +4,7 @@ import { WelcomePage } from './pages/welcome/WelcomePage'
 import { SetupPage } from './pages/setup/SetupPage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { PlanningPage } from './pages/planning/PlanningPage'
-import { AdvisorPage } from './pages/advisor/AdvisorPage'
+import { GovernmentPage } from './pages/government/GovernmentPage'
 import { SettingsPage } from './pages/settings/SettingsPage'
 
 export const router = createHashRouter([
@@ -16,7 +16,7 @@ export const router = createHashRouter([
       { path: 'setup', element: <SetupPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'planning', element: <PlanningPage /> },
-      { path: 'advisor', element: <AdvisorPage /> },
+      { path: 'government', element: <GovernmentPage /> },
       { path: 'settings', element: <SettingsPage /> },
     ],
   },

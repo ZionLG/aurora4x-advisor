@@ -3,7 +3,7 @@ import { windowIpcSchema } from './window-schema'
 import { appIpcSchema } from './app-schema'
 import { sessionIpcSchema } from './session-schema'
 import { empireIpcSchema } from './empire-schema'
-import { advisorIpcSchema } from './advisor-schema'
+import { governmentIpcSchema } from './government-schema'
 import { settingsIpcSchema } from './settings-schema'
 
 // Define all IPC channel schemas in one place
@@ -12,7 +12,7 @@ export const ipcSchemas = {
   ...appIpcSchema,
   ...sessionIpcSchema,
   ...empireIpcSchema,
-  ...advisorIpcSchema,
+  ...governmentIpcSchema,
   ...settingsIpcSchema,
 } as const
 

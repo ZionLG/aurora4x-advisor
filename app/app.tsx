@@ -3,13 +3,13 @@ import { RouterProvider } from 'react-router-dom'
 import { Toaster } from './components/ui/sonner'
 import { queryClient } from './lib/query-client'
 import { router } from './router'
-import { useEmpireTick, useSessionSync, useAdvisorSync } from './hooks/data'
+import { useEmpireTick, useSessionSync, useGovernmentSync } from './hooks/data'
 import './styles/app.css'
 
 function AppSyncHooks() {
   useEmpireTick()
   useSessionSync()
-  useAdvisorSync()
+  useGovernmentSync()
   return null
 }
 

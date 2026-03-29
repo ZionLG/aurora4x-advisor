@@ -14,4 +14,5 @@ export class SettingsApi extends ConveyorApi {
     apiKey: string | null,
     baseUrl: string | null,
   ) => this.invoke('settings:setProvider', id, model, apiKey, baseUrl)
+  verifyAi = () => this.invoke('settings:verifyAi')
 }

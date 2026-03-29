@@ -23,7 +23,72 @@ import {
   CircleDot,
   Folder,
   X,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react'
+
+function AiConnectionStatus() {
+  const [status, setStatus] = useState<{
+    configured: boolean
+    provider: string | null
+    model: string | null
+    connected: boolean
+    error: string | null
+  } | null>(null)
+  const [checking, setChecking] = useState(false)
+
+  const verify = async () => {
+    setChecking(true)
+    try {
+      const result = await window.conveyor.settings.verifyAi()
+      setStatus(result)
+      if (result.connected) {
+        toast.success('AI connection verified')
+      } else if (result.error) {
+        toast.error('AI connection failed', { description: result.error })
+      }
+    } finally {
+      setChecking(false)
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between px-1">
+      <div className="flex items-center gap-2">
+        {status === null ? (
+          <>
+            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-amber)]" />
+            <span className="text-[10px] font-mono text-[var(--cic-amber-dim)]">Not verified</span>
+          </>
+        ) : status.connected ? (
+          <>
+            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-green)] shadow-[0_0_4px_var(--cic-green)]" />
+            <span className="text-[10px] font-mono text-[var(--cic-green)]">
+              Connected: {status.provider}{status.model && ` / ${status.model}`}
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-red)]" />
+            <span className="text-[10px] font-mono text-[var(--cic-red)]">
+              {status.error ?? 'Connection failed'}
+            </span>
+          </>
+        )}
+      </div>
+      <Button
+        size="xs"
+        variant="ghost"
+        className="text-[9px] text-muted-foreground hover:text-[var(--cic-cyan)]"
+        onClick={verify}
+        disabled={checking}
+      >
+        {checking ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+        {checking ? 'Verifying...' : 'Verify'}
+      </Button>
+    </div>
+  )
+}
 
 function SectionHeader({
   icon: Icon,
@@ -337,15 +402,7 @@ export function SettingsPage() {
               </div>
             </SettingRow>
 
-            {activeProvider && (
-              <div className="flex items-center gap-2 px-1">
-                <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-green)] shadow-[0_0_4px_var(--cic-green)]" />
-                <span className="text-[10px] font-mono text-[var(--cic-green)]">
-                  Active: {activeProvider.name}
-                  {activeProvider.model && ` / ${activeProvider.model}`}
-                </span>
-              </div>
-            )}
+            {activeProvider && <AiConnectionStatus />}
           </div>
         </section>
 

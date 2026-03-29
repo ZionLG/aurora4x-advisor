@@ -5,27 +5,69 @@ export const menuItems: TitlebarMenu[] = [
     name: 'File',
     items: [
       {
+        name: 'New Campaign',
+        shortcut: 'Setup',
+        actionCallback: () => {
+          window.location.hash = '#/setup'
+        },
+      },
+      {
+        name: 'Settings',
+        actionCallback: () => {
+          window.location.hash = '#/settings'
+        },
+      },
+      {
+        name: '---',
+      },
+      {
+        name: 'Reconnect Bridge',
+        actionCallback: () => {
+          window.conveyor.session.reconnect()
+        },
+      },
+      {
+        name: '---',
+      },
+      {
         name: 'Exit',
         action: 'window-close',
+        shortcut: 'Alt+F4',
+      },
+    ],
+  },
+  {
+    name: 'Navigate',
+    items: [
+      {
+        name: 'Home',
+        actionCallback: () => {
+          window.location.hash = '#/'
+        },
+      },
+      {
+        name: 'Dashboard',
+        actionCallback: () => {
+          window.location.hash = '#/dashboard'
+        },
+      },
+      {
+        name: 'Planning',
+        actionCallback: () => {
+          window.location.hash = '#/planning'
+        },
+      },
+      {
+        name: 'Government',
+        actionCallback: () => {
+          window.location.hash = '#/government'
+        },
       },
     ],
   },
   {
     name: 'View',
     items: [
-      {
-        name: 'Reload',
-        action: 'web-reload',
-        shortcut: 'Ctrl+R',
-      },
-      {
-        name: 'Toggle Developer Tools',
-        action: 'web-toggle-devtools',
-        shortcut: 'Ctrl+Shift+I',
-      },
-      {
-        name: '---',
-      },
       {
         name: 'Zoom In',
         action: 'web-zoom-in',
@@ -37,7 +79,7 @@ export const menuItems: TitlebarMenu[] = [
         shortcut: 'Ctrl+-',
       },
       {
-        name: 'Actual Size',
+        name: 'Reset Zoom',
         action: 'web-actual-size',
         shortcut: 'Ctrl+0',
       },
@@ -48,6 +90,19 @@ export const menuItems: TitlebarMenu[] = [
         name: 'Toggle Fullscreen',
         action: 'web-toggle-fullscreen',
         shortcut: 'F11',
+      },
+      {
+        name: '---',
+      },
+      {
+        name: 'Reload',
+        action: 'web-reload',
+        shortcut: 'Ctrl+R',
+      },
+      {
+        name: 'Developer Tools',
+        action: 'web-toggle-devtools',
+        shortcut: 'Ctrl+Shift+I',
       },
     ],
   },
@@ -68,7 +123,6 @@ export const menuItems: TitlebarMenu[] = [
       {
         name: 'Maximize',
         action: 'window-maximize-toggle',
-        shortcut: 'Toggle',
       },
       {
         name: 'Minimize',
@@ -81,13 +135,29 @@ export const menuItems: TitlebarMenu[] = [
     ],
   },
   {
-    name: 'Credits',
+    name: 'Help',
     items: [
       {
         name: 'GitHub Repository',
         action: 'web-open-url',
         actionParams: ['https://github.com/ZionLG/aurora4x-advisor'],
         shortcut: '@ZionLG',
+      },
+      {
+        name: 'Report Issue',
+        action: 'web-open-url',
+        actionParams: ['https://github.com/ZionLG/aurora4x-advisor/issues'],
+      },
+      {
+        name: '---',
+      },
+      {
+        name: 'About',
+        actionCallback: () => {
+          window.conveyor.app.version().then((v) => {
+            alert(`Aurora 4X Companion v${v}`)
+          })
+        },
       },
     ],
   },

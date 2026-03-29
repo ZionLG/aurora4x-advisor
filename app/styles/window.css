@@ -31,21 +31,21 @@
   --window-titlebar-font-weight: 500;
   --window-c-popup-font-weight: 500;
 
-  --window-c-background: #fff;
-  --window-c-titlebar-background: #fff;
-  --window-c-titlebar-border: #8080801a;
-  --window-c-text: #000000c8;
-  --window-c-hover: #ececec;
-  --window-c-popup-background: #f6f6f6;
-  --window-c-popup-border: #dcdcdc;
-  --window-c-popup-shadow: hsla(0, 0%, 0%, 0.1);
-  --window-c-separator: #80808033;
-  --window-c-control-hover: #0000001a;
+  --window-c-background: hsl(215 20% 97%);
+  --window-c-titlebar-background: hsl(215 18% 98%);
+  --window-c-titlebar-border: hsl(215 15% 88%);
+  --window-c-text: hsl(220 20% 18%);
+  --window-c-hover: hsl(215 15% 92%);
+  --window-c-popup-background: hsl(0 0% 100%);
+  --window-c-popup-border: hsl(215 15% 86%);
+  --window-c-popup-shadow: hsla(215, 20%, 20%, 0.08);
+  --window-c-separator: hsl(215 10% 80% / 0.4);
+  --window-c-control-hover: hsl(215 15% 90%);
   --window-c-control-close-hover: #ff453b;
   --window-c-control-close-hover-text: #fff;
-  --window-c-scrollbar-track: #e0e0e0;
-  --window-c-scrollbar-thumb: #b0b0b0;
-  --window-c-scrollbar-thumb-hover: #888888cf;
+  --window-c-scrollbar-track: hsl(215 15% 92%);
+  --window-c-scrollbar-thumb: hsl(215 10% 78%);
+  --window-c-scrollbar-thumb-hover: hsl(215 10% 65%);
   --window-c-text-shadow: transparent;
 }
 

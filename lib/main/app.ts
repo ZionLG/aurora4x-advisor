@@ -6,7 +6,7 @@ import { registerWindowHandlers } from '@/lib/conveyor/handlers/window-handler'
 import { registerAppHandlers } from '@/lib/conveyor/handlers/app-handler'
 import { registerSessionHandlers } from '@/lib/conveyor/handlers/session-handler'
 import { registerEmpireHandlers } from '@/lib/conveyor/handlers/empire-handler'
-import { registerAdvisorHandlers } from '@/lib/conveyor/handlers/advisor-handler'
+import { registerGovernmentHandlers } from '@/lib/conveyor/handlers/government-handler'
 import { registerSettingsHandlers } from '@/lib/conveyor/handlers/settings-handler'
 
 export function createAppWindow(): void {
@@ -38,8 +38,24 @@ export function createAppWindow(): void {
   registerAppHandlers(app)
   registerSessionHandlers()
   registerEmpireHandlers()
-  registerAdvisorHandlers()
+  registerGovernmentHandlers()
   registerSettingsHandlers()
+
+  // Keyboard shortcuts for zoom (custom titlebar doesn't register accelerators)
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type !== 'keyDown' || !input.control || input.alt || input.shift) return
+    const wc = mainWindow.webContents
+    if (input.key === '=' || input.key === '+') {
+      wc.setZoomLevel(wc.zoomLevel + 0.5)
+      event.preventDefault()
+    } else if (input.key === '-') {
+      wc.setZoomLevel(wc.zoomLevel - 0.5)
+      event.preventDefault()
+    } else if (input.key === '0') {
+      wc.setZoomLevel(0)
+      event.preventDefault()
+    }
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

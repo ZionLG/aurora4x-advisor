@@ -121,7 +121,7 @@ export function WelcomePage() {
               Aurora 4X Companion
             </span>
           </div>
-          <span className="text-[9px] font-mono text-foreground/20">v0.1.0</span>
+          <span className="text-[9px] font-mono text-foreground/20">v0.2.0</span>
         </div>
 
         {/* Terminal body */}

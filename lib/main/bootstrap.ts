@@ -10,9 +10,8 @@ import { gameSession } from '@/lib/services/game-session'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { addOrUpdateGame } from '@/lib/services/game-persistence'
 import { queryGameState, detectEvents } from '@/lib/services/game-state-analyzer'
-import * as advisorAi from '@/lib/services/advisor-ai'
+import * as governmentAi from '@/lib/services/government-ai'
 import { broadcast } from '@/lib/main/broadcast'
-import type { ArchetypeId } from '@/shared/types'
 
 /**
  * Broadcast the combined session + bridge state to all renderers.
@@ -42,10 +41,7 @@ export async function bootstrap(): Promise<void> {
     broadcastSessionState()
   })
 
-  // 2. Auto-select most recent game
-  await gameSession.autoSelectGame()
-
-  // 3. Connect bridge
+  // 2. Connect bridge — game selection happens via bridge detection only
   auroraBridge.connect(settings.bridgePort || 47842)
 
   // 4. Empire detection + auto-lock
@@ -135,19 +131,20 @@ export async function bootstrap(): Promise<void> {
       addOrUpdateGame(game).catch(() => {})
     }
 
-    const archetypeId = game?.personalityArchetype as ArchetypeId | null
-    if (!archetypeId) return
+    // Government briefing generation — will be expanded with ministry routing
+    const gov = game?.government
+    if (!gov) return
 
     try {
       const [gameState, events] = await Promise.all([queryGameState(), detectEvents()])
       if (!gameState || events.length === 0) return
 
-      const alert = await advisorAi.generateAlert(events, archetypeId, null, gameState)
-      if (alert) {
-        broadcast('advisor:alert', alert)
+      const briefing = await governmentAi.generateBriefing(events, gov, null, gameState)
+      if (briefing) {
+        broadcast('government:briefing', briefing)
       }
     } catch (err) {
-      console.warn('[Bootstrap] Push-triggered analysis failed:', err)
+      console.warn('[Bootstrap] Push-triggered briefing failed:', err)
     }
   })
 

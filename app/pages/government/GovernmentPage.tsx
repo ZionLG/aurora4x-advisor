@@ -1,7 +1,7 @@
-export function AdvisorPage() {
+export function GovernmentPage() {
   return (
     <div className="flex h-full items-center justify-center text-muted-foreground">
-      <p>Advisor — coming in Phase 7.</p>
+      <p>Government — coming soon.</p>
     </div>
   )
 }

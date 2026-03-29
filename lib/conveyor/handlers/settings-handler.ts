@@ -1,6 +1,7 @@
 import { dialog } from 'electron'
 import { handle } from '@/lib/main/shared'
 import { loadSettings, saveSettings, updateSetting } from '@/lib/services/settings-persistence'
+import { verifyConnection } from '@/lib/services/ai-provider'
 import type { AppSettings } from '@/shared/types'
 
 const AI_PROVIDERS = [
@@ -50,4 +51,6 @@ export const registerSettingsHandlers = () => {
     settings.ollamaBaseUrl = baseUrl
     await saveSettings(settings)
   })
+
+  handle('settings:verifyAi', () => verifyConnection())
 }

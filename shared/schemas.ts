@@ -64,9 +64,56 @@ export const GameSnapshotSchema = z.object({
   capturedAt: z.number(),
 })
 
+// ── Government ─────────────────────────────────────────────────────
+
+export const MinistrySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  tags: z.array(z.string()),
+  description: z.string(),
+  toneOverride: z.string().nullable(),
+})
+
+export const GovernmentProfileSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  flavor: z.string(),
+  keywords: z.array(z.string()),
+})
+
+export const GovernmentSchema = z.object({
+  archetypeId: ArchetypeIdSchema,
+  archetypeOverride: z.boolean(),
+  profile: GovernmentProfileSchema.nullable(),
+  ideology: IdeologyProfileSchema,
+  ministries: z.array(MinistrySchema),
+})
+
+export const GameEventSchema = z.object({
+  id: z.string(),
+  tags: z.array(z.string()),
+  description: z.string(),
+  data: z.record(z.string(), z.unknown()),
+  severity: z.enum(['briefing', 'warning', 'alert']),
+})
+
+export const BriefingSchema = z.object({
+  id: z.string(),
+  ministryId: z.string().nullable(),
+  ministryName: z.string().nullable(),
+  event: GameEventSchema,
+  response: z.string(),
+  timestamp: z.number(),
+})
+
+// ── Game Session ───────────────────────────────────────────────────
+
 export const GameSessionSchema = z.object({
   id: z.string(),
   gameInfo: GameInfoSchema,
+  government: GovernmentSchema.nullable().optional(),
+  // Legacy fields kept for backward compat with existing saved games
   personalityArchetype: z.string().nullable(),
   personalityName: z.string().nullable(),
   initialSnapshot: GameSnapshotSchema.optional(),

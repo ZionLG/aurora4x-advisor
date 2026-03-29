@@ -1,7 +1,7 @@
 // Sync hooks — mount once at app root
 export { useEmpireTick } from './use-empire-tick'
 export { useSessionSync } from './use-session-sync'
-export { useAdvisorSync } from './use-advisor-sync'
+export { useGovernmentSync } from './use-government-sync'
 
 // Domain data hooks
 export {

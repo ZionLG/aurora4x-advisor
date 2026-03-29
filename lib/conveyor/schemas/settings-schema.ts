@@ -43,4 +43,14 @@ export const settingsIpcSchema = {
     args: z.tuple([z.string(), z.string().nullable(), z.string().nullable(), z.string().nullable()]),
     return: z.void(),
   },
+  'settings:verifyAi': {
+    args: z.tuple([]),
+    return: z.object({
+      configured: z.boolean(),
+      provider: z.string().nullable(),
+      model: z.string().nullable(),
+      connected: z.boolean(),
+      error: z.string().nullable(),
+    }),
+  },
 }

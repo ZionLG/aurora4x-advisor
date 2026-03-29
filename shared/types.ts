@@ -8,6 +8,11 @@ import {
   GameInfoSchema,
   GameSnapshotSchema,
   GameSessionSchema,
+  GovernmentSchema,
+  GovernmentProfileSchema,
+  MinistrySchema,
+  GameEventSchema,
+  BriefingSchema,
   AppSettingsSchema,
   BridgeStatusSchema,
   SystemBodySchema,
@@ -30,6 +35,10 @@ export {
   GameSessionSchema,
   GameInfoSchema,
   GameSnapshotSchema,
+  GovernmentSchema,
+  GovernmentProfileSchema,
+  MinistrySchema,
+  BriefingSchema,
   BridgeStatusSchema,
 } from './schemas'
 
@@ -43,6 +52,11 @@ export type PersonalityMatch = z.infer<typeof PersonalityMatchSchema>
 
 export type GameInfo = z.infer<typeof GameInfoSchema>
 export type GameSnapshot = z.infer<typeof GameSnapshotSchema>
+export type Government = z.infer<typeof GovernmentSchema>
+export type GovernmentProfile = z.infer<typeof GovernmentProfileSchema>
+export type Ministry = z.infer<typeof MinistrySchema>
+export type GameEvent = z.infer<typeof GameEventSchema>
+export type Briefing = z.infer<typeof BriefingSchema>
 export type GameSession = z.infer<typeof GameSessionSchema>
 
 export type AppSettings = z.infer<typeof AppSettingsSchema>

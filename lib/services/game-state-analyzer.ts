@@ -2,10 +2,11 @@
  * Game State Analyzer
  *
  * Analyzes live game state from the Aurora bridge and detects events.
- * Events are fed to the LLM advisor for generating alerts/briefings.
+ * Events are tagged for routing to the appropriate government ministry.
  */
 
 import { auroraBridge } from './aurora-bridge'
+import type { GameEvent } from '@/shared/types'
 
 export interface GameStateSnapshot {
   gameYear: number
@@ -22,16 +23,6 @@ export interface GameStateSnapshot {
   totalShipCount: number
 }
 
-export interface GameEvent {
-  id: string
-  type: 'idle-fleets' | 'scattered-ships' | 'no-fleets' | 'custom'
-  description: string
-  data: Record<string, unknown>
-}
-
-/**
- * Query game state from live bridge data
- */
 export async function queryGameState(): Promise<GameStateSnapshot | null> {
   if (!auroraBridge.isConnected) return null
 
@@ -62,9 +53,6 @@ export async function queryGameState(): Promise<GameStateSnapshot | null> {
   }
 }
 
-/**
- * Detect notable events from live bridge data
- */
 export async function detectEvents(): Promise<GameEvent[]> {
   if (!auroraBridge.isConnected) return []
 
@@ -79,12 +67,13 @@ export async function detectEvents(): Promise<GameEvent[]> {
     if (idleFleets.length > 0) {
       events.push({
         id: 'idle-fleets',
-        type: 'idle-fleets',
+        tags: ['military', 'fleet'],
         description: `${idleFleets.length} military fleet(s) are stationary`,
         data: {
           count: idleFleets.length,
           fleetNames: idleFleets.slice(0, 5).map((f: Record<string, unknown>) => f.FleetName),
         },
+        severity: 'warning',
       })
     }
 
@@ -94,21 +83,23 @@ export async function detectEvents(): Promise<GameEvent[]> {
     if (singleShipFleets.length >= 3) {
       events.push({
         id: 'scattered-ships',
-        type: 'scattered-ships',
+        tags: ['military', 'fleet'],
         description: `${singleShipFleets.length} single-ship military fleets detected`,
         data: {
           count: singleShipFleets.length,
           fleetNames: singleShipFleets.slice(0, 5).map((f: Record<string, unknown>) => f.FleetName),
         },
+        severity: 'briefing',
       })
     }
 
     if (fleets.length === 0) {
       events.push({
         id: 'no-fleets',
-        type: 'no-fleets',
+        tags: ['military'],
         description: 'No fleets exist yet',
         data: {},
+        severity: 'briefing',
       })
     }
   } catch (err) {
