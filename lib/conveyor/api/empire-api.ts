@@ -44,6 +44,22 @@ export class EmpireApi extends ConveyorApi {
   loadFilters = () => this.invoke('empire:loadFilters')
   saveFilters = (filters: Record<string, unknown>[]) => this.invoke('empire:saveFilters', filters)
 
+  // Production & shipyards
+  getProduction = () => this.invoke('empire:getProduction')
+  getShipyards = () => this.invoke('empire:getShipyards')
+
+  // Warnings
+  getWarnings = () => this.invoke('empire:getWarnings')
+
+  // Habitability
+  getHabitability = () => this.invoke('empire:getHabitability')
+  getSpeciesRequirements = () => this.invoke('empire:getSpeciesRequirements')
+
+  // Game log
+  getGameLog = (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean) =>
+    this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized)
+  getEventTypes = () => this.invoke('empire:getEventTypes')
+
   // Raw SQL (dev tools)
   query = (sql: string) => this.invoke('empire:query', sql)
 

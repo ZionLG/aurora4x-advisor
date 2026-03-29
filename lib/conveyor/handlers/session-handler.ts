@@ -8,6 +8,7 @@ import {
   updateGamePersonality,
 } from '@/lib/services/game-persistence'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
+import { openOfflineDb, closeOfflineDb, isOfflineReady } from '@/lib/services/offline-query'
 import { loadSettings } from '@/lib/services/settings-persistence'
 import type { GameInfo, GameSnapshot } from '@/shared/types'
 
@@ -22,7 +23,8 @@ export const registerSessionHandlers = () => {
 
   handle('session:selectGame', async (id: string) => {
     await gameSession.setCurrentGame(id)
-    if (!auroraBridge.isConnected) {
+    // Only auto-connect bridge if not in offline mode
+    if (!auroraBridge.isConnected && !isOfflineReady()) {
       const settings = await loadSettings()
       auroraBridge.connect(settings.bridgePort || 47842)
     }
@@ -69,5 +71,40 @@ export const registerSessionHandlers = () => {
 
   handle('session:reconnect', () => {
     auroraBridge.reconnectNow()
+  })
+
+  handle('session:goOffline', async () => {
+    const settings = await loadSettings()
+    const dbPath = settings.auroraDbPath ?? auroraBridge.auroraDbPath
+    if (!dbPath) throw new Error('No Aurora database path configured')
+
+    // Stop the bridge completely — no reconnection attempts while offline
+    auroraBridge.disconnect()
+
+    // Clear bridge lock — we're going offline, bridge state is irrelevant
+    gameSession.clearRunningGame()
+
+    openOfflineDb(dbPath)
+
+    // Auto-detect game from the DB and select the most recent matching campaign
+    const games = await listGames(dbPath)
+    const savedGames = await loadGames()
+    if (games.length > 0) {
+      const match = savedGames
+        .filter((sg) => games.some((g) => g.gameName === sg.gameInfo.gameName))
+        .sort((a, b) => b.lastAccessedAt - a.lastAccessedAt)[0]
+      if (match) {
+        await gameSession.setCurrentGame(match.id, { bypassLock: true })
+      }
+    }
+  })
+
+  handle('session:goOnline', async () => {
+    closeOfflineDb()
+    // Clear the offline game — bridge will re-detect and re-lock
+    gameSession.clearRunningGame()
+    // Reconnect bridge with auto-retry enabled
+    const settings = await loadSettings()
+    auroraBridge.connect(settings.bridgePort || 47842)
   })
 }

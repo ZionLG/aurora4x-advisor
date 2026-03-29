@@ -11,9 +11,12 @@ export interface PushEvents {
   'government:briefing': Briefing
 }
 
+export type ConnectionMode = 'bridge' | 'offline' | 'disconnected'
+
 export interface SessionState {
   currentGame: GameSession | null
   isConnected: boolean
+  connectionMode: ConnectionMode
   lockedCampaignId: string | null
   bridgeUrl: string | null
   protocolMismatch: boolean

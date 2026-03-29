@@ -9,19 +9,27 @@ import { dbWatcher } from '@/lib/services/db-watcher'
 import { gameSession } from '@/lib/services/game-session'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { addOrUpdateGame } from '@/lib/services/game-persistence'
+import { isOfflineReady, closeOfflineDb } from '@/lib/services/offline-query'
 import { queryGameState, detectEvents } from '@/lib/services/game-state-analyzer'
 import * as governmentAi from '@/lib/services/government-ai'
 import { broadcast } from '@/lib/main/broadcast'
+import type { ConnectionMode } from '@/shared/push-events'
 
 /**
  * Broadcast the combined session + bridge state to all renderers.
- * This is the single source of truth for the renderer's session store.
  */
 function broadcastSessionState(): void {
   const state = gameSession.getState()
+  const connectionMode: ConnectionMode = auroraBridge.isConnected
+    ? 'bridge'
+    : isOfflineReady()
+      ? 'offline'
+      : 'disconnected'
+
   broadcast('session:stateChanged', {
     currentGame: state.currentGame,
     isConnected: auroraBridge.isConnected,
+    connectionMode,
     lockedCampaignId: state.lockedCampaignId,
     bridgeUrl: null,
     protocolMismatch: auroraBridge.protocolMismatch,
@@ -55,22 +63,28 @@ export async function bootstrap(): Promise<void> {
     setTimeout(async () => {
       validationPending = false
 
+      // Re-check connection — may have disconnected or gone offline during the delay
+      if (!auroraBridge.isConnected || isOfflineReady()) return
+
       if (!lastEmpireName) {
         gameSession.validateDbPath(auroraBridge.auroraDbPath, settings.auroraDbPath)
       }
 
       await gameSession.detectAndLockRunningGame((sql) => auroraBridge.query(sql))
-      // Always broadcast after detection — even if game didn't change,
-      // the lock and connection status may have
       broadcastSessionState()
     }, 2000)
   }
 
-  // Bridge connect — broadcast state + start validation
+  // Bridge connect — auto-transition from offline to bridge (only if user chose to reconnect)
   auroraBridge.onPush(() => {
     if (!auroraBridge.isConnected) return
 
-    // Always broadcast on push so renderer knows we're connected
+    // If we were offline and bridge reconnected (user chose goOnline), switch to bridge
+    if (isOfflineReady()) {
+      closeOfflineDb()
+      console.warn('[Bootstrap] Bridge connected — switched from offline to bridge mode')
+    }
+
     broadcastSessionState()
 
     const currentEmpire = auroraBridge.activeEmpireName

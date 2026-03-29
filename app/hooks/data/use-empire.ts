@@ -1,11 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
 import { useSessionStore } from '@/app/stores/session-store'
 
-/** Only fetch when connected and a game is selected */
+/** Fetch when a game is selected and we have any data source (bridge or offline) */
 function useEmpireEnabled(): boolean {
   const game = useSessionStore((s) => s.currentGame)
-  const connected = useSessionStore((s) => s.isConnected)
-  return !!game && connected
+  const mode = useSessionStore((s) => s.connectionMode)
+  return !!game && (mode === 'bridge' || mode === 'offline')
+}
+
+/** Fetch only when bridge is connected (for realtime features) */
+function useBridgeEnabled(): boolean {
+  const game = useSessionStore((s) => s.currentGame)
+  const mode = useSessionStore((s) => s.connectionMode)
+  return !!game && mode === 'bridge'
 }
 
 export function useFleets() {
@@ -45,7 +52,7 @@ export function useClassDetail(classId: number | null) {
 }
 
 export function useBodies(systemId: number | null) {
-  const enabled = useEmpireEnabled()
+  const enabled = useBridgeEnabled()
   return useQuery({
     queryKey: ['empire', 'bodies', systemId],
     queryFn: () => window.conveyor.empire.getBodies(systemId!),
@@ -54,7 +61,7 @@ export function useBodies(systemId: number | null) {
 }
 
 export function useSystems() {
-  const enabled = useEmpireEnabled()
+  const enabled = useBridgeEnabled()
   return useQuery({
     queryKey: ['empire', 'systems'],
     queryFn: () => window.conveyor.empire.getSystems(),
@@ -63,7 +70,7 @@ export function useSystems() {
 }
 
 export function useRealtimeFleets() {
-  const enabled = useEmpireEnabled()
+  const enabled = useBridgeEnabled()
   return useQuery({
     queryKey: ['empire', 'realtimeFleets'],
     queryFn: () => window.conveyor.empire.getRealtimeFleets(),
@@ -145,5 +152,68 @@ export function useFilters() {
   return useQuery({
     queryKey: ['empire', 'filters'],
     queryFn: () => window.conveyor.empire.loadFilters(),
+  })
+}
+
+export function useProduction() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'production'],
+    queryFn: () => window.conveyor.empire.getProduction(),
+    enabled,
+  })
+}
+
+export function useShipyards() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'shipyards'],
+    queryFn: () => window.conveyor.empire.getShipyards(),
+    enabled,
+  })
+}
+
+export function useWarnings() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'warnings'],
+    queryFn: () => window.conveyor.empire.getWarnings(),
+    enabled,
+  })
+}
+
+export function useHabitability() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'habitability'],
+    queryFn: () => window.conveyor.empire.getHabitability(),
+    enabled,
+  })
+}
+
+export function useSpeciesRequirements() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'speciesRequirements'],
+    queryFn: () => window.conveyor.empire.getSpeciesRequirements(),
+    enabled,
+  })
+}
+
+export function useGameLog(limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean) {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized],
+    queryFn: () => window.conveyor.empire.getGameLog(limit, offset, eventTypes, onlyCustomized),
+    enabled,
+  })
+}
+
+export function useEventTypes() {
+  const enabled = useEmpireEnabled()
+  return useQuery({
+    queryKey: ['empire', 'eventTypes'],
+    queryFn: () => window.conveyor.empire.getEventTypes(),
+    enabled,
   })
 }

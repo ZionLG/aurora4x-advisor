@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 import type { GameSession } from '@/shared/types'
+import type { ConnectionMode } from '@/shared/push-events'
 
 interface SessionState {
   currentGame: GameSession | null
   savedGames: GameSession[]
   isConnected: boolean
+  connectionMode: ConnectionMode
   lockedCampaignId: string | null
   protocolMismatch: boolean
 
@@ -15,6 +17,7 @@ interface SessionState {
   syncFromMain: (state: {
     currentGame: GameSession | null
     isConnected: boolean
+    connectionMode: ConnectionMode
     lockedCampaignId: string | null
     protocolMismatch: boolean
   }) => void
@@ -24,6 +27,7 @@ export const useSessionStore = create<SessionState>((set) => ({
   currentGame: null,
   savedGames: [],
   isConnected: false,
+  connectionMode: 'disconnected',
   lockedCampaignId: null,
   protocolMismatch: false,
 
@@ -35,6 +39,7 @@ export const useSessionStore = create<SessionState>((set) => ({
     set({
       currentGame: state.currentGame as GameSession | null,
       isConnected: state.isConnected,
+      connectionMode: state.connectionMode,
       lockedCampaignId: state.lockedCampaignId,
       protocolMismatch: state.protocolMismatch,
     }),

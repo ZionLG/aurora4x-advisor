@@ -43,4 +43,12 @@ export const sessionIpcSchema = {
     args: z.tuple([]),
     return: z.void(),
   },
+  'session:goOffline': {
+    args: z.tuple([]),
+    return: z.void(),
+  },
+  'session:goOnline': {
+    args: z.tuple([]),
+    return: z.void(),
+  },
 }

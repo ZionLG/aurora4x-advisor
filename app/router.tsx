@@ -1,23 +1,33 @@
+import { Suspense } from 'react'
 import { createHashRouter } from 'react-router-dom'
 import { RootLayout } from './components/layout/RootLayout'
-import { WelcomePage } from './pages/welcome/WelcomePage'
-import { SetupPage } from './pages/setup/SetupPage'
-import { DashboardPage } from './pages/dashboard/DashboardPage'
-import { PlanningPage } from './pages/planning/PlanningPage'
-import { GovernmentPage } from './pages/government/GovernmentPage'
-import { SettingsPage } from './pages/settings/SettingsPage'
+import { MODULES } from './modules/registry'
+import { Loader2 } from 'lucide-react'
+
+function ModuleLoader() {
+  return (
+    <div className="flex h-full items-center justify-center bg-[var(--cic-void)]">
+      <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+    </div>
+  )
+}
+
+function SuspenseWrapper({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<ModuleLoader />}>{children}</Suspense>
+}
 
 export const router = createHashRouter([
   {
     path: '/',
     element: <RootLayout />,
-    children: [
-      { index: true, element: <WelcomePage /> },
-      { path: 'setup', element: <SetupPage /> },
-      { path: 'dashboard', element: <DashboardPage /> },
-      { path: 'planning', element: <PlanningPage /> },
-      { path: 'government', element: <GovernmentPage /> },
-      { path: 'settings', element: <SettingsPage /> },
-    ],
+    children: MODULES.filter((m) => m.status !== 'hidden').map((mod) => ({
+      path: mod.route === '/' ? undefined : mod.route.slice(1), // remove leading /
+      index: mod.route === '/' ? true : undefined,
+      element: (
+        <SuspenseWrapper>
+          <mod.component />
+        </SuspenseWrapper>
+      ),
+    })),
   },
 ])

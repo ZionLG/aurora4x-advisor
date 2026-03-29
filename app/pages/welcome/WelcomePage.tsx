@@ -60,7 +60,7 @@ function BootLine({
 
 export function WelcomePage() {
   const navigate = useNavigate()
-  const isConnected = useSessionStore((s) => s.isConnected)
+  const connectionMode = useSessionStore((s) => s.connectionMode)
   const settings = useSettingsStore((s) => s.settings)
   const [bootDone, setBootDone] = useState(false)
 
@@ -148,8 +148,8 @@ export function WelcomePage() {
               Aurora database:{' '}
               {hasDbPath ? settings?.auroraDbPath?.split(/[\\/]/).pop() : 'NOT CONFIGURED'}
             </BootLine>
-            <BootLine status={isConnected ? 'ok' : 'wait'} delay={450}>
-              Bridge connection: {isConnected ? 'LINK ACTIVE' : 'Awaiting Aurora'}
+            <BootLine status={connectionMode === 'bridge' ? 'ok' : connectionMode === 'offline' ? 'warn' : 'wait'} delay={450}>
+              Bridge: {connectionMode === 'bridge' ? 'LINK ACTIVE' : connectionMode === 'offline' ? 'OFFLINE MODE' : 'Awaiting Aurora'}
             </BootLine>
             <BootLine
               status={hasDbPath ? (dbGames && dbGames.length > 0 ? 'ok' : 'warn') : 'wait'}

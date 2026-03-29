@@ -1,6 +1,7 @@
 import { handle } from '@/lib/main/shared'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { gameSession } from '@/lib/services/game-session'
+import { getOfflineQuery } from '@/lib/services/offline-query'
 import {
   loadSavedRoutes,
   addSavedRoute,
@@ -9,9 +10,22 @@ import {
 } from '@/lib/services/route-persistence'
 import { loadSavedFilters, saveSavedFilters } from '@/lib/services/filter-persistence'
 import * as compute from '@/lib/compute'
+import { formatGameDate } from '@/lib/compute/utils'
 
-function getBridgeQuery(): compute.QueryFn {
+/**
+ * Returns the active QueryFn — either offline (direct SQLite) or bridge (WebSocket).
+ * The compute module doesn't care which one it gets.
+ */
+function getQuery(): compute.QueryFn {
+  const offlineQuery = getOfflineQuery()
+  if (offlineQuery) return offlineQuery
   return <T = Record<string, unknown>>(sql: string) => auroraBridge.query<T>(sql)
+}
+
+function requireBridge(): void {
+  if (!auroraBridge.isConnected) {
+    throw new Error('This feature requires the Aurora bridge connection')
+  }
 }
 
 function getGameCtx(): compute.GameCtx {
@@ -24,48 +38,51 @@ export const registerEmpireHandlers = () => {
   // Fleet & ship data
   handle('empire:getFleets', async () => {
     const ctx = getGameCtx()
-    return compute.getFleets(getBridgeQuery(), ctx)
+    return compute.getFleets(getQuery(), ctx)
   })
 
   handle('empire:getShips', async () => {
     const ctx = getGameCtx()
-    return compute.getShips(getBridgeQuery(), ctx)
+    return compute.getShips(getQuery(), ctx)
   })
 
   // Ship classes
   handle('empire:getClasses', async () => {
     const ctx = getGameCtx()
-    return compute.getShipClasses(getBridgeQuery(), ctx)
+    return compute.getShipClasses(getQuery(), ctx)
   })
 
   handle('empire:getClassDetail', async (classId: number) => {
     const ctx = getGameCtx()
-    return compute.getShipClassDetail(getBridgeQuery(), ctx, classId)
+    return compute.getShipClassDetail(getQuery(), ctx, classId)
   })
 
-  // System / map (realtime)
+  // System / map (realtime — bridge only)
   handle('empire:getBodies', async (systemId: number) => {
+    requireBridge()
     return auroraBridge.getBodies(systemId)
   })
 
   handle('empire:getSystems', async () => {
+    requireBridge()
     return auroraBridge.getKnownSystems()
   })
 
   handle('empire:getRealtimeFleets', async () => {
+    requireBridge()
     return auroraBridge.getFleets()
   })
 
   // Economy
   handle('empire:getMinerals', async () => {
     const ctx = getGameCtx()
-    return compute.getMineralTotals(getBridgeQuery(), ctx)
+    return compute.getMineralTotals(getQuery(), ctx)
   })
 
   handle('empire:getMineralHistory', async (resolution: string, populationId: number | null) => {
     const ctx = getGameCtx()
     return compute.getMineralHistory(
-      getBridgeQuery(),
+      getQuery(),
       ctx,
       resolution as compute.Resolution,
       populationId,
@@ -75,7 +92,7 @@ export const registerEmpireHandlers = () => {
   handle('empire:getMineralBreakdown', async (mineralId: number, resolution: string) => {
     const ctx = getGameCtx()
     return compute.getMineralBreakdown(
-      getBridgeQuery(),
+      getQuery(),
       ctx,
       mineralId,
       resolution as compute.Resolution,
@@ -84,24 +101,23 @@ export const registerEmpireHandlers = () => {
 
   handle('empire:getMineralColonies', async () => {
     const ctx = getGameCtx()
-    return compute.getMineralColonies(getBridgeQuery(), ctx)
+    return compute.getMineralColonies(getQuery(), ctx)
   })
 
   // Research
   handle('empire:getResearch', async () => {
     const ctx = getGameCtx()
-    return compute.getResearchOverview(getBridgeQuery(), ctx)
+    return compute.getResearchOverview(getQuery(), ctx)
   })
 
   // Navigation
   handle('empire:getWaypoints', async () => {
     const ctx = getGameCtx()
-    return compute.getWaypoints(getBridgeQuery(), ctx)
+    return compute.getWaypoints(getQuery(), ctx)
   })
 
-  handle('empire:getGameDate', () => {
-    // Parse exact date from Aurora's title bar (pushed on every tick)
-    // Format: "EmpireName   15 July 0058 08:00:00   Racial Wealth 269,6"
+  handle('empire:getGameDate', async () => {
+    // Try bridge title bar first (realtime)
     const titleBar = auroraBridge.lastTitleBarText
     if (titleBar) {
       const match = titleBar.match(
@@ -121,30 +137,40 @@ export const registerEmpireHandlers = () => {
         const m = month < 10 ? `0${month}` : `${month}`
         const d = day < 10 ? `0${day}` : `${day}`
         return {
-          gameTime: 0,
-          startYear: year,
-          year,
-          month,
-          day,
-          hours,
-          minutes,
-          seconds,
+          gameTime: 0, startYear: year, year, month, day, hours, minutes, seconds,
           formatted: `${year}-${m}-${d}`,
         }
       }
     }
+
+    // Fallback: read from database (works offline)
+    try {
+      const ctx = getGameCtx()
+      const rows = await getQuery()<{ GameTime: number; StartYear: number }>(
+        `SELECT GameTime, StartYear FROM FCT_Game WHERE GameID = ${ctx.gameId}`,
+      )
+      if (rows.length > 0) {
+        const { GameTime, StartYear } = rows[0]
+        return {
+          gameTime: GameTime, startYear: StartYear,
+          year: 0, month: 0, day: 0, hours: 0, minutes: 0, seconds: 0,
+          formatted: formatGameDate(GameTime, StartYear),
+        }
+      }
+    } catch { /* no data available */ }
+
     return null
   })
 
   // Route planning
   handle('empire:computeRoute', async (request) => {
     const ctx = getGameCtx()
-    return compute.computeRoute(getBridgeQuery(), ctx, request as compute.RouteRequest)
+    return compute.computeRoute(getQuery(), ctx, request as compute.RouteRequest)
   })
 
   handle('empire:computeFleetRoute', async (request) => {
     const ctx = getGameCtx()
-    return compute.computeFleetRoute(getBridgeQuery(), ctx, request as compute.FleetRouteRequest)
+    return compute.computeFleetRoute(getQuery(), ctx, request as compute.FleetRouteRequest)
   })
 
   // Route persistence
@@ -169,26 +195,69 @@ export const registerEmpireHandlers = () => {
     await saveSavedFilters(filters as Parameters<typeof saveSavedFilters>[0])
   })
 
-  // Raw SQL query
-  handle('empire:query', async (sql: string) => {
-    return auroraBridge.query(sql)
+  // Production & shipyards
+  handle('empire:getProduction', async () => {
+    const ctx = getGameCtx()
+    return compute.getProductionTasks(getQuery(), ctx)
   })
 
-  // Actions
+  handle('empire:getShipyards', async () => {
+    const ctx = getGameCtx()
+    return compute.getShipyards(getQuery(), ctx)
+  })
+
+  // Warnings
+  handle('empire:getWarnings', async () => {
+    const ctx = getGameCtx()
+    return compute.getWarnings(getQuery(), ctx)
+  })
+
+  // Habitability
+  handle('empire:getHabitability', async () => {
+    const ctx = getGameCtx()
+    return compute.getHabitability(getQuery(), ctx)
+  })
+
+  handle('empire:getSpeciesRequirements', async () => {
+    const ctx = getGameCtx()
+    return compute.getSpeciesRequirements(getQuery(), ctx)
+  })
+
+  // Game log
+  handle('empire:getGameLog', async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean) => {
+    const ctx = getGameCtx()
+    return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized })
+  })
+
+  handle('empire:getEventTypes', async () => {
+    const ctx = getGameCtx()
+    return compute.getUsedEventTypes(getQuery(), ctx)
+  })
+
+  // Raw SQL query (works offline)
+  handle('empire:query', async (sql: string) => {
+    return getQuery()(sql)
+  })
+
+  // Actions (bridge only)
   handle('empire:executeAction', async (request) => {
+    requireBridge()
     return auroraBridge.executeAction(request)
   })
 
-  // Memory explorer
+  // Memory explorer (bridge only)
   handle('empire:enumerateGameState', async () => {
+    requireBridge()
     return auroraBridge.enumerateGameState()
   })
 
   handle('empire:enumerateCollections', async () => {
+    requireBridge()
     return auroraBridge.enumerateCollections()
   })
 
   handle('empire:readCollection', async (params) => {
+    requireBridge()
     return auroraBridge.readCollection(params)
   })
 }

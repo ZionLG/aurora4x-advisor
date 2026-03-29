@@ -63,7 +63,8 @@ class GameSessionService extends EventEmitter {
    * Blocked if bridge is connected and game doesn't match.
    */
   async setCurrentGame(
-    gameId: string | null
+    gameId: string | null,
+    options?: { bypassLock?: boolean }
   ): Promise<{ accepted: boolean; reason?: string; state: GameSessionState }> {
     if (!gameId) {
       this._currentGame = null
@@ -79,8 +80,8 @@ class GameSessionService extends EventEmitter {
       return { accepted: false, reason: 'Game not found', state: this.getState() }
     }
 
-    // Enforce lock
-    if (this._runningGameId !== null) {
+    // Enforce lock (skipped in offline mode via bypassLock)
+    if (this._runningGameId !== null && !options?.bypassLock) {
       if (this._lockedCampaignId === null) {
         const reason = `Aurora is running "${this._runningGameName}" but no campaign matches. Create a new campaign for it.`
         console.warn(`[GameSession] Blocked "${game.gameInfo.gameName}": ${reason}`)

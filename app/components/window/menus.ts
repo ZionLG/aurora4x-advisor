@@ -41,27 +41,27 @@ export const menuItems: TitlebarMenu[] = [
     items: [
       {
         name: 'Home',
-        actionCallback: () => {
-          window.location.hash = '#/'
-        },
-      },
-      {
-        name: 'Dashboard',
-        actionCallback: () => {
-          window.location.hash = '#/dashboard'
-        },
-      },
-      {
-        name: 'Planning',
-        actionCallback: () => {
-          window.location.hash = '#/planning'
-        },
+        actionCallback: () => { window.location.hash = '#/' },
       },
       {
         name: 'Government',
-        actionCallback: () => {
-          window.location.hash = '#/government'
-        },
+        actionCallback: () => { window.location.hash = '#/strategic/government' },
+      },
+      {
+        name: 'Fleet Command',
+        actionCallback: () => { window.location.hash = '#/military/fleet' },
+      },
+      {
+        name: 'Minerals',
+        actionCallback: () => { window.location.hash = '#/economy/minerals' },
+      },
+      {
+        name: 'Research',
+        actionCallback: () => { window.location.hash = '#/science/research' },
+      },
+      {
+        name: 'Settings',
+        actionCallback: () => { window.location.hash = '#/system/settings' },
       },
     ],
   },

@@ -13,4 +13,6 @@ export class SessionApi extends ConveyorApi {
     this.invoke('session:updateSnapshot', id, snapshot)
   getState = () => this.invoke('session:getState')
   reconnect = () => this.invoke('session:reconnect')
+  goOffline = () => this.invoke('session:goOffline')
+  goOnline = () => this.invoke('session:goOnline')
 }

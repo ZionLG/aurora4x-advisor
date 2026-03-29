@@ -61,6 +61,24 @@ export const empireIpcSchema = {
   // Actions (bridge UI automation)
   'empire:executeAction': { args: z.tuple([ActionRequestSchema]), return: z.any() },
 
+  // Production & shipyards
+  'empire:getProduction': { args: z.tuple([]), return: z.any() },
+  'empire:getShipyards': { args: z.tuple([]), return: z.any() },
+
+  // Warnings
+  'empire:getWarnings': { args: z.tuple([]), return: z.any() },
+
+  // Habitability
+  'empire:getHabitability': { args: z.tuple([]), return: z.any() },
+  'empire:getSpeciesRequirements': { args: z.tuple([]), return: z.any() },
+
+  // Game log
+  'empire:getGameLog': {
+    args: z.tuple([z.number().optional(), z.number().optional(), z.array(z.number()).optional(), z.boolean().optional()]),
+    return: z.any(),
+  },
+  'empire:getEventTypes': { args: z.tuple([]), return: z.any() },
+
   // Memory explorer (dev tools)
   'empire:enumerateGameState': { args: z.tuple([]), return: z.any() },
   'empire:enumerateCollections': { args: z.tuple([]), return: z.any() },
