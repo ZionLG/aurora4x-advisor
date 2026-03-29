@@ -422,6 +422,77 @@ namespace AdvisorBridge
         #region Public API
 
         /// <summary>
+        /// Dump ALL raw fields from a single SystemBody, identified by SystemBodyID.
+        /// Returns obfuscated field names with their values — use to discover unmapped fields
+        /// by comparing against known DB column values.
+        /// Also returns the mapped name if known, for easy cross-reference.
+        /// </summary>
+        public Dictionary<string, object> DumpBodyRaw(int systemBodyId)
+        {
+            var result = new Dictionary<string, object>();
+            if (!Initialize() || _systemBodiesDict == null || _systemBodyAllFields == null) return result;
+
+            try
+            {
+                var gs = GetGameState();
+                if (gs == null) return result;
+
+                var values = GetDictValues(_systemBodiesDict, gs);
+                if (values == null) return result;
+
+                foreach (var body in values)
+                {
+                    try
+                    {
+                        if (_systemBodySystemIdField != null)
+                        {
+                            // Check the "v" field (SystemBodyID)
+                            var idField = _systemBodyAllFields.FirstOrDefault(f => f.Name == "v");
+                            if (idField != null && (int)idField.GetValue(body) != systemBodyId)
+                                continue;
+                        }
+                    }
+                    catch { continue; }
+
+                    // Read ALL primitive fields, keyed by obfuscated name
+                    // Add mapped name as suffix for known fields
+                    foreach (var f in _systemBodyAllFields)
+                    {
+                        try
+                        {
+                            if (f.FieldType == typeof(int) || f.FieldType == typeof(double)
+                                || f.FieldType == typeof(decimal) || f.FieldType == typeof(bool)
+                                || f.FieldType == typeof(string) || f.FieldType == typeof(float)
+                                || f.FieldType == typeof(long))
+                            {
+                                var key = BodyFieldNameMap.ContainsKey(f.Name)
+                                    ? $"{f.Name} ({BodyFieldNameMap[f.Name]})"
+                                    : f.Name;
+                                result[key] = f.GetValue(body);
+                            }
+                            else if (f.FieldType.IsEnum)
+                            {
+                                var key = BodyFieldNameMap.ContainsKey(f.Name)
+                                    ? $"{f.Name} ({BodyFieldNameMap[f.Name]})"
+                                    : f.Name;
+                                result[key] = f.GetValue(body)?.ToString();
+                            }
+                        }
+                        catch { }
+                    }
+
+                    break; // Found the body, stop
+                }
+            }
+            catch (Exception ex)
+            {
+                _patch.LogError($"DumpBodyRaw error: {ex.Message}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Read system bodies (planets, moons, comets, asteroids).
         /// Reads from GameState.bw (Dict of SystemBody/kc).
         /// Optimized: only reads fields needed for rendering.

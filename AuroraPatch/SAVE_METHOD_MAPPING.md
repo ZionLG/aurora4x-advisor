@@ -88,10 +88,11 @@ last tick, the save is skipped entirely.
 ### Population & Industry
 | Method | Tables |
 |--------|--------|
-| `jk` | FCT_Population, FCT_PopulationWeapon, FCT_PopComponent, FCT_PopMDChanges |
+| `jk` | FCT_Population, FCT_PopulationWeapon, FCT_PopComponent, FCT_PopMDChanges, FCT_PopInstallationDemand |
 | `ji` | FCT_PopulationInstallations |
 | `jv` | FCT_IndustrialProjects |
 | `j2` | FCT_Shipyard |
+| `j3` | FCT_ShipyardTask |
 
 ### Commanders
 | Method | Tables |
@@ -102,7 +103,7 @@ last tick, the save is skipped entirely.
 | Method | Tables |
 |--------|--------|
 | `a5` | FCT_Game |
-| `a6` | FCT_Race, FCT_KnownRuinRace, FCT_RaceNameThemes, FCT_WindowPosition, FCT_GroundUnitSeries, FCT_GroundUnitSeriesClass, FCT_RaceOperationalGroupElements, FCT_HullNumber, FCT_WealthHistory |
+| `a6` | FCT_Race, FCT_ResearchQueue, FCT_RaceNameThemes, FCT_WindowPosition, FCT_RaceOperationalGroupElements, FCT_HullNumber, FCT_WealthHistory |
 | `j4` | FCT_Species, FCT_KnownSpecies |
 
 ### Surveys
@@ -118,6 +119,8 @@ last tick, the save is skipped entirely.
 | `is` | FCT_GroundUnitFormationTemplate |
 | `it` | FCT_GroundUnitFormation |
 | `iu` | FCT_GroundUnitClass, FCT_GroundUnitCapability |
+| `ka` | FCT_GroundUnitTraining |
+| `kb` | FCT_GroundUnitTrainingQueue |
 
 ### Aliens
 | Method | Tables |
@@ -128,6 +131,12 @@ last tick, the save is skipped entirely.
 | `kh` | FCT_AlienShip |
 | `ki` | FCT_AlienGroundUnitClass |
 | `kj` | FCT_AlienPopulation |
+
+### Shipping
+| Method | Tables |
+|--------|--------|
+| `i7` | FCT_ShippingWealthData |
+| `j7` | FCT_ShippingLines |
 
 ### Misc
 | Method | Tables |
@@ -147,7 +156,7 @@ last tick, the save is skipped entirely.
 | `ju` | FCT_Wrecks, FCT_WreckTech, FCT_WreckComponents |
 | `j8` | FCT_NavalAdminCommand |
 
-## Unmapped methods (22 methods, no tables detected)
+## Unmapped methods (17 methods, no tables detected)
 
 These methods produced no INSERT, UPDATE, or DELETE triggers during testing.
 They may activate during specific game states (combat, diplomacy, etc.) or
@@ -155,7 +164,6 @@ may be unused/dead code.
 
 | Method | Notes |
 |--------|-------|
-| `kb` | Unknown - no writes detected |
 | `kl` | Unknown - no writes detected |
 | `kq` | Unknown - no writes detected |
 | `kr` | Unknown - no writes detected |
@@ -165,7 +173,6 @@ may be unused/dead code.
 | `i0` | Unknown - no writes detected |
 | `i1` | Unknown - no writes detected |
 | `i3` | Unknown - no writes detected |
-| `i7` | Unknown - no writes detected |
 | `i8` | Unknown - no writes detected |
 | `jb` | Unknown - no writes detected |
 | `jc` | Unknown - no writes detected |
@@ -175,10 +182,7 @@ may be unused/dead code.
 | `jq` | Unknown - no writes detected |
 | `jt` | Unknown - no writes detected |
 | `jw` | Unknown - no writes detected |
-| `j3` | Unknown - no writes detected |
-| `j7` | Unknown - no writes detected |
 | `j9` | Unknown - no writes detected |
-| `ka` | Unknown - no writes detected |
 
 To investigate these, try `rediscoverMapping` after triggering different game events
 (combat, first contact, ground invasions, etc.) and compare the output.

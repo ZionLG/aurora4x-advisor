@@ -34,7 +34,7 @@ export default [
     rules: {
       'better-tailwindcss/no-unknown-classes': 'off',
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
-      'better-tailwindcss/enforce-canonical-classes': 'off',
+      'better-/enftailwindcssorce-canonical-classes': 'off',
     },
   },
   {
@@ -49,6 +49,7 @@ export default [
       '.eslintignore',
       '.eslintrc',
       '.prettierrc',
+      'scripts'
     ],
   },
   eslint.configs.recommended,

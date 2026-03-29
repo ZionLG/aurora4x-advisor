@@ -68,6 +68,11 @@ export class EmpireApi extends ConveyorApi {
   ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden)
   getEventTypes = () => this.invoke('empire:getEventTypes')
 
+  // Bridge diagnostics
+  getTableMapping = () => this.invoke('empire:getTableMapping')
+  rediscoverMapping = () => this.invoke('empire:rediscoverMapping')
+  dumpBodyRaw = (systemBodyId: number) => this.invoke('empire:dumpBodyRaw', systemBodyId)
+
   // Raw SQL (dev tools)
   query = (sql: string) => this.invoke('empire:query', sql)
 

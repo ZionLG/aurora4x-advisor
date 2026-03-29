@@ -85,6 +85,11 @@ export const empireIpcSchema = {
   },
   'empire:getEventTypes': { args: z.tuple([]), return: z.any() },
 
+  // Bridge diagnostics
+  'empire:getTableMapping': { args: z.tuple([]), return: z.any() },
+  'empire:rediscoverMapping': { args: z.tuple([]), return: z.any() },
+  'empire:dumpBodyRaw': { args: z.tuple([z.number()]), return: z.any() },
+
   // Memory explorer (dev tools)
   'empire:enumerateGameState': { args: z.tuple([]), return: z.any() },
   'empire:enumerateCollections': { args: z.tuple([]), return: z.any() },

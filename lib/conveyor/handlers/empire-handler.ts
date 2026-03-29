@@ -264,6 +264,22 @@ export const registerEmpireHandlers = () => {
     return auroraBridge.executeAction(request)
   })
 
+  // Bridge diagnostics
+  handle('empire:getTableMapping', async () => {
+    requireBridge()
+    return auroraBridge.getTableMapping()
+  })
+
+  handle('empire:rediscoverMapping', async () => {
+    requireBridge()
+    return auroraBridge.send('rediscovermapping', null)
+  })
+
+  handle('empire:dumpBodyRaw', async (systemBodyId: number) => {
+    requireBridge()
+    return auroraBridge.send('dumpbodyraw', { SystemBodyId: systemBodyId })
+  })
+
   // Memory explorer (bridge only)
   handle('empire:enumerateGameState', async () => {
     requireBridge()

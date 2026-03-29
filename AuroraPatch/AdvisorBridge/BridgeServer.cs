@@ -342,6 +342,17 @@ namespace AdvisorBridge
                     response = HandleInspect(request);
                     break;
 
+                // Debug: dump all raw fields from a single body
+                case "dumpbodyraw":
+                    response = Handle(request, () =>
+                    {
+                        var payload = ParsePayload<SystemBodyIdPayload>(request);
+                        if (payload == null || payload.SystemBodyId <= 0)
+                            throw new ArgumentException("Missing 'SystemBodyId' in payload");
+                        return _memoryReader.DumpBodyRaw(payload.SystemBodyId);
+                    });
+                    break;
+
                 // Diagnostics
                 case "gettablemapping":
                     response = HandleGetTableMapping(request);
@@ -627,6 +638,11 @@ namespace AdvisorBridge
         private class InspectPayload
         {
             public string FormName { get; set; }
+        }
+
+        private class SystemBodyIdPayload
+        {
+            public int SystemBodyId { get; set; }
         }
     }
 }

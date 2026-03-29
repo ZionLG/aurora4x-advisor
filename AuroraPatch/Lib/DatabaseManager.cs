@@ -108,6 +108,7 @@ namespace Lib
                     { "ji", new[] { "FCT_PopulationInstallations" } },
                     { "jv", new[] { "FCT_IndustrialProjects" } },
                     { "j2", new[] { "FCT_Shipyard" } },
+                    { "j3", new[] { "FCT_ShipyardTask" } },
 
                     // Commanders
                     { "j1", new[] { "FCT_Commander", "FCT_CommanderHistory", "FCT_CommanderMedal",
@@ -139,6 +140,8 @@ namespace Lib
                     { "kj", new[] { "FCT_AlienPopulation" } },
 
                     // Misc
+                    { "ka", new[] { "FCT_GroundUnitTraining" } },
+                    { "kb", new[] { "FCT_GroundUnitTrainingQueue" } },
                     { "kd", new[] { "FCT_SectorCommand" } },
                     { "ko", new[] { "FCT_Increments" } },
                     { "ks", new[] { "FCT_GameLog" } },
