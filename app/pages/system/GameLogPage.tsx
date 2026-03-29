@@ -128,7 +128,9 @@ const columns: ColumnDef<GameLogEntry>[] = [
     header: 'Date',
     size: 80,
     cell: ({ row }) => (
-      <span className="text-[9px] font-mono text-muted-foreground/60 whitespace-nowrap">
+      <span className="
+        font-mono text-[9px] whitespace-nowrap text-muted-foreground/60
+      ">
         {row.original.formattedDate}
       </span>
     ),
@@ -141,7 +143,7 @@ const columns: ColumnDef<GameLogEntry>[] = [
       const Icon = getEventIcon(row.original.eventTypeName)
       return (
         <span style={{ color: row.original.textColor ?? 'var(--muted-foreground)' }}>
-          <Icon className="h-3 w-3" />
+          <Icon className="size-3" />
         </span>
       )
     },
@@ -153,7 +155,9 @@ const columns: ColumnDef<GameLogEntry>[] = [
     cell: ({ row }) => (
       <Badge
         variant="outline"
-        className="text-[7px] px-1.5 py-0 h-4 border-[var(--cic-panel-edge)] whitespace-nowrap"
+        className="
+          h-4 border-(--cic-panel-edge) px-1.5 py-0 text-[7px] whitespace-nowrap
+        "
         style={
           row.original.textColor
             ? { color: row.original.textColor, borderColor: row.original.textColor + '40' }
@@ -250,21 +254,28 @@ export function GameLogPage() {
   })
 
   return (
-    <div className="flex h-full flex-col bg-[var(--cic-void)]">
+    <div className="flex h-full flex-col bg-(--cic-void)">
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
+      <div className="
+        flex shrink-0 items-center justify-between border-b
+        border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2.5
+      ">
         <div className="flex items-center gap-3">
-          <ScrollText className="h-4 w-4 text-[var(--cic-amber)]" />
+          <ScrollText className="size-4 text-(--cic-amber)" />
           <span className="text-xs font-semibold text-foreground/80">Game Log</span>
-          <span className="text-[9px] font-mono text-muted-foreground">
+          <span className="font-mono text-[9px] text-muted-foreground">
             {totalCount.toLocaleString()} events
             {entries.length !== allEntries.length && ` (${entries.length} shown)`}
           </span>
-          {isFetching && !isLoading && <Loader2 className="h-3 w-3 animate-spin text-[var(--cic-cyan-dim)]" />}
+          {isFetching && !isLoading && <Loader2 className="
+            size-3 animate-spin text-(--cic-cyan-dim)
+          " />}
         </div>
         <div className="flex items-center gap-2">
           <Input
-            className="h-7 w-40 text-[9px] bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+            className="
+              h-7 w-40 border-(--cic-panel-edge) bg-(--cic-void) text-[9px]
+            "
             placeholder="Search messages..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -274,21 +285,29 @@ export function GameLogPage() {
             variant={filterOpen ? 'default' : 'ghost'}
             className={
               filterOpen
-                ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)] border border-[var(--cic-cyan-dim)]/30'
+                ? `
+                  border border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
+                  text-(--cic-cyan)
+                `
                 : 'text-muted-foreground'
             }
             onClick={() => setFilterOpen(!filterOpen)}
           >
-            <Filter className="h-3 w-3" />
+            <Filter className="size-3" />
             {selectedTypes.length > 0 && (
-              <span className="ml-1 text-[8px] bg-[var(--cic-cyan)] text-[var(--cic-void)] rounded-full px-1">
+              <span className="
+                ml-1 rounded-full bg-(--cic-cyan) px-1 text-[8px]
+                text-(--cic-void)
+              ">
                 {selectedTypes.length}
               </span>
             )}
           </Button>
-          <div className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground">
+          <div className="
+            flex items-center gap-1 font-mono text-[9px] text-muted-foreground
+          ">
             <Button size="icon-xs" variant="ghost" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
-              <ChevronLeft className="h-3 w-3" />
+              <ChevronLeft className="size-3" />
             </Button>
             <span>
               {page + 1}/{Math.max(totalPages, 1)}
@@ -299,7 +318,7 @@ export function GameLogPage() {
               disabled={page >= totalPages - 1}
               onClick={() => setPage((p) => p + 1)}
             >
-              <ChevronRight className="h-3 w-3" />
+              <ChevronRight className="size-3" />
             </Button>
           </div>
         </div>
@@ -307,11 +326,14 @@ export function GameLogPage() {
 
       {/* Filter panel */}
       {filterOpen && (
-        <div className="shrink-0 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]/80 px-4 py-2.5 space-y-2">
+        <div className="
+          shrink-0 space-y-2 border-b border-(--cic-panel-edge)
+          bg-(--cic-panel)/80 px-4 py-2.5
+        ">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
-                <EyeOff className="h-3 w-3 text-muted-foreground/60" />
+                <EyeOff className="size-3 text-muted-foreground/60" />
                 <Label className="text-[9px] text-muted-foreground">Hide non-customized</Label>
                 <Switch
                   checked={hideNonCustomized}
@@ -322,7 +344,7 @@ export function GameLogPage() {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <Eye className="h-3 w-3 text-muted-foreground/60" />
+                <Eye className="size-3 text-muted-foreground/60" />
                 <Label className="text-[9px] text-muted-foreground">Show hidden</Label>
                 <Switch
                   checked={showHidden}
@@ -336,11 +358,14 @@ export function GameLogPage() {
             <Button
               size="xs"
               variant="ghost"
-              className={`text-[8px] text-muted-foreground ${
+              className={`
+                text-[8px] text-muted-foreground
+                ${
                 selectedTypes.length > 0 || hideNonCustomized || showHidden || searchText || tagSearch
                   ? 'visible'
                   : 'invisible'
-              }`}
+              }
+              `}
               onClick={clearFilters}
             >
               Clear all
@@ -348,7 +373,7 @@ export function GameLogPage() {
           </div>
 
           <Input
-            className="h-7 text-[9px] bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+            className="h-7 border-(--cic-panel-edge) bg-(--cic-void) text-[9px]"
             placeholder="Search event types..."
             value={tagSearch}
             onChange={(e) => setTagSearch(e.target.value)}
@@ -358,7 +383,11 @@ export function GameLogPage() {
             {customizedTypes.length > 0 && (
               <div className={expandedSections.has('customized') ? 'basis-full' : ''}>
                 <button
-                  className="flex items-center gap-1 text-[8px] text-[var(--cic-amber-dim)] hover:text-[var(--cic-amber)] transition-colors"
+                  className="
+                    flex items-center gap-1 text-[8px] text-(--cic-amber-dim)
+                    transition-colors
+                    hover:text-(--cic-amber)
+                  "
                   onClick={() =>
                     setExpandedSections((prev) => {
                       const next = new Set(prev)
@@ -369,19 +398,25 @@ export function GameLogPage() {
                   }
                 >
                   <ChevronDown
-                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('customized') ? '' : '-rotate-90'}`}
+                    className={`
+                      size-2.5 transition-transform
+                      ${expandedSections.has('customized') ? '' : `-rotate-90`}
+                    `}
                   />
                   Customized ({customizedTypes.length})
                 </button>
                 {expandedSections.has('customized') && (
-                  <div className="flex flex-wrap gap-1 mt-1">
+                  <div className="mt-1 flex flex-wrap gap-1">
                     {customizedTypes.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
                         <Badge
                           key={t.id}
                           variant="outline"
-                          className="cursor-pointer text-[8px] px-2 py-0.5 h-5 transition-all"
+                          className="
+                            h-5 cursor-pointer px-2 py-0.5 text-[8px]
+                            transition-all
+                          "
                           style={{
                             borderColor: active ? (t.textColor ?? 'var(--cic-cyan-dim)') : 'var(--cic-panel-edge)',
                             color: active ? (t.textColor ?? 'var(--cic-cyan)') : undefined,
@@ -390,7 +425,7 @@ export function GameLogPage() {
                           onClick={() => toggleType(t.id)}
                         >
                           {t.textColor && (
-                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: t.textColor }} />
+                            <span className="size-1.5 shrink-0 rounded-full" style={{ background: t.textColor }} />
                           )}
                           {t.description}
                         </Badge>
@@ -404,7 +439,11 @@ export function GameLogPage() {
             {withEntries.length > 0 && (
               <div className={expandedSections.has('active') ? 'basis-full' : ''}>
                 <button
-                  className="flex items-center gap-1 text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] transition-colors"
+                  className="
+                    flex items-center gap-1 text-[8px] text-(--cic-cyan-dim)
+                    transition-colors
+                    hover:text-(--cic-cyan)
+                  "
                   onClick={() =>
                     setExpandedSections((prev) => {
                       const next = new Set(prev)
@@ -415,19 +454,34 @@ export function GameLogPage() {
                   }
                 >
                   <ChevronDown
-                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('active') ? '' : '-rotate-90'}`}
+                    className={`
+                      size-2.5 transition-transform
+                      ${expandedSections.has('active') ? '' : `-rotate-90`}
+                    `}
                   />
                   Active in Log ({withEntries.length})
                 </button>
                 {expandedSections.has('active') && (
-                  <div className="flex flex-wrap gap-1 mt-1 max-h-[120px] overflow-y-auto">
+                  <div className="
+                    mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
+                  ">
                     {withEntries.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
                         <Badge
                           key={t.id}
                           variant="outline"
-                          className={`cursor-pointer text-[8px] px-2 py-0.5 h-5 transition-all ${active ? 'border-[var(--cic-cyan-dim)] text-[var(--cic-cyan)] bg-[var(--cic-cyan-glow)]' : 'border-[var(--cic-panel-edge)] text-muted-foreground/60 hover:text-foreground/70'}`}
+                          className={`
+                            h-5 cursor-pointer px-2 py-0.5 text-[8px]
+                            transition-all
+                            ${active ? `
+                              border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                              text-(--cic-cyan)
+                            ` : `
+                              border-(--cic-panel-edge) text-muted-foreground/60
+                              hover:text-foreground/70
+                            `}
+                          `}
                           onClick={() => toggleType(t.id)}
                         >
                           {t.description}
@@ -442,7 +496,11 @@ export function GameLogPage() {
             {hiddenTypesList.length > 0 && (
               <div className={expandedSections.has('hidden') ? 'basis-full' : ''}>
                 <button
-                  className="flex items-center gap-1 text-[8px] text-[var(--cic-red)]/60 hover:text-[var(--cic-red)] transition-colors"
+                  className="
+                    flex items-center gap-1 text-[8px] text-(--cic-red)/60
+                    transition-colors
+                    hover:text-(--cic-red)
+                  "
                   onClick={() =>
                     setExpandedSections((prev) => {
                       const next = new Set(prev)
@@ -453,22 +511,35 @@ export function GameLogPage() {
                   }
                 >
                   <ChevronDown
-                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('hidden') ? '' : '-rotate-90'}`}
+                    className={`
+                      size-2.5 transition-transform
+                      ${expandedSections.has('hidden') ? '' : `-rotate-90`}
+                    `}
                   />
                   Hidden in Aurora ({hiddenTypesList.length})
                 </button>
                 {expandedSections.has('hidden') && (
-                  <div className="flex flex-wrap gap-1 mt-1">
+                  <div className="mt-1 flex flex-wrap gap-1">
                     {hiddenTypesList.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
                         <Badge
                           key={t.id}
                           variant="outline"
-                          className={`cursor-pointer text-[8px] px-2 py-0.5 h-5 transition-all ${active ? 'border-[var(--cic-red)]/40 text-[var(--cic-red)] bg-[var(--cic-red)]/5' : 'border-[var(--cic-panel-edge)] text-muted-foreground/40 line-through'}`}
+                          className={`
+                            h-5 cursor-pointer px-2 py-0.5 text-[8px]
+                            transition-all
+                            ${active ? `
+                              border-(--cic-red)/40 bg-(--cic-red)/5
+                              text-(--cic-red)
+                            ` : `
+                              border-(--cic-panel-edge) text-muted-foreground/40
+                              line-through
+                            `}
+                          `}
                           onClick={() => toggleType(t.id)}
                         >
-                          <EyeOff className="h-2.5 w-2.5 mr-0.5" />
+                          <EyeOff className="mr-0.5 size-2.5" />
                           {t.description}
                         </Badge>
                       )
@@ -481,7 +552,11 @@ export function GameLogPage() {
             {noEntries.length > 0 && (
               <div className={expandedSections.has('all') ? 'basis-full' : ''}>
                 <button
-                  className="flex items-center gap-1 text-[8px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+                  className="
+                    flex items-center gap-1 text-[8px] text-muted-foreground/40
+                    transition-colors
+                    hover:text-muted-foreground/60
+                  "
                   onClick={() =>
                     setExpandedSections((prev) => {
                       const next = new Set(prev)
@@ -492,19 +567,34 @@ export function GameLogPage() {
                   }
                 >
                   <ChevronDown
-                    className={`h-2.5 w-2.5 transition-transform ${expandedSections.has('all') ? '' : '-rotate-90'}`}
+                    className={`
+                      size-2.5 transition-transform
+                      ${expandedSections.has('all') ? '' : `-rotate-90`}
+                    `}
                   />
                   All Types ({noEntries.length})
                 </button>
                 {expandedSections.has('all') && (
-                  <div className="flex flex-wrap gap-1 mt-1 max-h-[120px] overflow-y-auto">
+                  <div className="
+                    mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
+                  ">
                     {noEntries.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
                         <Badge
                           key={t.id}
                           variant="outline"
-                          className={`cursor-pointer text-[7px] px-1.5 py-0 h-4 transition-all ${active ? 'border-[var(--cic-cyan-dim)] text-[var(--cic-cyan)] bg-[var(--cic-cyan-glow)]' : 'border-[var(--cic-panel-edge)] text-muted-foreground/30 hover:text-muted-foreground/50'}`}
+                          className={`
+                            h-4 cursor-pointer px-1.5 py-0 text-[7px]
+                            transition-all
+                            ${active ? `
+                              border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                              text-(--cic-cyan)
+                            ` : `
+                              border-(--cic-panel-edge) text-muted-foreground/30
+                              hover:text-muted-foreground/50
+                            `}
+                          `}
                           onClick={() => toggleType(t.id)}
                         >
                           {t.description}
@@ -522,22 +612,31 @@ export function GameLogPage() {
       {/* Data Table */}
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center">
-          <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+          <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center text-muted-foreground text-[10px]">
+        <div className="
+          flex flex-1 items-center justify-center text-[10px]
+          text-muted-foreground
+        ">
           {allEntries.length > 0 ? 'All entries hidden by filters' : 'No log entries found'}
         </div>
       ) : (
         <div className="flex-1 overflow-auto">
           <Table>
-            <TableHeader className="sticky top-0 bg-[var(--cic-panel)] z-10">
+            <TableHeader className="sticky top-0 z-10 bg-(--cic-panel)">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-b border-[var(--cic-panel-edge)] hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="
+                  border-b border-(--cic-panel-edge)
+                  hover:bg-transparent
+                ">
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="text-[8px] uppercase tracking-wider text-muted-foreground/60 h-7 px-2"
+                      className="
+                        h-7 px-2 text-[8px] tracking-wider
+                        text-muted-foreground/60 uppercase
+                      "
                       style={header.column.getSize() !== 150 ? { width: header.column.getSize() } : undefined}
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -550,7 +649,10 @@ export function GameLogPage() {
               {table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-b border-[var(--cic-panel-edge)] hover:bg-[var(--cic-panel)]/50"
+                  className="
+                    border-b border-(--cic-panel-edge)
+                    hover:bg-(--cic-panel)/50
+                  "
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-2 py-1.5">

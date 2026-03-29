@@ -76,9 +76,14 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
         return (
           <div
             key={ministry.tempId}
-            className={`rounded-md border bg-[var(--cic-panel)] overflow-hidden ${
-              activeTagCount === 0 ? 'border-[var(--cic-red)]/30' : 'border-[var(--cic-panel-edge)]'
-            }`}
+            className={`
+              overflow-hidden rounded-md border bg-(--cic-panel)
+              ${
+              activeTagCount === 0 ? 'border-(--cic-red)/30' : `
+                border-(--cic-panel-edge)
+              `
+            }
+            `}
             style={{
               animationDelay: `${idx * 50}ms`,
             }}
@@ -90,39 +95,54 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             />
 
             {/* Department header bar */}
-            <div className="flex items-center justify-between px-3 py-2 bg-[var(--cic-void)]/60 border-b border-[var(--cic-panel-edge)]">
+            <div className="
+              flex items-center justify-between border-b
+              border-(--cic-panel-edge) bg-(--cic-void)/60 px-3 py-2
+            ">
               <div className="flex items-center gap-2.5">
                 <Landmark
-                  className="h-3 w-3 transition-colors duration-200"
+                  className="size-3 transition-colors duration-200"
                   style={{ color: activeTagCount > 0 ? accentColor : 'var(--cic-amber-dim)' }}
                 />
                 <span className="text-[11px] font-semibold text-foreground/80">{ministry.name}</span>
-                <span className="text-[7px] font-mono text-muted-foreground/25">DEPT-{deptNum}</span>
+                <span className="font-mono text-[7px] text-muted-foreground/25">DEPT-{deptNum}</span>
               </div>
               <div className="flex items-center gap-2">
                 {activeTagCount > 0 ? (
-                  <span className="text-[7px] font-mono text-[var(--cic-cyan-dim)] bg-[var(--cic-cyan-glow)] px-1.5 py-px rounded">
+                  <span className="
+                    rounded-sm bg-(--cic-cyan-glow) px-1.5 py-px font-mono
+                    text-[7px] text-(--cic-cyan-dim)
+                  ">
                     {activeTagCount} {activeTagCount === 1 ? 'domain' : 'domains'}
                   </span>
                 ) : (
-                  <span className="text-[7px] font-mono text-[var(--cic-red)] bg-[var(--cic-red)]/10 px-1.5 py-px rounded">
+                  <span className="
+                    rounded-sm bg-(--cic-red)/10 px-1.5 py-px font-mono
+                    text-[7px] text-(--cic-red)
+                  ">
                     No domains
                   </span>
                 )}
                 <button
                   onClick={() => removeMinistry(ministry.tempId)}
-                  className="text-muted-foreground/50 hover:text-[var(--cic-red)] transition-colors p-0.5 rounded hover:bg-[var(--cic-red)]/10"
+                  className="
+                    rounded-sm p-0.5 text-muted-foreground/50 transition-colors
+                    hover:bg-(--cic-red)/10 hover:text-(--cic-red)
+                  "
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </div>
             </div>
 
             {/* Body */}
-            <div className="p-4 space-y-3">
+            <div className="space-y-3 p-4">
               {/* Domain tags */}
               <div>
-                <p className="text-[7px] uppercase tracking-wider text-muted-foreground mb-1.5">Domain Assignments</p>
+                <p className="
+                  mb-1.5 text-[7px] tracking-wider text-muted-foreground
+                  uppercase
+                ">Domain Assignments</p>
                 <div className="flex flex-wrap gap-1.5">
                   {EVENT_TAGS.map((tag) => {
                     const active = ministry.tags.includes(tag.id)
@@ -133,13 +153,25 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
                       <Badge
                         key={tag.id}
                         variant="outline"
-                        className={`text-[9px] pl-2 pr-2.5 py-0.5 h-7 gap-1.5 transition-all duration-150 ${
+                        className={`
+                          h-7 gap-1.5 py-0.5 pr-2.5 pl-2 text-[9px]
+                          transition-all duration-150
+                          ${
                           active
                             ? 'cursor-pointer'
                             : taken
-                              ? 'cursor-not-allowed border-[var(--cic-panel-edge)]/40 text-muted-foreground/40'
-                              : 'cursor-pointer border-[var(--cic-panel-edge)] text-foreground/30 hover:text-foreground/60 hover:border-foreground/20'
-                        }`}
+                              ? `
+                                cursor-not-allowed border-(--cic-panel-edge)/40
+                                text-muted-foreground/40
+                              `
+                              : `
+                                cursor-pointer border-(--cic-panel-edge)
+                                text-foreground/30
+                                hover:border-foreground/20
+                                hover:text-foreground/60
+                              `
+                        }
+                        `}
                         style={
                           active
                             ? {
@@ -152,7 +184,10 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
                         onClick={() => !taken && toggleTag(ministry.tempId, tag.id)}
                       >
                         <div
-                          className="w-2 h-2 rounded-full shrink-0 transition-all duration-150"
+                          className="
+                            size-2 shrink-0 rounded-full transition-all
+                            duration-150
+                          "
                           style={{
                             background: active ? dotColor : taken ? 'var(--foreground)' : dotColor,
                             opacity: active ? 1 : taken ? 0.08 : 0.25,
@@ -168,11 +203,19 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
 
               {/* Description */}
               <div>
-                <p className="text-[7px] uppercase tracking-wider text-muted-foreground mb-1">
+                <p className="
+                  mb-1 text-[7px] tracking-wider text-muted-foreground uppercase
+                ">
                   Mandate <span className="text-muted-foreground/60">(optional)</span>
                 </p>
                 <textarea
-                  className="w-full rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-void)] px-3 py-2 text-[10px] text-foreground/45 placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-[var(--cic-cyan-dim)]/40 transition-colors"
+                  className="
+                    w-full resize-none rounded-md border
+                    border-(--cic-panel-edge) bg-(--cic-void) px-3 py-2
+                    text-[10px] text-foreground/45 transition-colors
+                    placeholder:text-muted-foreground/50
+                    focus:border-(--cic-cyan-dim)/40 focus:outline-none
+                  "
                   rows={2}
                   placeholder="Describe this ministry's mandate and responsibilities..."
                   value={ministry.description}
@@ -185,16 +228,25 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
       })}
 
       {/* Add ministry — command panel */}
-      <div className="rounded-md border border-dashed border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
+      <div className="
+        overflow-hidden rounded-md border border-dashed
+        border-(--cic-panel-edge) bg-(--cic-panel)
+      ">
         {/* Header strip */}
-        <div className="px-3 py-1.5 bg-[var(--cic-void)]/40 border-b border-[var(--cic-panel-edge)]/50 flex items-center gap-2">
-          <Plus className="h-2.5 w-2.5 text-[var(--cic-amber-dim)]/60" />
-          <span className="text-[7px] uppercase tracking-wider text-muted-foreground/50 font-semibold">
+        <div className="
+          flex items-center gap-2 border-b border-(--cic-panel-edge)/50
+          bg-(--cic-void)/40 px-3 py-1.5
+        ">
+          <Plus className="size-2.5 text-(--cic-amber-dim)/60" />
+          <span className="
+            text-[7px] font-semibold tracking-wider text-muted-foreground/50
+            uppercase
+          ">
             Establish New Ministry
           </span>
         </div>
 
-        <div className="p-3 space-y-3">
+        <div className="space-y-3 p-3">
           {ministries.length === 0 && (
             <p className="text-[10px] text-muted-foreground/60">
               No ministries established. Select a government profile to get suggested ministries, or create one below.
@@ -202,7 +254,10 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
           )}
           <div className="flex items-center gap-3">
             <Input
-              className="h-9 text-[11px] bg-[var(--cic-void)] border-[var(--cic-panel-edge)] flex-1 focus-visible:border-[var(--cic-cyan-dim)]/40"
+              className="
+                h-9 flex-1 border-(--cic-panel-edge) bg-(--cic-void) text-[11px]
+                focus-visible:border-(--cic-cyan-dim)/40
+              "
               placeholder="Enter ministry name..."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -211,10 +266,16 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             <Button
               size="sm"
               disabled={!newName.trim()}
-              className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/30 hover:bg-[var(--cic-amber)]/20 disabled:opacity-20 transition-all shrink-0 h-9 text-[10px] px-4"
+              className="
+                h-9 shrink-0 border border-(--cic-amber-dim)/30
+                bg-(--cic-amber)/10 px-4 text-[10px] text-(--cic-amber)
+                transition-all
+                hover:bg-(--cic-amber)/20
+                disabled:opacity-20
+              "
               onClick={addMinistry}
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="size-3" />
               Establish
             </Button>
           </div>

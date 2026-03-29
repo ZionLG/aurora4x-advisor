@@ -51,32 +51,40 @@ function AiConnectionStatus() {
       <div className="flex items-center gap-2">
         {status === null ? (
           <>
-            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-amber)]" />
-            <span className="text-[10px] font-mono text-[var(--cic-amber-dim)]">Not verified</span>
+            <div className="size-1.5 rounded-full bg-(--cic-amber)" />
+            <span className="font-mono text-[10px] text-(--cic-amber-dim)">Not verified</span>
           </>
         ) : status.connected ? (
           <>
-            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-green)] shadow-[0_0_4px_var(--cic-green)]" />
-            <span className="text-[10px] font-mono text-[var(--cic-green)]">
+            <div className="
+              size-1.5 rounded-full bg-(--cic-green)
+              shadow-[0_0_4px_var(--cic-green)]
+            " />
+            <span className="font-mono text-[10px] text-(--cic-green)">
               Connected: {status.provider}
               {status.model && ` / ${status.model}`}
             </span>
           </>
         ) : (
           <>
-            <div className="h-1.5 w-1.5 rounded-full bg-[var(--cic-red)]" />
-            <span className="text-[10px] font-mono text-[var(--cic-red)]">{status.error ?? 'Connection failed'}</span>
+            <div className="size-1.5 rounded-full bg-(--cic-red)" />
+            <span className="font-mono text-[10px] text-(--cic-red)">{status.error ?? 'Connection failed'}</span>
           </>
         )}
       </div>
       <Button
         size="xs"
         variant="ghost"
-        className="text-[9px] text-muted-foreground hover:text-[var(--cic-cyan)]"
+        className="
+          text-[9px] text-muted-foreground
+          hover:text-(--cic-cyan)
+        "
         onClick={verify}
         disabled={checking}
       >
-        {checking ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+        {checking ? <Loader2 className="size-3 animate-spin" /> : <RefreshCw className="
+          size-3
+        " />}
         {checking ? 'Verifying...' : 'Verify'}
       </Button>
     </div>
@@ -93,14 +101,23 @@ function SectionHeader({
   tag?: string
 }) {
   return (
-    <div className="flex items-center gap-3 mb-4">
-      <div className="flex items-center justify-center w-8 h-8 rounded bg-[var(--cic-amber-glow)] border border-[var(--cic-amber-dim)]/30">
-        <Icon className="h-4 w-4 text-[var(--cic-amber)]" />
+    <div className="mb-4 flex items-center gap-3">
+      <div className="
+        flex size-8 items-center justify-center rounded-sm border
+        border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
+      ">
+        <Icon className="size-4 text-(--cic-amber)" />
       </div>
-      <div className="flex items-center gap-2 flex-1">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">{label}</span>
-        <div className="flex-1 h-px bg-gradient-to-r from-[var(--cic-amber-dim)]/40 to-transparent" />
-        {tag && <span className="text-[10px] font-mono text-[var(--cic-amber-dim)]/60 uppercase">{tag}</span>}
+      <div className="flex flex-1 items-center gap-2">
+        <span className="
+          text-xs font-semibold tracking-[0.2em] text-(--cic-amber) uppercase
+        ">{label}</span>
+        <div className="
+          h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
+        " />
+        {tag && <span className="
+          font-mono text-[10px] text-(--cic-amber-dim)/60 uppercase
+        ">{tag}</span>}
       </div>
     </div>
   )
@@ -109,7 +126,12 @@ function SectionHeader({
 function SettingRow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <div
-      className={`relative rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-4 transition-colors hover:border-[var(--cic-cyan-dim)]/30 ${className}`}
+      className={`
+        relative rounded-md border border-(--cic-panel-edge) bg-(--cic-panel)
+        p-4 transition-colors
+        hover:border-(--cic-cyan-dim)/30
+        ${className}
+      `}
     >
       {children}
     </div>
@@ -119,9 +141,15 @@ function SettingRow({ children, className = '' }: { children: React.ReactNode; c
 function DataReadout({ label, value, mono = true }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60">{label}</span>
+      <span className="
+        text-[10px] tracking-wider text-muted-foreground/60 uppercase
+      ">{label}</span>
       <div
-        className={`mt-1 rounded border border-[var(--cic-panel-edge)] bg-[var(--cic-void)] px-3 py-2 text-xs break-all ${mono ? 'font-mono text-[var(--cic-cyan)]' : 'text-foreground'}`}
+        className={`
+          mt-1 rounded-sm border border-(--cic-panel-edge) bg-(--cic-void) px-3
+          py-2 text-xs break-all
+          ${mono ? `font-mono text-(--cic-cyan)` : `text-foreground`}
+        `}
       >
         {value}
       </div>
@@ -193,8 +221,11 @@ export function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="flex items-center gap-2 text-[var(--cic-cyan-dim)] text-xs font-mono animate-pulse">
-          <CircleDot className="h-3 w-3" />
+        <div className="
+          flex animate-pulse items-center gap-2 font-mono text-xs
+          text-(--cic-cyan-dim)
+        ">
+          <CircleDot className="size-3" />
           Loading configuration...
         </div>
       </div>
@@ -202,26 +233,34 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-[var(--cic-void)]">
+    <div className="h-full overflow-y-auto bg-(--cic-void)">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]/95 backdrop-blur-sm">
+      <div className="
+        sticky top-0 z-10 border-b border-(--cic-panel-edge) bg-(--cic-panel)/95
+        backdrop-blur-sm
+      ">
         <div className="flex items-center gap-3 px-5 py-3">
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-[var(--cic-cyan)]"
+            className="
+              text-muted-foreground
+              hover:text-(--cic-cyan)
+            "
             onClick={() => navigate(currentGame ? '/dashboard' : '/')}
           >
-            <ArrowLeft className="mr-1 h-4 w-4" />
+            <ArrowLeft className="mr-1 size-4" />
             Back
           </Button>
-          <div className="h-4 w-px bg-[var(--cic-panel-edge)]" />
+          <div className="h-4 w-px bg-(--cic-panel-edge)" />
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-foreground">
+            <span className="
+              text-xs font-semibold tracking-[0.15em] text-foreground uppercase
+            ">
               System Configuration
             </span>
-            <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
-            <span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">v{settings?.bridgePort ?? '47842'}</span>
+            <ChevronRight className="size-3 text-muted-foreground/40" />
+            <span className="font-mono text-[10px] text-(--cic-cyan-dim)">v{settings?.bridgePort ?? '47842'}</span>
           </div>
         </div>
       </div>
@@ -234,32 +273,43 @@ export function SettingsPage() {
           <SettingRow>
             <DataReadout label="Database Path" value={settings?.auroraDbPath ?? 'No database path configured'} />
 
-            <div className="flex items-center gap-2 mt-4">
+            <div className="mt-4 flex items-center gap-2">
               <Button
                 size="sm"
-                className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 hover:border-[var(--cic-amber)]/60"
+                className="
+                  border border-(--cic-amber-dim)/40 bg-(--cic-amber)/10
+                  text-(--cic-amber)
+                  hover:border-(--cic-amber)/60 hover:bg-(--cic-amber)/20
+                "
                 onClick={() => pickFileMutation.mutate()}
                 disabled={pickFileMutation.isPending}
               >
-                <Folder className="h-3.5 w-3.5" />
+                <Folder className="size-3.5" />
                 {pickFileMutation.isPending ? 'Selecting...' : 'Select Database'}
               </Button>
               {settings?.auroraDbPath && (
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-muted-foreground border-[var(--cic-panel-edge)] hover:text-[var(--cic-red)] hover:border-[var(--cic-red)]/40 hover:bg-[var(--cic-red)]/10"
+                  className="
+                    border-(--cic-panel-edge) text-muted-foreground
+                    hover:border-(--cic-red)/40 hover:bg-(--cic-red)/10
+                    hover:text-(--cic-red)
+                  "
                   onClick={() => updateMutation.mutate({ key: 'auroraDbPath', value: null })}
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="size-3.5" />
                   Clear
                 </Button>
               )}
             </div>
 
-            <div className="mt-4 rounded border-l-2 border-[var(--cic-amber-dim)]/30 bg-[var(--cic-amber-glow)] px-3 py-2">
-              <p className="text-[10px] leading-relaxed text-[var(--cic-amber-dim)]">
-                Locate <span className="font-mono text-[var(--cic-amber)]">AuroraDB.db</span> in your Aurora 4X
+            <div className="
+              mt-4 rounded-sm border-l-2 border-(--cic-amber-dim)/30
+              bg-(--cic-amber-glow) px-3 py-2
+            ">
+              <p className="text-[10px] leading-relaxed text-(--cic-amber-dim)">
+                Locate <span className="font-mono text-(--cic-amber)">AuroraDB.db</span> in your Aurora 4X
                 installation folder. The companion monitors this file for save events.
               </p>
             </div>
@@ -274,7 +324,10 @@ export function SettingsPage() {
             <SettingRow>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Provider</Label>
+                  <Label className="
+                    text-[10px] tracking-wider text-muted-foreground/60
+                    uppercase
+                  ">Provider</Label>
                   <Select
                     value={settings?.aiProvider ?? ''}
                     onValueChange={(value) => {
@@ -286,7 +339,9 @@ export function SettingsPage() {
                       })
                     }}
                   >
-                    <SelectTrigger className="mt-1 bg-[var(--cic-void)] border-[var(--cic-panel-edge)]">
+                    <SelectTrigger className="
+                      mt-1 border-(--cic-panel-edge) bg-(--cic-void)
+                    ">
                       <SelectValue placeholder="Select a provider" />
                     </SelectTrigger>
                     <SelectContent>
@@ -301,10 +356,16 @@ export function SettingsPage() {
 
                 {selectedProvider?.requiresApiKey && (
                   <div>
-                    <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">API Key</Label>
+                    <Label className="
+                      text-[10px] tracking-wider text-muted-foreground/60
+                      uppercase
+                    ">API Key</Label>
                     <Input
                       type="password"
-                      className="mt-1 font-mono text-xs bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                      className="
+                        mt-1 border-(--cic-panel-edge) bg-(--cic-void) font-mono
+                        text-xs
+                      "
                       value={aiApiKey}
                       onChange={(e) => setAiApiKey(e.target.value)}
                       onBlur={() =>
@@ -322,11 +383,17 @@ export function SettingsPage() {
 
                 {selectedProvider?.requiresBaseUrl && (
                   <div>
-                    <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">
+                    <Label className="
+                      text-[10px] tracking-wider text-muted-foreground/60
+                      uppercase
+                    ">
                       Ollama Endpoint
                     </Label>
                     <Input
-                      className="mt-1 font-mono text-xs bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                      className="
+                        mt-1 border-(--cic-panel-edge) bg-(--cic-void) font-mono
+                        text-xs
+                      "
                       value={ollamaUrl}
                       onChange={(e) => setOllamaUrl(e.target.value)}
                       onBlur={() =>
@@ -342,9 +409,14 @@ export function SettingsPage() {
                 )}
 
                 <div>
-                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Model</Label>
+                  <Label className="
+                    text-[10px] tracking-wider text-muted-foreground/60
+                    uppercase
+                  ">Model</Label>
                   <Input
-                    className="mt-1 text-xs bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                    className="
+                      mt-1 border-(--cic-panel-edge) bg-(--cic-void) text-xs
+                    "
                     value={aiModel}
                     onChange={(e) => setAiModel(e.target.value)}
                     onBlur={() =>
@@ -379,7 +451,7 @@ export function SettingsPage() {
             <SettingRow className="flex items-center justify-between">
               <div>
                 <span className="text-sm text-foreground">Developer Tools</span>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">Table Explorer and Memory Inspector</p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground/60">Table Explorer and Memory Inspector</p>
               </div>
               <Switch
                 checked={settings?.enableDevTools ?? false}
@@ -390,7 +462,7 @@ export function SettingsPage() {
             <SettingRow className="flex items-center justify-between">
               <div>
                 <span className="text-sm text-foreground">Database Watcher</span>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">Monitor Aurora database for save events</p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground/60">Monitor Aurora database for save events</p>
               </div>
               <Switch
                 checked={settings?.watchEnabled ?? true}
@@ -402,11 +474,14 @@ export function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-sm text-foreground">Bridge Port</span>
-                  <p className="text-[10px] text-muted-foreground/60 mt-0.5">Must match AdvisorBridge configuration</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground/60">Must match AdvisorBridge configuration</p>
                 </div>
                 <Input
                   type="number"
-                  className="w-28 text-xs text-center font-mono bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                  className="
+                    w-28 border-(--cic-panel-edge) bg-(--cic-void) text-center
+                    font-mono text-xs
+                  "
                   value={settings?.bridgePort ?? 47842}
                   onChange={(e) => updateMutation.mutate({ key: 'bridgePort', value: Number(e.target.value) })}
                 />

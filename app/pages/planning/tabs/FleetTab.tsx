@@ -12,7 +12,7 @@ export function FleetTab() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+        <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
       </div>
     )
   }
@@ -20,7 +20,7 @@ export function FleetTab() {
   if (error) {
     return (
       <div className="flex h-full items-center justify-center">
-        <p className="text-[10px] text-[var(--cic-red)]">Failed to load fleet data</p>
+        <p className="text-[10px] text-(--cic-red)">Failed to load fleet data</p>
       </div>
     )
   }
@@ -30,17 +30,25 @@ export function FleetTab() {
   return (
     <div>
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
+      <div className="
+        flex shrink-0 items-center justify-between border-b
+        border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2
+      ">
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)]">
+          <span className="
+            text-[9px] font-semibold tracking-wider text-(--cic-amber-dim)
+            uppercase
+          ">
             {fleetList.length} Fleets
           </span>
           {connectionMode === 'bridge' && realtimeFleets && (
             <Badge
               variant="outline"
-              className="text-[7px] h-4 px-1.5 border-[var(--cic-green)]/30 text-[var(--cic-green)]"
+              className="
+                h-4 border-(--cic-green)/30 px-1.5 text-[7px] text-(--cic-green)
+              "
             >
-              <Radio className="h-2 w-2 mr-0.5" /> Live
+              <Radio className="mr-0.5 size-2" /> Live
             </Badge>
           )}
         </div>
@@ -48,9 +56,9 @@ export function FleetTab() {
 
       {/* Fleet list */}
 
-      <div className="p-4 space-y-2">
+      <div className="space-y-2 p-4">
         {fleetList.length === 0 ? (
-          <p className="text-[10px] text-muted-foreground text-center py-8">No fleets found</p>
+          <p className="py-8 text-center text-[10px] text-muted-foreground">No fleets found</p>
         ) : (
           fleetList.map((fleet) => {
             const ships = (fleet.ships ?? []) as Record<string, unknown>[]
@@ -60,41 +68,52 @@ export function FleetTab() {
             return (
               <div
                 key={fleet.fleetId as number}
-                className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden"
+                className="
+                  overflow-hidden rounded-md border border-(--cic-panel-edge)
+                  bg-(--cic-panel)
+                "
               >
                 {/* Fleet header */}
-                <div className="flex items-center justify-between px-3 py-2 bg-[var(--cic-void)]/40 border-b border-[var(--cic-panel-edge)]">
+                <div className="
+                  flex items-center justify-between border-b
+                  border-(--cic-panel-edge) bg-(--cic-void)/40 px-3 py-2
+                ">
                   <div className="flex items-center gap-2">
-                    <Ship className="h-3 w-3 text-[var(--cic-cyan-dim)]" />
-                    <span className="text-[11px] font-semibold text-foreground/80">{fleet.fleetName as string}</span>
+                    <Ship className="size-3 text-(--cic-cyan-dim)" />
+                    <span className="
+                      text-[11px] font-semibold text-foreground/80
+                    ">{fleet.fleetName as string}</span>
                     <span className="text-[8px] text-muted-foreground">{ships.length} ships</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {jumpStatus && (
                       <Badge
                         variant="outline"
-                        className={`text-[7px] h-4 px-1.5 ${
+                        className={`
+                          h-4 px-1.5 text-[7px]
+                          ${
                           jumpStatus === 'ok'
-                            ? 'border-[var(--cic-green)]/30 text-[var(--cic-green)]'
+                            ? `border-(--cic-green)/30 text-(--cic-green)`
                             : jumpStatus === 'covered'
-                              ? 'border-[var(--cic-cyan-dim)]/30 text-[var(--cic-cyan)]'
-                              : 'border-[var(--cic-amber-dim)]/30 text-[var(--cic-amber)]'
-                        }`}
+                              ? `border-(--cic-cyan-dim)/30 text-(--cic-cyan)`
+                              : `border-(--cic-amber-dim)/30 text-(--cic-amber)`
+                        }
+                        `}
                       >
                         {jumpStatus === 'ok' ? (
-                          <CheckCircle className="h-2 w-2 mr-0.5" />
+                          <CheckCircle className="mr-0.5 size-2" />
                         ) : (
-                          <AlertTriangle className="h-2 w-2 mr-0.5" />
+                          <AlertTriangle className="mr-0.5 size-2" />
                         )}
                         {jumpStatus === 'ok' ? 'Jump OK' : jumpStatus === 'covered' ? 'Tender' : 'Warning'}
                       </Badge>
                     )}
-                    <span className="text-[8px] font-mono text-muted-foreground">{fleet.systemName as string}</span>
+                    <span className="font-mono text-[8px] text-muted-foreground">{fleet.systemName as string}</span>
                   </div>
                 </div>
 
                 {/* Fleet details */}
-                <div className="px-3 py-2 grid grid-cols-4 gap-3 text-[9px]">
+                <div className="grid grid-cols-4 gap-3 px-3 py-2 text-[9px]">
                   <div>
                     <span className="text-muted-foreground">Speed</span>
                     <p className="font-mono text-foreground/70">{fleet.speed as number} km/s</p>
@@ -117,12 +136,16 @@ export function FleetTab() {
 
                 {/* Ship list (collapsed) */}
                 {ships.length > 0 && (
-                  <div className="border-t border-[var(--cic-panel-edge)] px-3 py-1.5">
+                  <div className="
+                    border-t border-(--cic-panel-edge) px-3 py-1.5
+                  ">
                     <div className="flex flex-wrap gap-x-3 gap-y-0.5">
                       {ships.map((ship) => (
-                        <span key={ship.shipId as number} className="text-[8px] text-muted-foreground/70">
+                        <span key={ship.shipId as number} className="
+                          text-[8px] text-muted-foreground/70
+                        ">
                           {ship.shipName as string}
-                          <span className="text-muted-foreground/40 ml-1">({ship.className as string})</span>
+                          <span className="ml-1 text-muted-foreground/40">({ship.className as string})</span>
                         </span>
                       ))}
                     </div>

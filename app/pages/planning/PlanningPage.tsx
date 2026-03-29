@@ -25,8 +25,8 @@ export function PlanningPage() {
 
   if (!currentGame) {
     return (
-      <div className="flex h-full items-center justify-center bg-[var(--cic-void)]">
-        <div className="text-center space-y-2">
+      <div className="flex h-full items-center justify-center bg-(--cic-void)">
+        <div className="space-y-2 text-center">
           <p className="text-sm text-muted-foreground">No active campaign</p>
           <p className="text-[10px] text-muted-foreground/60">
             {connectionMode === 'disconnected'
@@ -39,33 +39,49 @@ export function PlanningPage() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-[var(--cic-void)]">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
+    <div className="flex h-full flex-col bg-(--cic-void)">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="
+        flex h-full flex-col
+      ">
         {/* Tab bar */}
-        <div className="shrink-0 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
+        <div className="
+          shrink-0 border-b border-(--cic-panel-edge) bg-(--cic-panel)
+        ">
           <div className="flex items-center justify-between px-4">
-            <TabsList className="bg-transparent h-auto p-0 gap-0">
+            <TabsList className="h-auto gap-0 bg-transparent p-0">
               {TABS.map(({ id, label, icon: Icon }) => (
                 <TabsTrigger
                   key={id}
                   value={id}
-                  className="relative rounded-none border-b-2 border-transparent px-3 py-2.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60 data-[state=active]:border-[var(--cic-cyan)] data-[state=active]:text-[var(--cic-cyan)] data-[state=active]:bg-[var(--cic-cyan-glow)] data-[state=active]:shadow-none hover:text-foreground/70 hover:bg-[var(--cic-panel)]/50 transition-colors"
+                  className="
+                    relative rounded-none border-b-2 border-transparent px-3
+                    py-2.5 text-[10px] font-medium tracking-wider
+                    text-muted-foreground/60 uppercase transition-colors
+                    hover:bg-(--cic-panel)/50 hover:text-foreground/70
+                    data-[state=active]:border-(--cic-cyan)
+                    data-[state=active]:bg-(--cic-cyan-glow)
+                    data-[state=active]:text-(--cic-cyan)
+                    data-[state=active]:shadow-none
+                  "
                 >
-                  <Icon className="h-3 w-3 mr-1.5" />
+                  <Icon className="mr-1.5 size-3" />
                   {label}
                 </TabsTrigger>
               ))}
             </TabsList>
-            <div className="flex items-center gap-2 text-[9px] font-mono text-muted-foreground/50">
+            <div className="
+              flex items-center gap-2 font-mono text-[9px]
+              text-muted-foreground/50
+            ">
               <span>{currentGame.gameInfo.gameName}</span>
               <span className="text-[7px]">·</span>
               <span
                 className={
                   connectionMode === 'bridge'
-                    ? 'text-[var(--cic-green)]'
+                    ? 'text-(--cic-green)'
                     : connectionMode === 'offline'
                       ? 'text-muted-foreground'
-                      : 'text-[var(--cic-red)]'
+                      : 'text-(--cic-red)'
                 }
               >
                 {connectionMode === 'bridge' ? 'LIVE' : connectionMode === 'offline' ? 'OFFLINE' : 'NO DATA'}
@@ -75,23 +91,35 @@ export function PlanningPage() {
         </div>
 
         {/* Tab content — each tab is absolutely positioned to fill the container */}
-        <div className="flex-1 relative">
-          <TabsContent value="overview" className="absolute inset-0 m-0 overflow-auto">
+        <div className="relative flex-1">
+          <TabsContent value="overview" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <OverviewTab />
           </TabsContent>
-          <TabsContent value="fleet" className="absolute inset-0 m-0 overflow-auto">
+          <TabsContent value="fleet" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <FleetTab />
           </TabsContent>
-          <TabsContent value="routes" className="absolute inset-0 m-0 overflow-auto">
+          <TabsContent value="routes" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <RoutesTab />
           </TabsContent>
-          <TabsContent value="minerals" className="absolute inset-0 m-0 overflow-auto">
+          <TabsContent value="minerals" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <MineralsTab />
           </TabsContent>
-          <TabsContent value="research" className="absolute inset-0 m-0 overflow-auto">
+          <TabsContent value="research" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <ResearchTab />
           </TabsContent>
-          <TabsContent value="shipyard" className="absolute inset-0 m-0 overflow-auto">
+          <TabsContent value="shipyard" className="
+            absolute inset-0 m-0 overflow-auto
+          ">
             <ShipyardTab />
           </TabsContent>
         </div>

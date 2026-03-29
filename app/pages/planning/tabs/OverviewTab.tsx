@@ -16,15 +16,19 @@ function StatCard({
   color?: string
 }) {
   return (
-    <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-3">
-      <div className="flex items-center gap-1.5 mb-1">
+    <div className="
+      rounded-md border border-(--cic-panel-edge) bg-(--cic-panel) p-3
+    ">
+      <div className="mb-1 flex items-center gap-1.5">
         <span style={{ color }}>
-          <Icon className="h-3 w-3" />
+          <Icon className="size-3" />
         </span>
-        <span className="text-[8px] uppercase tracking-wider text-muted-foreground">{label}</span>
+        <span className="
+          text-[8px] tracking-wider text-muted-foreground uppercase
+        ">{label}</span>
       </div>
-      <p className="text-lg font-mono font-bold text-foreground/80">{value}</p>
-      {sub && <p className="text-[8px] text-muted-foreground mt-0.5">{sub}</p>}
+      <p className="font-mono text-lg font-bold text-foreground/80">{value}</p>
+      {sub && <p className="mt-0.5 text-[8px] text-muted-foreground">{sub}</p>}
     </div>
   )
 }
@@ -40,7 +44,7 @@ export function OverviewTab() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+        <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
       </div>
     )
   }
@@ -56,17 +60,22 @@ export function OverviewTab() {
   const gameDateFormatted = gameDate ? ((gameDate as Record<string, unknown>).formatted as string) : null
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4 p-4">
       {/* Game date */}
       {gameDateFormatted && (
-        <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground">
-          <Clock className="h-3 w-3" />
+        <div className="
+          flex items-center gap-2 font-mono text-[10px] text-muted-foreground
+        ">
+          <Clock className="size-3" />
           Game Date: <span className="text-foreground/70">{gameDateFormatted}</span>
         </div>
       )}
 
       {/* Summary cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="
+        grid grid-cols-2 gap-3
+        lg:grid-cols-4
+      ">
         <StatCard
           icon={Ship}
           label="Fleets"
@@ -93,23 +102,35 @@ export function OverviewTab() {
 
       {/* Active research */}
       {projects.length > 0 && (
-        <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
-          <div className="px-3 py-2 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-void)]/40">
-            <span className="text-[8px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)]">
+        <div className="
+          overflow-hidden rounded-md border border-(--cic-panel-edge)
+          bg-(--cic-panel)
+        ">
+          <div className="
+            border-b border-(--cic-panel-edge) bg-(--cic-void)/40 px-3 py-2
+          ">
+            <span className="
+              text-[8px] font-semibold tracking-wider text-(--cic-amber-dim)
+              uppercase
+            ">
               Active Research
             </span>
           </div>
-          <div className="divide-y divide-[var(--cic-panel-edge)]">
+          <div className="divide-y divide-(--cic-panel-edge)">
             {projects.slice(0, 5).map((p, i) => (
-              <div key={i} className="px-3 py-2 flex items-center justify-between">
+              <div key={i} className="
+                flex items-center justify-between px-3 py-2
+              ">
                 <span className="text-[10px] text-foreground/70">{p.name as string}</span>
-                <span className="text-[9px] font-mono text-[var(--cic-cyan-dim)]">
+                <span className="font-mono text-[9px] text-(--cic-cyan-dim)">
                   {((p.percentComplete as number) ?? 0).toFixed(1)}%
                 </span>
               </div>
             ))}
             {projects.length > 5 && (
-              <div className="px-3 py-1.5 text-[8px] text-muted-foreground text-center">
+              <div className="
+                px-3 py-1.5 text-center text-[8px] text-muted-foreground
+              ">
                 +{projects.length - 5} more
               </div>
             )}
@@ -119,24 +140,36 @@ export function OverviewTab() {
 
       {/* Fleets summary */}
       {fleetList.length > 0 && (
-        <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
-          <div className="px-3 py-2 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-void)]/40">
-            <span className="text-[8px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)]">
+        <div className="
+          overflow-hidden rounded-md border border-(--cic-panel-edge)
+          bg-(--cic-panel)
+        ">
+          <div className="
+            border-b border-(--cic-panel-edge) bg-(--cic-void)/40 px-3 py-2
+          ">
+            <span className="
+              text-[8px] font-semibold tracking-wider text-(--cic-amber-dim)
+              uppercase
+            ">
               Fleet Summary
             </span>
           </div>
-          <div className="divide-y divide-[var(--cic-panel-edge)]">
+          <div className="divide-y divide-(--cic-panel-edge)">
             {fleetList.slice(0, 8).map((f, i) => (
-              <div key={i} className="px-3 py-2 flex items-center justify-between">
+              <div key={i} className="
+                flex items-center justify-between px-3 py-2
+              ">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-foreground/70">{f.fleetName as string}</span>
                   <span className="text-[8px] text-muted-foreground">{(f.ships as unknown[])?.length ?? 0} ships</span>
                 </div>
-                <span className="text-[8px] font-mono text-muted-foreground">{f.systemName as string}</span>
+                <span className="font-mono text-[8px] text-muted-foreground">{f.systemName as string}</span>
               </div>
             ))}
             {fleetList.length > 8 && (
-              <div className="px-3 py-1.5 text-[8px] text-muted-foreground text-center">
+              <div className="
+                px-3 py-1.5 text-center text-[8px] text-muted-foreground
+              ">
                 +{fleetList.length - 8} more fleets
               </div>
             )}

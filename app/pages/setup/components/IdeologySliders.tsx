@@ -8,16 +8,22 @@ interface IdeologySlidersProps {
 
 export function IdeologySliders({ ideology, onChange }: IdeologySlidersProps) {
   return (
-    <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-4 grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3">
+    <div className="
+      grid grid-cols-1 gap-x-8 gap-y-3 rounded-md border
+      border-(--cic-panel-edge) bg-(--cic-panel) p-4
+      lg:grid-cols-2
+    ">
       {IDEOLOGY_STATS.map(({ key, label, desc }) => (
         <div key={key}>
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="mb-1.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-medium text-foreground/70">{label}</span>
               <span className="text-[8px] text-muted-foreground">{desc}</span>
             </div>
             <span
-              className="text-[11px] font-mono font-bold tabular-nums w-7 text-right"
+              className="
+                w-7 text-right font-mono text-[11px] font-bold tabular-nums
+              "
               style={{
                 color:
                   ideology[key] >= 75

@@ -31,7 +31,7 @@ export function ResearchTab() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+        <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
       </div>
     )
   }
@@ -41,37 +41,48 @@ export function ResearchTab() {
   const categories = data?.categories ?? []
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4 p-4">
       {/* Active projects */}
       {projects.length > 0 && (
         <div>
-          <h3 className="text-[9px] font-semibold uppercase tracking-wider text-[var(--cic-cyan-dim)] mb-2">
+          <h3 className="
+            mb-2 text-[9px] font-semibold tracking-wider text-(--cic-cyan-dim)
+            uppercase
+          ">
             Active Projects
           </h3>
           <div className="space-y-2">
             {projects.map((project) => (
               <div
                 key={project.projectId}
-                className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] p-3"
+                className="
+                  rounded-md border border-(--cic-panel-edge) bg-(--cic-panel)
+                  p-3
+                "
               >
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="mb-1.5 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <FlaskConical className="h-3 w-3 text-[var(--cic-cyan-dim)]" />
+                    <FlaskConical className="size-3 text-(--cic-cyan-dim)" />
                     <span className="text-[10px] font-medium text-foreground/80">{project.techName}</span>
                     {project.paused && (
-                      <span className="text-[7px] px-1 py-0.5 rounded bg-[var(--cic-amber-glow)] text-[var(--cic-amber)]">
+                      <span className="
+                        rounded-sm bg-(--cic-amber-glow) px-1 py-0.5 text-[7px]
+                        text-(--cic-amber)
+                      ">
                         PAUSED
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Clock className="h-2.5 w-2.5 text-muted-foreground" />
-                    <span className="text-[8px] font-mono text-muted-foreground">
+                    <Clock className="size-2.5 text-muted-foreground" />
+                    <span className="font-mono text-[8px] text-muted-foreground">
                       {project.labs} labs · {project.colony}
                     </span>
                   </div>
                 </div>
-                <div className="w-full h-1.5 rounded-full bg-[var(--cic-void)] overflow-hidden">
+                <div className="
+                  h-1.5 w-full overflow-hidden rounded-full bg-(--cic-void)
+                ">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -80,9 +91,9 @@ export function ResearchTab() {
                     }}
                   />
                 </div>
-                <div className="flex items-center justify-between mt-1">
+                <div className="mt-1 flex items-center justify-between">
                   <span className="text-[8px] text-muted-foreground">{project.fieldName}</span>
-                  <span className="text-[8px] font-mono text-muted-foreground">
+                  <span className="font-mono text-[8px] text-muted-foreground">
                     {project.percentComplete.toFixed(1)}% · {project.pointsRemaining.toLocaleString()} RP remaining
                   </span>
                 </div>
@@ -95,19 +106,28 @@ export function ResearchTab() {
       {/* Categories summary */}
       {categories.length > 0 && (
         <div>
-          <h3 className="text-[9px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)] mb-2">
+          <h3 className="
+            mb-2 text-[9px] font-semibold tracking-wider text-(--cic-amber-dim)
+            uppercase
+          ">
             Research Fields
           </h3>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="
+            grid grid-cols-2 gap-2
+            lg:grid-cols-3
+          ">
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-3 py-2"
+                className="
+                  rounded-md border border-(--cic-panel-edge) bg-(--cic-panel)
+                  px-3 py-2
+                "
               >
                 <span className="text-[9px] font-medium text-foreground/60">{cat.name}</span>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <CheckCircle className="h-2.5 w-2.5 text-[var(--cic-green)]" />
-                  <span className="text-[8px] font-mono text-muted-foreground">
+                <div className="mt-0.5 flex items-center gap-1">
+                  <CheckCircle className="size-2.5 text-(--cic-green)" />
+                  <span className="font-mono text-[8px] text-muted-foreground">
                     {cat.researched}/{cat.total}
                   </span>
                 </div>
@@ -118,7 +138,7 @@ export function ResearchTab() {
       )}
 
       {projects.length === 0 && categories.length === 0 && (
-        <p className="text-[10px] text-muted-foreground text-center py-8">No research data available</p>
+        <p className="py-8 text-center text-[10px] text-muted-foreground">No research data available</p>
       )}
     </div>
   )

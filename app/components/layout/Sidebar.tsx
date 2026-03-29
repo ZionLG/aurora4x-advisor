@@ -91,13 +91,19 @@ export function Sidebar() {
   // ── Collapsed sidebar ──────────────────────────────
   if (collapsed) {
     return (
-      <aside className="flex w-12 flex-col items-center border-r border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] py-2 transition-all duration-200">
+      <aside className="
+        flex w-12 flex-col items-center border-r border-(--cic-panel-edge)
+        bg-(--cic-panel) py-2 transition-all duration-200
+      ">
         <button
           onClick={toggleCollapsed}
-          className="mb-2 p-1.5 rounded text-muted-foreground hover:text-foreground/50 hover:bg-[var(--cic-cyan-glow)] transition-colors"
+          className="
+            mb-2 rounded-sm p-1.5 text-muted-foreground transition-colors
+            hover:bg-(--cic-cyan-glow) hover:text-foreground/50
+          "
           title="Expand sidebar"
         >
-          <PanelLeftOpen className="h-3.5 w-3.5" />
+          <PanelLeftOpen className="size-3.5" />
         </button>
 
         <div className="flex flex-col gap-1.5">
@@ -107,21 +113,37 @@ export function Sidebar() {
             const isActive = activeCategory === cat.id
             const Icon = cat.icon
             return (
-              <div key={cat.id} className="relative group/fly">
+              <div key={cat.id} className="group/fly relative">
                 <button
-                  className={`flex items-center justify-center w-8 h-8 rounded transition-colors ${
+                  className={`
+                    flex size-8 items-center justify-center rounded-sm
+                    transition-colors
+                    ${
                     isActive
-                      ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)]'
-                      : 'text-muted-foreground/60 hover:bg-[var(--cic-cyan-glow)] hover:text-foreground/70'
-                  }`}
+                      ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
+                      : `
+                        text-muted-foreground/60
+                        hover:bg-(--cic-cyan-glow) hover:text-foreground/70
+                      `
+                  }
+                  `}
                   title={cat.label}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="size-3.5" />
                 </button>
                 {/* Flyout — padding-left creates a hover bridge between button and menu */}
-                <div className="absolute left-full top-0 pl-1 hidden group-hover/fly:block z-50">
-                  <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] shadow-lg py-1 min-w-[160px]">
-                    <p className="px-3 py-1 text-[8px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)]">
+                <div className="
+                  absolute top-0 left-full z-50 hidden pl-1
+                  group-hover/fly:block
+                ">
+                  <div className="
+                    min-w-[160px] rounded-md border border-(--cic-panel-edge)
+                    bg-(--cic-panel) py-1 shadow-lg
+                  ">
+                    <p className="
+                      px-3 py-1 text-[8px] font-semibold tracking-wider
+                      text-(--cic-amber-dim) uppercase
+                    ">
                       {cat.label}
                     </p>
                     {modules.map((mod) => (
@@ -136,7 +158,7 @@ export function Sidebar() {
                           } ${mod.status === 'coming-soon' ? 'opacity-40' : ''}`
                         }
                       >
-                        <mod.icon className="h-3 w-3" />
+                        <mod.icon className="size-3" />
                         {mod.name}
                       </NavLink>
                     ))}
@@ -147,8 +169,11 @@ export function Sidebar() {
           })}
         </div>
 
-        <div className="mt-auto pb-4 pt-2" title={statusLabel}>
-          <div className={`h-1.5 w-1.5 shrink-0 rounded-full ${statusDotClass}`} />
+        <div className="mt-auto pt-2 pb-4" title={statusLabel}>
+          <div className={`
+            size-1.5 shrink-0 rounded-full
+            ${statusDotClass}
+          `} />
         </div>
       </aside>
     )
@@ -156,20 +181,26 @@ export function Sidebar() {
 
   // ── Expanded sidebar ───────────────────────────────
   return (
-    <aside className="flex w-52 h-full flex-col overflow-hidden border-r border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] transition-all duration-200">
+    <aside className="
+      flex h-full w-52 flex-col overflow-hidden border-r
+      border-(--cic-panel-edge) bg-(--cic-panel) transition-all duration-200
+    ">
       {/* Collapse button */}
       <div className="flex justify-end px-2 pt-2">
         <button
           onClick={toggleCollapsed}
-          className="p-1 rounded text-muted-foreground/50 hover:text-foreground/40 hover:bg-[var(--cic-cyan-glow)] transition-colors"
+          className="
+            rounded-sm p-1 text-muted-foreground/50 transition-colors
+            hover:bg-(--cic-cyan-glow) hover:text-foreground/40
+          "
           title="Collapse sidebar"
         >
-          <PanelLeftClose className="h-3 w-3" />
+          <PanelLeftClose className="size-3" />
         </button>
       </div>
 
       {/* Module categories */}
-      <ScrollArea className="flex-1 min-h-0">
+      <ScrollArea className="min-h-0 flex-1">
         <div className="px-2 pb-2">
           {CATEGORY_LIST.map((cat) => {
             const modules = modulesByCategory[cat.id] ?? []
@@ -181,15 +212,22 @@ export function Sidebar() {
                 {/* Category header */}
                 <button
                   onClick={() => toggleCategory(cat.id)}
-                  className="w-full flex items-center gap-1.5 px-2 py-1.5 rounded text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--cic-amber-dim)] hover:text-[var(--cic-amber)] hover:bg-[var(--cic-amber-glow)] transition-colors"
+                  className="
+                    flex w-full items-center gap-1.5 rounded-sm px-2 py-1.5
+                    text-[9px] font-semibold tracking-[0.12em]
+                    text-(--cic-amber-dim) uppercase transition-colors
+                    hover:bg-(--cic-amber-glow) hover:text-(--cic-amber)
+                  "
                 >
-                  <Icon className="h-3 w-3" />
+                  <Icon className="size-3" />
                   <span className="flex-1 text-left">{cat.label}</span>
-                  {isOpen ? <ChevronDown className="h-2.5 w-2.5" /> : <ChevronRight className="h-2.5 w-2.5" />}
+                  {isOpen ? <ChevronDown className="size-2.5" /> : <ChevronRight className="
+                    size-2.5
+                  " />}
                 </button>
                 {/* Module links */}
                 {isOpen && (
-                  <div className="ml-2 space-y-0.5 mt-0.5">
+                  <div className="mt-0.5 ml-2 space-y-0.5">
                     {modules.map((mod) => (
                       <ModuleLink key={mod.id} mod={mod} />
                     ))}
@@ -202,8 +240,11 @@ export function Sidebar() {
 
         {/* Campaigns */}
         {sortedGames.length > 0 && (
-          <div className="border-t border-[var(--cic-panel-edge)] px-2 py-2">
-            <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/40 px-2 mb-1">
+          <div className="border-t border-(--cic-panel-edge) p-2">
+            <p className="
+              mb-1 px-2 text-[8px] font-semibold tracking-[0.12em]
+              text-muted-foreground/40 uppercase
+            ">
               Campaigns
             </p>
             {sortedGames.map((game) => {
@@ -213,36 +254,51 @@ export function Sidebar() {
                 <div
                   key={game.id}
                   onClick={() => canSelect && !isActive && window.conveyor.session.selectGame(game.id)}
-                  className={`group/card rounded px-2 py-1.5 ${
+                  className={`
+                    group/card rounded-sm px-2 py-1.5
+                    ${
                     isActive
-                      ? 'bg-[var(--cic-cyan-glow)] border border-[var(--cic-cyan-dim)]/30'
+                      ? `border border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)`
                       : canSelect
-                        ? 'border border-transparent opacity-60 hover:opacity-90 hover:bg-[var(--cic-cyan-glow)] cursor-pointer'
+                        ? `
+                          cursor-pointer border border-transparent opacity-60
+                          hover:bg-(--cic-cyan-glow) hover:opacity-90
+                        `
                         : 'border border-transparent opacity-40'
-                  }`}
+                  }
+                  `}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-[10px] font-medium truncate ${isActive ? 'text-[var(--cic-cyan)]' : 'text-foreground/70'}`}
+                      className={`
+                        truncate text-[10px] font-medium
+                        ${isActive ? `text-(--cic-cyan)` : `text-foreground/70`}
+                      `}
                     >
                       {game.gameInfo.gameName}
                     </span>
                     <div className="flex items-center gap-1">
-                      {isActive && <CircleDot className="h-2 w-2 shrink-0 text-[var(--cic-green)]" />}
+                      {isActive && <CircleDot className="
+                        size-2 shrink-0 text-(--cic-green)
+                      " />}
                       {!isActive && (
                         <button
-                          className="opacity-0 group-hover/card:opacity-100 transition-opacity text-muted-foreground hover:text-[var(--cic-red)]"
+                          className="
+                            text-muted-foreground opacity-0 transition-opacity
+                            group-hover/card:opacity-100
+                            hover:text-(--cic-red)
+                          "
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDeleteGame(game.id, game.gameInfo.gameName)
                           }}
                         >
-                          <Trash2 className="h-2 w-2" />
+                          <Trash2 className="size-2" />
                         </button>
                       )}
                     </div>
                   </div>
-                  <div className="text-[8px] text-muted-foreground/40 mt-0.5">
+                  <div className="mt-0.5 text-[8px] text-muted-foreground/40">
                     {isActive && gameDate
                       ? ((gameDate as Record<string, unknown>).formatted as string)
                       : (game.lastGameDate ?? `Year ${game.gameInfo.startingYear}`)}
@@ -257,11 +313,14 @@ export function Sidebar() {
       </ScrollArea>
 
       {/* Connection status */}
-      <div className="shrink-0 border-t border-[var(--cic-panel-edge)] px-3 py-2">
+      <div className="shrink-0 border-t border-(--cic-panel-edge) px-3 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className={`h-1.5 w-1.5 shrink-0 rounded-full ${statusDotClass}`} />
-            <span className="text-[9px] font-mono text-muted-foreground/60">{statusLabel}</span>
+            <div className={`
+              size-1.5 shrink-0 rounded-full
+              ${statusDotClass}
+            `} />
+            <span className="font-mono text-[9px] text-muted-foreground/60">{statusLabel}</span>
           </div>
           <div className="flex items-center gap-1">
             {connectionMode === 'disconnected' && (
@@ -269,7 +328,10 @@ export function Sidebar() {
                 <Button
                   size="xs"
                   variant="ghost"
-                  className="text-[8px] text-muted-foreground hover:text-foreground/60 h-5 px-1.5"
+                  className="
+                    h-5 px-1.5 text-[8px] text-muted-foreground
+                    hover:text-foreground/60
+                  "
                   onClick={() => window.conveyor.session.goOffline()}
                 >
                   Offline
@@ -277,7 +339,10 @@ export function Sidebar() {
                 <Button
                   size="xs"
                   variant="ghost"
-                  className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                  className="
+                    h-5 px-1.5 text-[8px] text-(--cic-cyan-dim)
+                    hover:text-(--cic-cyan)
+                  "
                   onClick={() => window.conveyor.session.reconnect()}
                 >
                   Retry
@@ -288,7 +353,10 @@ export function Sidebar() {
               <Button
                 size="xs"
                 variant="ghost"
-                className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                className="
+                  h-5 px-1.5 text-[8px] text-(--cic-cyan-dim)
+                  hover:text-(--cic-cyan)
+                "
                 onClick={() => window.conveyor.session.goOnline()}
               >
                 Reconnect
@@ -298,7 +366,10 @@ export function Sidebar() {
               <Button
                 size="xs"
                 variant="ghost"
-                className="text-[8px] text-[var(--cic-cyan-dim)] hover:text-[var(--cic-cyan)] h-5 px-1.5"
+                className="
+                  h-5 px-1.5 text-[8px] text-(--cic-cyan-dim)
+                  hover:text-(--cic-cyan)
+                "
                 onClick={() => window.conveyor.session.reconnect()}
               >
                 Retry
@@ -351,9 +422,11 @@ function ModuleLink({ mod }: { mod: ModuleDefinition }) {
         } ${mod.status === 'coming-soon' ? 'opacity-50' : ''}`
       }
     >
-      <mod.icon className="h-3 w-3 shrink-0" />
+      <mod.icon className="size-3 shrink-0" />
       <span className="truncate">{mod.name}</span>
-      {mod.status === 'coming-soon' && <span className="ml-auto text-[6px] text-muted-foreground/30">SOON</span>}
+      {mod.status === 'coming-soon' && <span className="
+        ml-auto text-[6px] text-muted-foreground/30
+      ">SOON</span>}
     </NavLink>
   )
 }

@@ -62,18 +62,24 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
 
   return (
     <Form {...form}>
-      <form onChange={form.handleSubmit(pushUpdate, () => {})} className="p-4 space-y-4">
+      <form onChange={form.handleSubmit(pushUpdate, () => {})} className="
+        space-y-4 p-4
+      ">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[8px] uppercase tracking-wider text-[var(--cic-amber-dim)]">
+              <FormLabel className="
+                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+              ">
                 Profile Name
               </FormLabel>
               <FormControl>
                 <Input
-                  className="h-8 text-sm bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                  className="
+                    h-8 border-(--cic-panel-edge) bg-(--cic-void) text-sm
+                  "
                   placeholder="e.g., Iron Fist, Enlightened Despot, Trade Baron..."
                   {...field}
                 />
@@ -88,12 +94,16 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[8px] uppercase tracking-wider text-[var(--cic-amber-dim)]">
+              <FormLabel className="
+                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+              ">
                 Short Description
               </FormLabel>
               <FormControl>
                 <Input
-                  className="h-7 text-[10px] bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                  className="
+                    h-7 border-(--cic-panel-edge) bg-(--cic-void) text-[10px]
+                  "
                   placeholder="One-line summary of this government style..."
                   {...field}
                 />
@@ -108,15 +118,23 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="flavor"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[8px] uppercase tracking-wider text-[var(--cic-amber-dim)]">
+              <FormLabel className="
+                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+              ">
                 Personality & Flavor
               </FormLabel>
-              <p className="text-[8px] text-muted-foreground mb-1">
+              <p className="mb-1 text-[8px] text-muted-foreground">
                 Shapes how the AI speaks. Describe tone, vocabulary, how it addresses the player.
               </p>
               <FormControl>
                 <textarea
-                  className="w-full rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-void)] px-3 py-2 text-[10px] text-foreground/60 placeholder:text-muted-foreground/70 resize-none focus:outline-none focus:border-[var(--cic-cyan-dim)]"
+                  className="
+                    w-full resize-none rounded-md border
+                    border-(--cic-panel-edge) bg-(--cic-void) px-3 py-2
+                    text-[10px] text-foreground/60
+                    placeholder:text-muted-foreground/70
+                    focus:border-(--cic-cyan-dim) focus:outline-none
+                  "
                   rows={4}
                   placeholder="e.g., You speak as a ruthless warlord. Every recommendation is framed in terms of conquest..."
                   {...field}
@@ -132,12 +150,16 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="keywords"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[8px] uppercase tracking-wider text-[var(--cic-amber-dim)]">
+              <FormLabel className="
+                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+              ">
                 Keywords <span className="text-muted-foreground/70">(comma-separated)</span>
               </FormLabel>
               <FormControl>
                 <Input
-                  className="h-7 text-[10px] bg-[var(--cic-void)] border-[var(--cic-panel-edge)]"
+                  className="
+                    h-7 border-(--cic-panel-edge) bg-(--cic-void) text-[10px]
+                  "
                   placeholder="e.g., Commander, glory, conquest, honor"
                   {...field}
                 />
@@ -151,7 +173,9 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="archetypeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[8px] uppercase tracking-wider text-[var(--cic-amber-dim)]">
+              <FormLabel className="
+                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+              ">
                 Archetype
               </FormLabel>
               <div className="flex flex-wrap gap-1">
@@ -159,11 +183,20 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
                   <Badge
                     key={arch.id}
                     variant="outline"
-                    className={`cursor-pointer text-[8px] px-2 py-0.5 h-5 transition-all ${
+                    className={`
+                      h-5 cursor-pointer px-2 py-0.5 text-[8px] transition-all
+                      ${
                       selectedArchetype === arch.id
-                        ? 'border-[var(--cic-cyan-dim)] text-[var(--cic-cyan)] bg-[var(--cic-cyan-glow)]'
-                        : 'border-[var(--cic-panel-edge)] text-foreground/30 hover:text-foreground/60'
-                    }`}
+                        ? `
+                          border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                          text-(--cic-cyan)
+                        `
+                        : `
+                          border-(--cic-panel-edge) text-foreground/30
+                          hover:text-foreground/60
+                        `
+                    }
+                    `}
                     onClick={() => {
                       field.onChange(arch.id)
                       // Trigger update manually since badge click doesn't fire form onChange
@@ -196,7 +229,11 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           size="sm"
           variant="outline"
           disabled={!form.formState.isValid || saveProfileMutation.isPending}
-          className="w-full border-[var(--cic-cyan-dim)]/30 text-[var(--cic-cyan-dim)] hover:bg-[var(--cic-cyan-glow)] hover:text-[var(--cic-cyan)] disabled:opacity-30 text-[10px]"
+          className="
+            w-full border-(--cic-cyan-dim)/30 text-[10px] text-(--cic-cyan-dim)
+            hover:bg-(--cic-cyan-glow) hover:text-(--cic-cyan)
+            disabled:opacity-30
+          "
           onClick={() => {
             const values = form.getValues()
             const preset: ProfilePreset = {
@@ -224,7 +261,7 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
             saveProfileMutation.mutate(preset)
           }}
         >
-          <Save className="h-3 w-3" />
+          <Save className="size-3" />
           Save Profile
         </Button>
       </form>

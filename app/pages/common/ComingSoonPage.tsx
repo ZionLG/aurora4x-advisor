@@ -9,16 +9,18 @@ export function ComingSoonPage() {
   const category = mod ? CATEGORIES[mod.category] : null
 
   return (
-    <div className="flex h-full items-center justify-center bg-[var(--cic-void)]">
-      <div className="text-center space-y-3">
-        <Construction className="h-8 w-8 text-[var(--cic-amber-dim)] mx-auto" />
+    <div className="flex h-full items-center justify-center bg-(--cic-void)">
+      <div className="space-y-3 text-center">
+        <Construction className="mx-auto size-8 text-(--cic-amber-dim)" />
         <div>
           <h2 className="text-sm font-semibold text-foreground/80">{mod?.name ?? 'Module'}</h2>
           {category && (
-            <p className="text-[9px] uppercase tracking-wider text-[var(--cic-amber-dim)] mt-0.5">{category.label}</p>
+            <p className="
+              mt-0.5 text-[9px] tracking-wider text-(--cic-amber-dim) uppercase
+            ">{category.label}</p>
           )}
         </div>
-        <p className="text-[10px] text-muted-foreground max-w-xs">
+        <p className="max-w-xs text-[10px] text-muted-foreground">
           This module is under development and will be available in a future update.
         </p>
       </div>

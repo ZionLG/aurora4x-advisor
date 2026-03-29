@@ -39,20 +39,23 @@ function StepIndicator({ current }: { current: Step }) {
           <div key={s.id} className="flex items-center gap-1">
             {i > 0 && (
               <div
-                className="w-8 h-px mx-1"
+                className="mx-1 h-px w-8"
                 style={{ background: isPast ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)' }}
               />
             )}
             <div className="flex items-center gap-1.5">
               <div
-                className="flex items-center justify-center w-5 h-5 rounded text-[8px] font-mono font-bold"
+                className="
+                  flex size-5 items-center justify-center rounded-sm font-mono
+                  text-[8px] font-bold
+                "
                 style={{
                   background: isActive || isPast ? 'var(--cic-cyan-glow)' : 'transparent',
                   border: `1px solid ${isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)'}`,
                   color: isActive ? 'var(--cic-cyan)' : isPast ? 'var(--cic-cyan-dim)' : 'var(--cic-panel-edge)',
                 }}
               >
-                {isPast ? <Check className="w-2.5 h-2.5" /> : s.num}
+                {isPast ? <Check className="size-2.5" /> : s.num}
               </div>
               <span
                 className="text-[8px] font-semibold tracking-[0.15em]"
@@ -80,14 +83,24 @@ function SectionDivider({
   tag: string
 }) {
   return (
-    <div className="flex items-center gap-3 mb-4">
-      <div className="flex h-7 w-7 items-center justify-center rounded bg-[var(--cic-amber-glow)] border border-[var(--cic-amber-dim)]/30">
-        <Icon className="h-3.5 w-3.5 text-[var(--cic-amber)]" />
+    <div className="mb-4 flex items-center gap-3">
+      <div className="
+        flex size-7 items-center justify-center rounded-sm border
+        border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
+      ">
+        <Icon className="size-3.5 text-(--cic-amber)" />
       </div>
-      <div className="flex items-center gap-2 flex-1">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">{label}</span>
-        <div className="flex-1 h-px bg-gradient-to-r from-[var(--cic-amber-dim)]/40 to-transparent" />
-        <span className="text-[8px] font-mono text-[var(--cic-amber-dim)]/50 uppercase">{tag}</span>
+      <div className="flex flex-1 items-center gap-2">
+        <span className="
+          text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
+          uppercase
+        ">{label}</span>
+        <div className="
+          h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
+        " />
+        <span className="
+          font-mono text-[8px] text-(--cic-amber-dim)/50 uppercase
+        ">{tag}</span>
       </div>
     </div>
   )
@@ -232,27 +245,37 @@ export function SetupPage() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-[var(--cic-void)]">
+    <div className="flex h-full flex-col bg-(--cic-void)">
       {/* Header */}
-      <div className="shrink-0 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
+      <div className="
+        shrink-0 border-b border-(--cic-panel-edge) bg-(--cic-panel)
+      ">
         <div className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-[var(--cic-amber)] cic-glow-pulse" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cic-amber)]">
+              <div className="
+                cic-glow-pulse size-2 rounded-full bg-(--cic-amber)
+              " />
+              <span className="
+                text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
+                uppercase
+              ">
                 New Campaign
               </span>
             </div>
-            <div className="h-4 w-px bg-[var(--cic-panel-edge)]" />
+            <div className="h-4 w-px bg-(--cic-panel-edge)" />
             <StepIndicator current={step} />
           </div>
           <Button
             size="xs"
             variant="ghost"
-            className="text-foreground/30 hover:text-foreground/60"
+            className="
+              text-foreground/30
+              hover:text-foreground/60
+            "
             onClick={() => navigate('/')}
           >
-            <ArrowLeft className="h-3 w-3" /> Abort
+            <ArrowLeft className="size-3" /> Abort
           </Button>
         </div>
       </div>
@@ -261,62 +284,89 @@ export function SetupPage() {
       {step === 'pick-game' && (
         <div className="flex-1 overflow-y-auto">
           <div className="flex h-full items-center justify-center p-8">
-            <div className="w-full max-w-xl cic-slide-up">
+            <div className="cic-slide-up w-full max-w-xl">
               <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-[var(--cic-cyan-glow)] border border-[var(--cic-cyan-dim)]/30">
-                  <Target className="h-4 w-4 text-[var(--cic-cyan)]" />
+                <div className="
+                  flex size-8 items-center justify-center rounded-sm border
+                  border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
+                ">
+                  <Target className="size-4 text-(--cic-cyan)" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-foreground/90">Target Selection</h2>
                   <p className="text-[9px] text-foreground/40">Select a campaign from Aurora&apos;s database</p>
                 </div>
               </div>
-              <div className="rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] overflow-hidden">
+              <div className="
+                overflow-hidden rounded-md border border-(--cic-panel-edge)
+                bg-(--cic-panel)
+              ">
                 {isLoading && (
                   <div className="flex flex-col items-center gap-3 py-12">
-                    <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
-                    <span className="text-[10px] font-mono text-[var(--cic-cyan-dim)]">Scanning...</span>
+                    <Loader2 className="
+                      size-5 animate-spin text-(--cic-cyan-dim)
+                    " />
+                    <span className="
+                      font-mono text-[10px] text-(--cic-cyan-dim)
+                    ">Scanning...</span>
                   </div>
                 )}
                 {error && (
-                  <div className="p-5 space-y-3">
-                    <div className="rounded border-l-2 border-[var(--cic-red)] bg-[var(--cic-red)]/5 p-3">
+                  <div className="space-y-3 p-5">
+                    <div className="
+                      rounded-sm border-l-2 border-(--cic-red) bg-(--cic-red)/5
+                      p-3
+                    ">
                       <p className="text-[10px] text-foreground/40">Check database path in Settings.</p>
                     </div>
                     <Button size="sm" variant="outline" onClick={() => refetch()}>
-                      <RefreshCw className="h-3 w-3" />
+                      <RefreshCw className="size-3" />
                       Retry
                     </Button>
                   </div>
                 )}
                 {!isLoading && !error && availableGames.length === 0 && (
-                  <div className="p-5 space-y-3">
+                  <div className="space-y-3 p-5">
                     <p className="text-[10px] text-foreground/40">
                       {dbGames?.length === 0 ? 'No campaigns detected.' : 'All campaigns tracked.'}
                     </p>
                     <Button size="sm" variant="outline" onClick={() => refetch()}>
-                      <RefreshCw className="h-3 w-3" />
+                      <RefreshCw className="size-3" />
                       Rescan
                     </Button>
                   </div>
                 )}
                 {availableGames.length > 0 && (
-                  <div className="divide-y divide-[var(--cic-panel-edge)]">
+                  <div className="divide-y divide-(--cic-panel-edge)">
                     {availableGames.map((game: GameInfo) => {
                       const isSel = selectedGame?.gameName === game.gameName
                       return (
                         <button
                           key={game.auroraGameId}
                           onClick={() => setSelectedGame(game)}
-                          className={`w-full text-left px-4 py-3 relative group transition-[background-color,box-shadow] duration-300 ease-out ${
-                            isSel ? 'bg-[var(--cic-cyan-glow)]' : 'hover:bg-[var(--cic-cyan-glow)]'
-                          }`}
+                          className={`
+                            group relative w-full px-4 py-3 text-left
+                            transition-[background-color,box-shadow]
+                            duration-300 ease-out
+                            ${
+                            isSel ? 'bg-(--cic-cyan-glow)' : `
+                              hover:bg-(--cic-cyan-glow)
+                            `
+                          }
+                          `}
                         >
                           {/* Left accent bar */}
                           <div
-                            className={`absolute left-0 top-0 bottom-0 transition-all duration-300 ease-out ${
-                              isSel ? 'w-[3px]' : 'w-[2px] group-hover:w-[3px]'
-                            }`}
+                            className={`
+                              absolute inset-y-0 left-0 transition-all
+                              duration-300 ease-out
+                              ${
+                              isSel ? 'w-[3px]' : `
+                                w-[2px]
+                                group-hover:w-[3px]
+                              `
+                            }
+                            `}
                             style={{
                               background: isSel ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)',
                               boxShadow: isSel ? '0 0 10px var(--cic-cyan), 0 0 4px var(--cic-cyan)' : 'none',
@@ -325,7 +375,12 @@ export function SetupPage() {
                           {/* Hover-only glow layer for the left bar (overlays the base bar when not selected) */}
                           {!isSel && (
                             <div
-                              className="absolute left-0 top-0 bottom-0 w-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out pointer-events-none"
+                              className="
+                                pointer-events-none absolute inset-y-0 left-0
+                                w-[3px] opacity-0 transition-opacity
+                                duration-300 ease-out
+                                group-hover:opacity-100
+                              "
                               style={{
                                 background: 'var(--cic-cyan-dim)',
                                 boxShadow: '0 0 10px var(--cic-cyan-dim), 0 0 4px var(--cic-cyan-dim)',
@@ -335,30 +390,52 @@ export function SetupPage() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <div
-                                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ease-out ${
+                                className={`
+                                  size-1.5 rounded-full transition-all
+                                  duration-300 ease-out
+                                  ${
                                   !isSel ? 'group-hover:scale-110' : ''
-                                }`}
+                                }
+                                `}
                                 style={{
                                   background: isSel ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)',
                                   boxShadow: isSel ? '0 0 6px var(--cic-cyan)' : 'none',
                                 }}
                               />
                               <span
-                                className={`text-[11px] font-medium transition-colors duration-300 ease-out ${
-                                  isSel ? 'text-[var(--cic-cyan)]' : 'text-foreground/50 group-hover:text-foreground'
-                                }`}
+                                className={`
+                                  text-[11px] font-medium transition-colors
+                                  duration-300 ease-out
+                                  ${
+                                  isSel ? 'text-(--cic-cyan)' : `
+                                    text-foreground/50
+                                    group-hover:text-foreground
+                                  `
+                                }
+                                `}
                               >
                                 {game.gameName}
                               </span>
                             </div>
-                            <span className="rounded px-1.5 py-0.5 text-[7px] font-bold uppercase bg-[var(--cic-amber-glow)] text-[var(--cic-amber-dim)] border border-[var(--cic-amber-dim)]/20">
+                            <span className="
+                              rounded-sm border border-(--cic-amber-dim)/20
+                              bg-(--cic-amber-glow) px-1.5 py-0.5 text-[7px]
+                              font-bold text-(--cic-amber-dim) uppercase
+                            ">
                               {game.techLevel}
                             </span>
                           </div>
                           <p
-                            className={`mt-1 ml-3.5 text-[9px] transition-colors duration-300 ease-out ${
-                              isSel ? 'text-foreground/40' : 'text-foreground/30 group-hover:text-foreground/50'
-                            }`}
+                            className={`
+                              mt-1 ml-3.5 text-[9px] transition-colors
+                              duration-300 ease-out
+                              ${
+                              isSel ? 'text-foreground/40' : `
+                                text-foreground/30
+                                group-hover:text-foreground/50
+                              `
+                            }
+                            `}
                           >
                             {game.empireName} — Year {game.startingYear}
                           </p>
@@ -368,40 +445,61 @@ export function SetupPage() {
                   </div>
                 )}
                 {alreadyTracked.length > 0 && (
-                  <div className="border-t border-[var(--cic-panel-edge)] px-4 py-3 bg-[var(--cic-void)]/50">
-                    <p className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1.5">
+                  <div className="
+                    border-t border-(--cic-panel-edge) bg-(--cic-void)/50 px-4
+                    py-3
+                  ">
+                    <p className="
+                      mb-1.5 text-[8px] font-semibold tracking-wider
+                      text-muted-foreground/70 uppercase
+                    ">
                       Already Tracked ({alreadyTracked.length})
                     </p>
                     {alreadyTracked.map((g: GameInfo) => (
-                      <p key={g.auroraGameId} className="text-[9px] text-muted-foreground/70 py-0.5 ml-3.5">
+                      <p key={g.auroraGameId} className="
+                        ml-3.5 py-0.5 text-[9px] text-muted-foreground/70
+                      ">
                         {g.gameName}
                       </p>
                     ))}
                   </div>
                 )}
-                <div className="flex items-center justify-between border-t border-[var(--cic-panel-edge)] bg-[var(--cic-void)]/30 px-4 py-3">
+                <div className="
+                  flex items-center justify-between border-t
+                  border-(--cic-panel-edge) bg-(--cic-void)/30 px-4 py-3
+                ">
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => navigate('/')}>
-                      <ArrowLeft className="h-3 w-3" />
+                    <Button size="sm" variant="ghost" className="
+                      text-foreground/40
+                    " onClick={() => navigate('/')}>
+                      <ArrowLeft className="size-3" />
                       Cancel
                     </Button>
                     <Button
                       size="xs"
                       variant="ghost"
-                      className="text-muted-foreground hover:text-[var(--cic-cyan-dim)]"
+                      className="
+                        text-muted-foreground
+                        hover:text-(--cic-cyan-dim)
+                      "
                       onClick={() => refetch()}
                     >
-                      <RefreshCw className="h-3 w-3" />
+                      <RefreshCw className="size-3" />
                       Rescan
                     </Button>
                   </div>
                   <Button
                     size="sm"
                     disabled={!selectedGame}
-                    className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 disabled:opacity-20 transition-all"
+                    className="
+                      border border-(--cic-amber-dim)/40 bg-(--cic-amber)/10
+                      text-(--cic-amber) transition-all
+                      hover:bg-(--cic-amber)/20
+                      disabled:opacity-20
+                    "
                     onClick={() => setStep('government')}
                   >
-                    Form Government <ArrowRight className="h-3 w-3" />
+                    Form Government <ArrowRight className="size-3" />
                   </Button>
                 </div>
               </div>
@@ -413,25 +511,36 @@ export function SetupPage() {
       {/* Step 2: Form Government */}
       {step === 'government' && (
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-5xl mx-auto px-6 py-6 space-y-8 cic-slide-up">
+          <div className="cic-slide-up mx-auto max-w-5xl space-y-8 p-6">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-semibold text-foreground/90">
                   Form Government{' '}
-                  <span className="ml-2 text-[11px] font-normal text-[var(--cic-cyan)]">{selectedGame?.gameName}</span>
+                  <span className="
+                    ml-2 text-[11px] font-normal text-(--cic-cyan)
+                  ">{selectedGame?.gameName}</span>
                 </h2>
-                <p className="text-[10px] text-foreground/35 mt-0.5">
+                <p className="mt-0.5 text-[10px] text-foreground/35">
                   Select a government profile — this defines how your AI government speaks and thinks.
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => setStep('pick-game')}>
-                  <ArrowLeft className="h-3 w-3" /> Back
+                  <ArrowLeft className="size-3" /> Back
                 </Button>
-                <div className="flex items-center gap-2 rounded-md border border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-2.5 py-1.5">
-                  <BrainCog className={`h-3 w-3 ${noAi ? 'text-[var(--cic-amber)]' : 'text-muted-foreground'}`} />
-                  <span className={`text-[9px] font-medium ${noAi ? 'text-[var(--cic-amber)]' : 'text-foreground/30'}`}>
+                <div className="
+                  flex items-center gap-2 rounded-md border
+                  border-(--cic-panel-edge) bg-(--cic-panel) px-2.5 py-1.5
+                ">
+                  <BrainCog className={`
+                    size-3
+                    ${noAi ? `text-(--cic-amber)` : `text-muted-foreground`}
+                  `} />
+                  <span className={`
+                    text-[9px] font-medium
+                    ${noAi ? `text-(--cic-amber)` : `text-foreground/30`}
+                  `}>
                     No AI
                   </span>
                   <Switch
@@ -449,22 +558,35 @@ export function SetupPage() {
             {/* No AI warning banner */}
             {noAi && (
               <div
-                className={`rounded-md border px-4 py-3 flex items-start gap-3 ${
+                className={`
+                  flex items-start gap-3 rounded-md border px-4 py-3
+                  ${
                   aiUnavailable
-                    ? 'border-[var(--cic-red)]/30 bg-[var(--cic-red)]/5'
-                    : 'border-[var(--cic-amber-dim)]/40 bg-[var(--cic-amber-glow)]'
-                }`}
+                    ? 'border-(--cic-red)/30 bg-(--cic-red)/5'
+                    : `border-(--cic-amber-dim)/40 bg-(--cic-amber-glow)`
+                }
+                `}
               >
                 <AlertTriangle
-                  className={`h-4 w-4 shrink-0 mt-0.5 ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`}
+                  className={`
+                    mt-0.5 size-4 shrink-0
+                    ${aiUnavailable ? `text-(--cic-red)` : `text-(--cic-amber)`}
+                  `}
                 />
                 <div>
                   <p
-                    className={`text-[10px] font-semibold ${aiUnavailable ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber)]'}`}
+                    className={`
+                      text-[10px] font-semibold
+                      ${aiUnavailable ? `text-(--cic-red)` : `
+                        text-(--cic-amber)
+                      `}
+                    `}
                   >
                     {aiUnavailable ? 'AI Provider Not Available' : 'AI Advisor Disabled'}
                   </p>
-                  <p className="text-[9px] text-foreground/40 mt-0.5 leading-relaxed">
+                  <p className="
+                    mt-0.5 text-[9px] leading-relaxed text-foreground/40
+                  ">
                     {aiUnavailable
                       ? 'No AI provider is configured or reachable. Configure one in Settings to enable AI-generated briefings. You can still create ministries for event routing.'
                       : 'Events will display as raw data only — no AI-generated briefings, analysis, or in-character responses. You can still create ministries for event routing and categorization.'}{' '}
@@ -475,10 +597,16 @@ export function SetupPage() {
             )}
 
             {/* Ideology — disabled when noAi */}
-            <section className={`relative ${noAi ? 'pointer-events-none' : ''}`}>
+            <section className={`
+              relative
+              ${noAi ? 'pointer-events-none' : ''}
+            `}>
               {noAi && (
-                <div className="absolute inset-0 bg-[var(--cic-void)]/70 z-10 rounded-md flex items-center justify-center">
-                  <span className="text-[10px] font-mono text-muted-foreground">AI features disabled</span>
+                <div className="
+                  absolute inset-0 z-10 flex items-center justify-center
+                  rounded-md bg-(--cic-void)/70
+                ">
+                  <span className="font-mono text-[10px] text-muted-foreground">AI features disabled</span>
                 </div>
               )}
               <SectionDivider icon={Scroll} label="Ideology" tag="GOV.IDL" />
@@ -491,10 +619,16 @@ export function SetupPage() {
             </section>
 
             {/* Government Profile — disabled when noAi */}
-            <section className={`relative ${noAi ? 'pointer-events-none' : ''}`}>
+            <section className={`
+              relative
+              ${noAi ? 'pointer-events-none' : ''}
+            `}>
               {noAi && (
-                <div className="absolute inset-0 bg-[var(--cic-void)]/70 z-10 rounded-md flex items-center justify-center">
-                  <span className="text-[10px] font-mono text-muted-foreground">AI features disabled</span>
+                <div className="
+                  absolute inset-0 z-10 flex items-center justify-center
+                  rounded-md bg-(--cic-void)/70
+                ">
+                  <span className="font-mono text-[10px] text-muted-foreground">AI features disabled</span>
                 </div>
               )}
               <SectionDivider icon={Crown} label="Government Profile" tag="GOV.PRF" />
@@ -519,9 +653,14 @@ export function SetupPage() {
 
             {/* Validation + Footer */}
             {!noEmptyMinistries && ministries.length > 0 && (
-              <div className="rounded-md border border-[var(--cic-red)]/20 bg-[var(--cic-red)]/5 px-4 py-2.5 flex items-start gap-2">
-                <AlertTriangle className="h-3 w-3 text-[var(--cic-red)] shrink-0 mt-0.5" />
-                <p className="text-[9px] text-[var(--cic-red)]/70">
+              <div className="
+                flex items-start gap-2 rounded-md border border-(--cic-red)/20
+                bg-(--cic-red)/5 px-4 py-2.5
+              ">
+                <AlertTriangle className="
+                  mt-0.5 size-3 shrink-0 text-(--cic-red)
+                " />
+                <p className="text-[9px] text-(--cic-red)/70">
                   {ministries
                     .filter((m) => m.tags.length === 0)
                     .map((m) => m.name)
@@ -532,9 +671,14 @@ export function SetupPage() {
               </div>
             )}
             {!allTagsCovered && noEmptyMinistries && (
-              <div className="rounded-md border border-[var(--cic-red)]/20 bg-[var(--cic-red)]/5 px-4 py-2.5 flex items-start gap-2">
-                <AlertTriangle className="h-3 w-3 text-[var(--cic-red)] shrink-0 mt-0.5" />
-                <p className="text-[9px] text-[var(--cic-red)]/70">
+              <div className="
+                flex items-start gap-2 rounded-md border border-(--cic-red)/20
+                bg-(--cic-red)/5 px-4 py-2.5
+              ">
+                <AlertTriangle className="
+                  mt-0.5 size-3 shrink-0 text-(--cic-red)
+                " />
+                <p className="text-[9px] text-(--cic-red)/70">
                   Unassigned domains:{' '}
                   {EVENT_TAGS.filter((t) => !allAssignedTags.has(t.id))
                     .map((t) => t.label)
@@ -544,9 +688,12 @@ export function SetupPage() {
               </div>
             )}
             {!noAi && !activeProfile && (
-              <div className="rounded-md border border-[var(--cic-amber-dim)]/20 bg-[var(--cic-amber-glow)] px-4 py-2.5 flex items-start gap-2">
-                <Crown className="h-3 w-3 text-[var(--cic-amber-dim)] shrink-0 mt-0.5" />
-                <p className="text-[9px] text-[var(--cic-amber-dim)]/70">
+              <div className="
+                flex items-start gap-2 rounded-md border
+                border-(--cic-amber-dim)/20 bg-(--cic-amber-glow) px-4 py-2.5
+              ">
+                <Crown className="mt-0.5 size-3 shrink-0 text-(--cic-amber-dim)" />
+                <p className="text-[9px] text-(--cic-amber-dim)/70">
                   Select a government profile above, or create a custom one.
                 </p>
               </div>
@@ -562,10 +709,15 @@ export function SetupPage() {
               <Button
                 size="sm"
                 disabled={!canEstablish}
-                className="bg-[var(--cic-amber)]/15 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/50 hover:bg-[var(--cic-amber)]/25 hover:border-[var(--cic-amber)]/70 disabled:opacity-20 transition-all px-6"
+                className="
+                  border border-(--cic-amber-dim)/50 bg-(--cic-amber)/15 px-6
+                  text-(--cic-amber) transition-all
+                  hover:border-(--cic-amber)/70 hover:bg-(--cic-amber)/25
+                  disabled:opacity-20
+                "
                 onClick={finishSetup}
               >
-                <Check className="h-3.5 w-3.5" /> Establish Government
+                <Check className="size-3.5" /> Establish Government
               </Button>
             </div>
           </div>

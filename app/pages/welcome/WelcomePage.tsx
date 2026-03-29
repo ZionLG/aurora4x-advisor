@@ -36,13 +36,13 @@ function BootLine({ children, status, delay = 0 }: { children: React.ReactNode; 
 
   return (
     <div
-      className="flex items-center gap-3 h-[18px]"
+      className="flex h-[18px] items-center gap-3"
       style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.2s ease-out' }}
     >
-      <span className="shrink-0 font-mono text-[10px] w-[60px]" style={{ color: STATUS_COLORS[status] }}>
+      <span className="w-[60px] shrink-0 font-mono text-[10px]" style={{ color: STATUS_COLORS[status] }}>
         {STATUS_LABELS[status]}
       </span>
-      <span className="text-[10px] font-mono text-foreground/50">{children}</span>
+      <span className="font-mono text-[10px] text-foreground/50">{children}</span>
     </div>
   )
 }
@@ -90,11 +90,11 @@ export function WelcomePage() {
   }
 
   return (
-    <div className="flex h-full items-center justify-center p-8 bg-[var(--cic-void)]">
+    <div className="flex h-full items-center justify-center bg-(--cic-void) p-8">
       <div className="w-full max-w-xl">
         {/* Terminal header */}
         <div
-          className="px-4 py-2.5 flex items-center justify-between rounded-t-md"
+          className="flex items-center justify-between rounded-t-md px-4 py-2.5"
           style={{
             background: 'var(--cic-panel)',
             borderTop: '1px solid var(--cic-cyan)',
@@ -104,12 +104,15 @@ export function WelcomePage() {
           }}
         >
           <div className="flex items-center gap-2">
-            <CircleDot className="h-3 w-3 text-[var(--cic-cyan)] cic-glow-pulse" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--cic-cyan)]">
+            <CircleDot className="cic-glow-pulse size-3 text-(--cic-cyan)" />
+            <span className="
+              text-[10px] font-semibold tracking-[0.25em] text-(--cic-cyan)
+              uppercase
+            ">
               Aurora 4X Companion
             </span>
           </div>
-          <span className="text-[9px] font-mono text-foreground/20">v0.2.0</span>
+          <span className="font-mono text-[9px] text-foreground/20">v0.2.0</span>
         </div>
 
         {/* Terminal body */}
@@ -122,9 +125,11 @@ export function WelcomePage() {
           }}
         >
           {/* Scanline overlay */}
-          <div className="cic-scanline absolute inset-0 pointer-events-none z-20" />
+          <div className="
+            cic-scanline pointer-events-none absolute inset-0 z-20
+          " />
 
-          <div className="p-5 space-y-1.5 relative z-10">
+          <div className="relative z-10 space-y-1.5 p-5">
             {/* Boot sequence */}
             <BootLine status="ok" delay={0}>
               Initializing Aurora 4X Companion...
@@ -165,23 +170,32 @@ export function WelcomePage() {
               <div className="cic-slide-up space-y-4">
                 {!hasDbPath ? (
                   <div
-                    className="p-3 rounded"
+                    className="rounded-sm p-3"
                     style={{
                       background: 'var(--cic-amber-glow)',
                       border: '1px solid var(--cic-amber-dim)',
                       borderLeft: '2px solid var(--cic-amber)',
                     }}
                   >
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[var(--cic-amber)] mb-1.5">
+                    <p className="
+                      mb-1.5 text-[9px] font-semibold tracking-[0.15em]
+                      text-(--cic-amber) uppercase
+                    ">
                       First-Time Setup Required
                     </p>
-                    <p className="text-[10px] text-foreground/40 leading-relaxed mb-3">
+                    <p className="
+                      mb-3 text-[10px] leading-relaxed text-foreground/40
+                    ">
                       Configure the path to your Aurora 4X database to begin. The companion reads this file to track
                       your game state.
                     </p>
                     <Button
                       size="sm"
-                      className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 hover:border-[var(--cic-amber)]/60 transition-all"
+                      className="
+                        border border-(--cic-amber-dim)/40 bg-(--cic-amber)/10
+                        text-(--cic-amber) transition-all
+                        hover:border-(--cic-amber)/60 hover:bg-(--cic-amber)/20
+                      "
                       onClick={() => navigate('/settings')}
                     >
                       Configure Database Path
@@ -191,13 +205,17 @@ export function WelcomePage() {
                   <div className="flex items-center gap-3">
                     <Button
                       size="sm"
-                      className="bg-[var(--cic-amber)]/10 text-[var(--cic-amber)] border border-[var(--cic-amber-dim)]/40 hover:bg-[var(--cic-amber)]/20 hover:border-[var(--cic-amber)]/60 transition-all"
+                      className="
+                        border border-(--cic-amber-dim)/40 bg-(--cic-amber)/10
+                        text-(--cic-amber) transition-all
+                        hover:border-(--cic-amber)/60 hover:bg-(--cic-amber)/20
+                      "
                       onClick={handleNewCampaign}
                     >
                       + Initialize New Campaign
                     </Button>
                     {campaignCount > 0 && (
-                      <span className="text-[9px] font-mono text-foreground/20">or select from sidebar</span>
+                      <span className="font-mono text-[9px] text-foreground/20">or select from sidebar</span>
                     )}
                   </div>
                 )}
@@ -207,11 +225,11 @@ export function WelcomePage() {
                   className="flex items-center justify-between pt-3"
                   style={{ borderTop: '1px solid var(--cic-panel-edge)' }}
                 >
-                  <span className="text-[9px] font-mono text-foreground/15">
+                  <span className="font-mono text-[9px] text-foreground/15">
                     Ready for input
                     <span className="cic-cursor ml-1">_</span>
                   </span>
-                  <span className="text-[8px] font-mono text-foreground/10">Aurora 4X Companion</span>
+                  <span className="font-mono text-[8px] text-foreground/10">Aurora 4X Companion</span>
                 </div>
               </div>
             )}

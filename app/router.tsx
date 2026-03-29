@@ -6,8 +6,8 @@ import { Loader2 } from 'lucide-react'
 
 function ModuleLoader() {
   return (
-    <div className="flex h-full items-center justify-center bg-[var(--cic-void)]">
-      <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+    <div className="flex h-full items-center justify-center bg-(--cic-void)">
+      <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
     </div>
   )
 }

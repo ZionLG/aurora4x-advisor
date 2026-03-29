@@ -16,8 +16,8 @@ function SyncHooks() {
 
 function ModuleLoader() {
   return (
-    <div className="flex h-screen items-center justify-center bg-[var(--cic-void)]">
-      <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+    <div className="flex h-screen items-center justify-center bg-(--cic-void)">
+      <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
     </div>
   )
 }
@@ -27,7 +27,10 @@ export function PopoutShell({ moduleId }: { moduleId: string }) {
 
   if (!mod) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[var(--cic-void)] text-muted-foreground text-sm">
+      <div className="
+        flex h-screen items-center justify-center bg-(--cic-void) text-sm
+        text-muted-foreground
+      ">
         Module not found: {moduleId}
       </div>
     )
@@ -38,7 +41,7 @@ export function PopoutShell({ moduleId }: { moduleId: string }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SyncHooks />
-      <div className="h-screen bg-[var(--cic-void)]">
+      <div className="h-screen bg-(--cic-void)">
         <Suspense fallback={<ModuleLoader />}>
           <Component />
         </Suspense>

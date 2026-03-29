@@ -39,24 +39,42 @@ function SortableTab({
       {...listeners}
       onClick={onActivate}
       onMouseDown={onMiddleClick}
-      className={`group flex items-center gap-1.5 px-3 py-1.5 cursor-pointer border-b-2 transition-colors max-w-[180px] min-w-[100px] select-none ${
+      className={`
+        group flex max-w-[180px] min-w-[100px] cursor-pointer items-center
+        gap-1.5 border-b-2 px-3 py-1.5 transition-colors select-none
+        ${
         isActive
-          ? 'border-[var(--cic-cyan)] bg-[var(--cic-void)] text-[var(--cic-cyan)]'
-          : 'border-transparent text-muted-foreground/60 hover:text-foreground/70 hover:bg-[var(--cic-void)]/50'
-      } ${isDragging ? 'shadow-lg rounded-t' : ''}`}
+          ? `border-(--cic-cyan) bg-(--cic-void) text-(--cic-cyan)`
+          : `
+            border-transparent text-muted-foreground/60
+            hover:bg-(--cic-void)/50 hover:text-foreground/70
+          `
+      }
+        ${isDragging ? 'rounded-t shadow-lg' : ''}
+      `}
     >
-      {Icon && <Icon className="h-3 w-3 shrink-0" />}
-      <span className="text-[10px] truncate flex-1">{tab.name}</span>
+      {Icon && <Icon className="size-3 shrink-0" />}
+      <span className="flex-1 truncate text-[10px]">{tab.name}</span>
       <button
         onClick={onClose}
         onMouseDown={(e) => e.stopPropagation()}
-        className={`shrink-0 rounded p-0.5 transition-colors ${
+        className={`
+          shrink-0 rounded-sm p-0.5 transition-colors
+          ${
           isActive
-            ? 'text-[var(--cic-cyan)]/50 hover:text-[var(--cic-cyan)] hover:bg-[var(--cic-cyan-glow)]'
-            : 'opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-foreground/60 hover:bg-[var(--cic-panel-edge)]'
-        }`}
+            ? `
+              text-(--cic-cyan)/50
+              hover:bg-(--cic-cyan-glow) hover:text-(--cic-cyan)
+            `
+            : `
+              text-muted-foreground/40 opacity-0
+              group-hover:opacity-100
+              hover:bg-(--cic-panel-edge) hover:text-foreground/60
+            `
+        }
+        `}
       >
-        <X className="h-2.5 w-2.5" />
+        <X className="size-2.5" />
       </button>
     </div>
   )
@@ -145,7 +163,10 @@ export function TabBar() {
   }
 
   return (
-    <div className="shrink-0 flex items-end border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)] px-1 overflow-x-auto">
+    <div className="
+      flex shrink-0 items-end overflow-x-auto border-b border-(--cic-panel-edge)
+      bg-(--cic-panel) px-1
+    ">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={tabs.map((t) => t.id)} strategy={horizontalListSortingStrategy}>
           {tabs.map((tab) => (

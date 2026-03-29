@@ -29,13 +29,18 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="min-h-screen bg-background flex items-center justify-center p-4">
-            <div className="max-w-lg w-full space-y-6">
+          <div className="
+            flex min-h-screen items-center justify-center bg-background p-4
+          ">
+            <div className="w-full max-w-lg space-y-6">
               {/* Error Icon */}
               <div className="flex justify-center">
-                <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center">
+                <div className="
+                  flex size-16 items-center justify-center rounded-full
+                  bg-destructive/10
+                ">
                   <svg
-                    className="w-8 h-8 text-destructive"
+                    className="size-8 text-destructive"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -52,18 +57,22 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
 
               {/* Error Content */}
-              <div className="text-center space-y-4">
+              <div className="space-y-4 text-center">
                 <div className="space-y-2">
                   <h1 className="text-2xl font-semibold text-foreground">Something went wrong</h1>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-sm/relaxed text-muted-foreground">
                     An unexpected error occurred in the application
                   </p>
                 </div>
 
                 {/* Stack Trace */}
                 {this.state.error?.stack && (
-                  <ScrollArea className="mt-3 h-32 p-4 rounded-lg border border-border/50 bg-muted/50">
-                    <pre className="text-sm text-foreground select-text text-left">{this.state.error.stack}</pre>
+                  <ScrollArea className="
+                    mt-3 h-32 rounded-lg border border-border/50 bg-muted/50 p-4
+                  ">
+                    <pre className="
+                      text-left text-sm text-foreground select-text
+                    ">{this.state.error.stack}</pre>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 )}

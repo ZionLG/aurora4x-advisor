@@ -2,8 +2,41 @@ import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import tailwindcss from 'eslint-plugin-better-tailwindcss'
 
 export default [
+  {
+    ...tailwindcss.configs['recommended-warn'],
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'app/styles/globals.css',
+      },
+    },
+    rules: {
+      ...tailwindcss.configs['recommended-warn'].rules,
+      'better-tailwindcss/no-unknown-classes': ['warn', {
+        ignore: [
+          // tailwindcss-animate classes (used by shadcn/ui)
+          'animate-in', 'animate-out',
+          'fade-in-\\d*', 'fade-out-\\d*',
+          'zoom-in-\\d*', 'zoom-out-\\d*',
+          'slide-in-from-.*', 'slide-out-to-.*',
+          'spin-in-\\d*', 'spin-out-\\d*',
+          // CIC custom classes
+          'cic-.*',
+        ],
+      }],
+    },
+  },
+  {
+    // Disable tailwind linting for shadcn/ui components and window chrome
+    files: ['app/components/ui/**/*.{ts,tsx}', 'app/components/window/**/*.{ts,tsx}'],
+    rules: {
+      'better-tailwindcss/no-unknown-classes': 'off',
+      'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
+      'better-tailwindcss/enforce-canonical-classes': 'off',
+    },
+  },
   {
     ignores: [
       'node_modules/**',

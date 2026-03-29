@@ -11,7 +11,7 @@ export function MineralsTab() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-[var(--cic-cyan-dim)]" />
+        <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
       </div>
     )
   }
@@ -24,13 +24,22 @@ export function MineralsTab() {
   return (
     <div>
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-[var(--cic-panel-edge)] bg-[var(--cic-panel)]">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-[var(--cic-amber-dim)]">
+      <div className="
+        flex shrink-0 items-center justify-between border-b
+        border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2
+      ">
+        <span className="
+          text-[9px] font-semibold tracking-wider text-(--cic-amber-dim)
+          uppercase
+        ">
           Mineral Stockpiles
         </span>
         {colonyList.length > 0 && (
           <select
-            className="text-[9px] bg-[var(--cic-void)] border border-[var(--cic-panel-edge)] rounded px-2 py-1 text-foreground/60"
+            className="
+              rounded-sm border border-(--cic-panel-edge) bg-(--cic-void) px-2
+              py-1 text-[9px] text-foreground/60
+            "
             value={selectedColony ?? ''}
             onChange={(e) => setSelectedColony(e.target.value ? Number(e.target.value) : null)}
           >
@@ -48,27 +57,40 @@ export function MineralsTab() {
 
       <div className="p-4">
         {mineralNames.length === 0 ? (
-          <p className="text-[10px] text-muted-foreground text-center py-8">No mineral data available</p>
+          <p className="py-8 text-center text-[10px] text-muted-foreground">No mineral data available</p>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="
+            grid grid-cols-2 gap-3
+            lg:grid-cols-3
+          ">
             {mineralNames.map((name) => {
               const amount = totals[name] ?? 0
               const isLow = amount < 1000
               return (
                 <div
                   key={name}
-                  className={`rounded-md border bg-[var(--cic-panel)] p-3 ${
-                    isLow ? 'border-[var(--cic-red)]/30' : 'border-[var(--cic-panel-edge)]'
-                  }`}
+                  className={`
+                    rounded-md border bg-(--cic-panel) p-3
+                    ${
+                    isLow ? 'border-(--cic-red)/30' : `
+                      border-(--cic-panel-edge)
+                    `
+                  }
+                  `}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <Gem className={`h-3 w-3 ${isLow ? 'text-[var(--cic-red)]' : 'text-[var(--cic-amber-dim)]'}`} />
-                      <span className="text-[10px] font-medium text-foreground/70">{name}</span>
+                      <Gem className={`
+                        size-3
+                        ${isLow ? 'text-(--cic-red)' : `text-(--cic-amber-dim)`}
+                      `} />
+                      <span className="
+                        text-[10px] font-medium text-foreground/70
+                      ">{name}</span>
                     </div>
-                    {isLow && <span className="text-[7px] text-[var(--cic-red)]">LOW</span>}
+                    {isLow && <span className="text-[7px] text-(--cic-red)">LOW</span>}
                   </div>
-                  <p className="text-sm font-mono text-foreground/80 mt-1">{amount.toLocaleString()}</p>
+                  <p className="mt-1 font-mono text-sm text-foreground/80">{amount.toLocaleString()}</p>
                 </div>
               )
             })}

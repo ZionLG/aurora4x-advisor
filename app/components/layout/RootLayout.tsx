@@ -4,7 +4,7 @@ import { TabBar } from './TabBar'
 
 export function RootLayout() {
   return (
-    <div className="flex h-full bg-[var(--cic-void)]">
+    <div className="flex h-full bg-(--cic-void)">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <TabBar />
