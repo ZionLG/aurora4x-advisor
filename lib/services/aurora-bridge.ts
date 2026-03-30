@@ -305,7 +305,7 @@ class AuroraBridge {
       const payload = msg.Payload as { pushType?: string; data?: { raw?: string } }
       if (payload?.pushType === 'gameDate' && payload.data?.raw) {
         this._lastTitleBarText = payload.data.raw as string
-        const match = payload.data.raw.match(/^(.+?)\s{2,}\d/)
+        const match = payload.data.raw.match(/^(.+?)\s{2,}/)
         if (match) {
           this._activeEmpireName = match[1].trim()
           console.warn(
