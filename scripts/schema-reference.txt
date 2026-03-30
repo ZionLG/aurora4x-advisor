@@ -1,0 +1,2836 @@
+
+📐 Schema dump (non-empty tables)
+
+
+DIM_AssignmentTypeFilter (16 rows, 17 cols):
+  AssignmentTypeID               INTEGER
+  LeaderType                     INTEGER
+  Description                    TEXT
+  DisplayOrder                   INTEGER
+  Ship                           Numeric
+  Team                           Numeric
+  Population                     Numeric
+  Sector                         Numeric
+  Ground                         Numeric
+  Fighter                        Numeric
+  Armed                          Numeric
+  Freighters                     Numeric
+  NavalAdmin                     Numeric
+  Survey                         INTEGER
+  RankPriorityModifier           INTEGER
+  ShipCommandType                INTEGER
+  Academy                        INTEGER
+
+DIM_AutomatedClassDesign (88 rows, 69 cols):
+  AutomatedClassID               INTEGER
+  DesignID                       TEXT
+  DefaultClassName               TEXT
+  ShippingLineName               TEXT
+  KeyTechA                       INTEGER
+  KeyTechB                       INTEGER
+  HullID                         INTEGER
+  HullSize                       Double
+  WeaponType                     INTEGER
+  MissileType                    INTEGER
+  EngineType                     INTEGER
+  EngineNumberType               INTEGER
+  EngineNumber                   INTEGER
+  RandomEngineElement            INTEGER
+  EngineeringType                INTEGER
+  Engineering                    INTEGER
+  DeploymentDuration             Double
+  FuelDuration                   Double
+  AdditionalArmour               Numeric
+  ArmourAdjustment               INTEGER
+  Hangar                         INTEGER
+  Shields                        INTEGER
+  SecondaryActive                INTEGER
+  NumFireControls                INTEGER
+  MissileFireControl             INTEGER
+  ThermalFixed                   INTEGER
+  ThermalRandom                  INTEGER
+  EMFixed                        INTEGER
+  EMRandom                       INTEGER
+  CargoHolds                     INTEGER
+  CargoHandling                  INTEGER
+  CryogenicModules               INTEGER
+  LuxuryAccomodation             INTEGER
+  SalvageModules                 INTEGER
+  JGCS                           Numeric
+  CIWSFixed                      INTEGER
+  CIWSRandom                     INTEGER
+  JumpDriveType                  INTEGER
+  RoleType                       INTEGER
+  HullClass                      TEXT
+  BeamFireControl                INTEGER
+  AuxiliaryControl               INTEGER
+  ScienceDepartment              INTEGER
+  MainEngineering                INTEGER
+  CIC                            INTEGER
+  PrimaryFlightControl           INTEGER
+  SpinalLaser                    INTEGER
+  ECCM                           INTEGER
+  FuelTransferSystem             INTEGER
+  AssignAsTanker                 INTEGER
+  AssignAsCollier                INTEGER
+  GeoSurvey                      INTEGER
+  GravSurvey                     INTEGER
+  TroopTransportBase             INTEGER
+  TroopTransportRandom           INTEGER
+  Notes                          TEXT
+  AlternativeWeapon              Boolean
+  PrimaryActive                  INTEGER
+  FillSpace                      Boolean
+  BioEnergyStorage               INTEGER
+  HullSizeType                   INTEGER
+  SwarmDesign                    Boolean
+  HiveShipSizeClass              INTEGER
+  EnergyEscort                   INTEGER
+  SurrenderStatus                INTEGER
+  MaxFuelHullPercentage          Double
+  StealthDesign                  INTEGER
+  DecoyLaunchers                 INTEGER
+  SecondaryWeaponProportion      Double
+
+DIM_AutomatedGroundTemplateDesign (21 rows, 9 cols):
+  AutomatedTemplateID            INTEGER
+  Name                           TEXT
+  Abbreviation                   TEXT
+  StandardProportion             Double
+  Priority                       INTEGER
+  SpecialNPR                     INTEGER
+  FieldPosition                  INTEGER
+  PrimaryFunction                INTEGER
+  RequiredTechID                 INTEGER
+
+DIM_AutomatedGroundTemplateElements (100 rows, 11 cols):
+  AutomatedTemplateID            INTEGER
+  BaseAmount                     INTEGER
+  DiceAmount                     INTEGER
+  Multiple                       INTEGER
+  DiceSize                       INTEGER
+  GUClassType                    INTEGER
+  PrimaryClass                   Boolean
+  ClassName                      TEXT
+  HQ                             Boolean
+  Logistics                      Boolean
+  Construction                   Boolean
+
+DIM_ClassSummaryType (9 rows, 2 cols):
+  ClassSummaryTypeID             INTEGER
+  Description                    TEXT
+
+DIM_CommanderBonusType (34 rows, 10 cols):
+  BonusID                        INTEGER
+  Description                    TEXT
+  Percentage                     Numeric
+  Naval                          Numeric
+  Ground                         Numeric
+  Civilian                       Numeric
+  Scientist                      Numeric
+  DisplayOrder                   INTEGER
+  BonusAbbrev                    TEXT
+  MaximumBonus                   Double
+
+DIM_CommanderNameTheme (79 rows, 8 cols):
+  NameThemeID                    INTEGER
+  Description                    TEXT
+  NameOne                        INTEGER
+  NameTwo                        INTEGER
+  NameThree                      INTEGER
+  SpecialRule                    INTEGER
+  NameOneAddition                TEXT
+  NameOneAdditionChance          INTEGER
+
+DIM_CommanderNames (130843 rows, 6 cols):
+  NameThemeID                    INTEGER
+  FirstName                      Boolean
+  Name                           TEXT
+  Female                         Boolean
+  ThirdName                      Boolean
+  FamilyName                     Boolean
+
+DIM_CompanyNames (49 rows, 3 cols):
+  ID                             INTEGER
+  CompanySuffix                  VARCHAR(255)
+  CompanyType                    INTEGER
+
+DIM_ComponentType (58 rows, 10 cols):
+  ComponentTypeID                INTEGER
+  TypeDescription                TEXT
+  EmptySpaceModifier             Double
+  RatingDescription              TEXT
+  ClassDisplayOrder              INTEGER
+  RepairPriority                 INTEGER
+  ShowInClassDisplay             Numeric
+  SingleSystem                   Numeric
+  ObsoleteAllowed                Boolean
+  ClassSummaryTypeID             INTEGER
+
+DIM_Condition (13 rows, 3 cols):
+  ConditionID                    INTEGER
+  Description                    VARCHAR(50)
+  DisplayOrder                   INTEGER
+
+DIM_Constellation (88 rows, 26 cols):
+  Constellation                  TEXT
+  MaxFlamsteed                   TEXT
+  Alpha                          TEXT
+  Beta                           TEXT
+  Gamma                          TEXT
+  Delta                          TEXT
+  Epsilon                        TEXT
+  Zeta                           TEXT
+  Eta                            TEXT
+  Theta                          TEXT
+  Iota                           TEXT
+  Kappa                          TEXT
+  Lambda                         TEXT
+  Mu                             TEXT
+  Nu                             TEXT
+  Xi                             TEXT
+  Omicron                        TEXT
+  Pi                             TEXT
+  Rho                            TEXT
+  Sigma                          TEXT
+  Tau                            TEXT
+  Upsilon                        TEXT
+  Phi                            TEXT
+  Chi                            TEXT
+  Psi                            TEXT
+  Omega                          TEXT
+
+DIM_DesignPhilosophyGroundForceDeployments (12 rows, 5 cols):
+  GroundForceDeploymentThemeID   INTEGER
+  AutomatedTemplateID            INTEGER
+  NumberRequired                 INTEGER
+  PopulationValue                INTEGER
+  Priority                       INTEGER
+
+DIM_DesignPhilosophyTechProgression (173 rows, 10 cols):
+  TechTypeID                     INTEGER
+  TechGroupID                    INTEGER
+  ProgressionOrder               Double
+  Description                    TEXT
+  Notes                          TEXT
+  ResearchField                  INTEGER
+  EstimatedRP                    INTEGER
+  TechProgressionCategoryID      INTEGER
+  Mandatory                      Boolean
+  CheckList                      Boolean
+
+DIM_EmpireTitles (47 rows, 5 cols):
+  EmpireTitleID                  INTEGER
+  Title                          TEXT
+  Prefix                         Numeric
+  Suffix                         Numeric
+  MaxChance                      INTEGER
+
+DIM_EventType (240 rows, 7 cols):
+  EventTypeID                    INTEGER
+  Description                    TEXT
+  CombatDisplay                  INTEGER
+  DamageDisplay                  INTEGER
+  AttackEvent                    Numeric
+  PlayerInterrupt                INTEGER
+  AIInterrupt                    INTEGER
+
+DIM_Gases (22 rows, 9 cols):
+  GasID                          INTEGER
+  Name                           TEXT
+  Symbol                         TEXT
+  Weight                         INTEGER
+  BoilingPoint                   INTEGER
+  GHGas                          Numeric
+  AntiGHGas                      Numeric
+  Dangerous                      INTEGER
+  DangerousLevel                 Double
+
+DIM_GroundComponentType (30 rows, 28 cols):
+  Size                           Double
+  Static                         Boolean
+  Infantry                       Boolean
+  Vehicle                        Boolean
+  SuperHeavyVehicle              Boolean
+  Penetration                    Double
+  Damage                         Double
+  Shots                          INTEGER
+  TechSystemID                   INTEGER
+  ComponentName                  TEXT
+  ComponentTypeID                INTEGER
+  Abbreviation                   TEXT
+  HeavyVehicle                   Boolean
+  UltraHeavyVehicle              Boolean
+  STO                            INTEGER
+  Construction                   Double
+  FireDirection                  INTEGER
+  HQMaxSize                      INTEGER
+  LightVehicle                   Boolean
+  BombardmentWeapon              INTEGER
+  Geosurvey                      Double
+  LogisticsPoints                INTEGER
+  SupplyUse                      Double
+  AAWeapon                       INTEGER
+  DisplayOrder                   INTEGER
+  Xenoarchaeology                Double
+  Decontamination                Double
+  GroundWeapon                   Boolean
+
+DIM_GroundUnitArmour (21 rows, 5 cols):
+  TechSystemID                   INTEGER
+  Name                           TEXT
+  ArmourStrength                 Double
+  BaseUnitType                   INTEGER
+  ArmourTypeID                   INTEGER
+
+DIM_GroundUnitBaseType (7 rows, 11 cols):
+  Name                           TEXT
+  HitPoints                      INTEGER
+  MaxSelfFortification           Double
+  MaxFortification               Double
+  UnitBaseTypeID                 INTEGER
+  Size                           INTEGER
+  TechSystemID                   INTEGER
+  Abbreviation                   TEXT
+  ToHitModifier                  Double
+  ComponentSlots                 INTEGER
+  DisplayOrder                   INTEGER
+
+DIM_GroundUnitCapability (13 rows, 6 cols):
+  CapabilityID                   INTEGER
+  CapabilityName                 TEXT
+  TechSystemID                   INTEGER
+  InfantryOnly                   Boolean
+  CostMultiplier                 Double
+  HPEnhancement                  Double
+
+DIM_KnownSystems (63793 rows, 18 cols):
+  KnownSystemID                  INTEGER
+  Name                           TEXT
+  PrimaryName                    TEXT
+  Component1ID                   INTEGER
+  Component2ID                   INTEGER
+  C2Orbit                        Double
+  Component3ID                   INTEGER
+  C3Orbit                        Double
+  C3OrbitType                    INTEGER
+  Component4ID                   INTEGER
+  C4Orbit                        Double
+  C4OrbitType                    INTEGER
+  X                              Double
+  Y                              Double
+  Z                              Double
+  Distance                       Double
+  ConstellationName              TEXT
+  GameID                         INTEGER
+
+DIM_KnownSystems_Old (4497 rows, 18 cols):
+  KnownSystemID                  INTEGER
+  Name                           TEXT
+  PrimaryName                    TEXT
+  Component1ID                   INTEGER
+  Component2ID                   INTEGER
+  C2Orbit                        Double
+  Component3ID                   INTEGER
+  C3Orbit                        Double
+  C3OrbitType                    INTEGER
+  Component4ID                   INTEGER
+  C4Orbit                        Double
+  C4OrbitType                    INTEGER
+  X                              Double
+  Y                              Double
+  Z                              Double
+  Distance                       Double
+  ConstellationName              TEXT
+  GameID                         INTEGER
+
+DIM_LineNames (66 rows, 2 cols):
+  LineNameID                     INTEGER
+  LineNames                      VARCHAR(50)
+
+DIM_MedalCondition (72 rows, 5 cols):
+  MedalConditionID               INTEGER
+  Description                    TEXT
+  MeasurementType                INTEGER
+  AmountRequired                 INTEGER
+  DisplayOrder                   INTEGER
+
+DIM_MineralDataType (22 rows, 4 cols):
+  MineralDataType                INTEGER
+  Income                         Boolean
+  DisplayOrder                   INTEGER
+  Description                    TEXT
+
+DIM_MiningNames (25 rows, 2 cols):
+  MNID                           INTEGER
+  MiningName                     VARCHAR(50)
+
+DIM_MoveAction (120 rows, 28 cols):
+  MoveActionID                   INTEGER
+  Description                    TEXT
+  Completed                      Numeric
+  MoveRequirementID              INTEGER
+  DestinationItemType            INTEGER
+  DisplayOrder                   INTEGER
+  TransitOrder                   Numeric
+  MinDistanceOption              Numeric
+  SpecifyQuanitity               Numeric
+  NoOrderChange                  Numeric
+  MinQuantity                    Numeric
+  LoadGroundUnit                 Numeric
+  NoGasGiants                    Numeric
+  ReserveLevel                   Numeric
+  WarpPoint                      Numeric
+  SystemBody                     Numeric
+  SurveyLocation                 Numeric
+  Fleet                          Numeric
+  Waypoint                       Numeric
+  Contact                        Numeric
+  Lifepod                        Numeric
+  Wreck                          Numeric
+  LagrangePoint                  Numeric
+  Wormhole                       Numeric
+  DesignModeOnly                 Numeric
+  AetherGate                     Numeric
+  DeepSpaceLocation              INTEGER
+  StationaryAction               Boolean
+
+DIM_NamingTheme (110696 rows, 2 cols):
+  NameThemeID                    INTEGER
+  Name                           VARCHAR(255)
+
+DIM_NamingThemeTypes (621 rows, 3 cols):
+  ThemeID                        INTEGER
+  Description                    TEXT
+  RaceNameEligible               Boolean
+
+DIM_NavalAdminCommandType (7 rows, 13 cols):
+  CommandTypeID                  INTEGER
+  Description                    TEXT
+  Abbrev                         TEXT
+  Radius                         Double
+  Survey                         Double
+  Industrial                     Double
+  FleetTraining                  Double
+  Engineering                    Double
+  CrewTraining                   Double
+  Tactical                       Double
+  Reaction                       Double
+  Logistics                      Double
+  DisplayOrder                   INTEGER
+
+DIM_OperationalGroup (91 rows, 12 cols):
+  Description                    TEXT
+  TechRequirementA               INTEGER
+  PrimaryStandingOrder           INTEGER
+  SecondaryStandingOrder         INTEGER
+  MainFunction                   INTEGER
+  AvoidDanger                    Boolean
+  OperationalGroupID             INTEGER
+  ChangeStandingToFuel           Boolean
+  MainFunctionPriority           INTEGER
+  MobileMilitary                 INTEGER
+  OffensiveForce                 Boolean
+  StaticForce                    Boolean
+
+DIM_OperationalGroupElement (205 rows, 7 cols):
+  AutomatedDesignID              INTEGER
+  NumShips                       INTEGER
+  KeyElement                     Boolean
+  OperationalGroupID             INTEGER
+  Description                    TEXT
+  RandomNumShips                 INTEGER
+  ChanceOfElement                INTEGER
+
+DIM_OperationalGroupProgression (316 rows, 7 cols):
+  OpGroupProgressionType         INTEGER
+  ProgressionOrder               INTEGER
+  NumGroups                      INTEGER
+  CountGroupType                 INTEGER
+  OperationalGroupID             INTEGER
+  Description                    TEXT
+  Mandatory                      Boolean
+
+DIM_PlanetaryInstallation (37 rows, 51 cols):
+  PlanetaryInstallationID        INTEGER
+  Name                           TEXT
+  Cost                           Double
+  ConversionFrom                 INTEGER
+  ConversionTo                   INTEGER
+  CargoPoints                    INTEGER
+  ConstructionValue              Double
+  OrdnanceProductionValue        Double
+  FighterProductionValue         Double
+  RefineryProductionValue        Double
+  ResearchValue                  Double
+  TerraformValue                 Double
+  MaintenanceValue               Double
+  MiningProductionValue          Double
+  InfrastructureValue            Double
+  LGInfrastructureValue          Double
+  SensorValue                    Double
+  GroundTrainingValue            Double
+  AcademyValue                   Double
+  SectorCommandValue             Double
+  MassDriverValue                Double
+  FinancialProductionValue       Double
+  CargoShuttleValue              Double
+  GeneticModificationValue       Double
+  MassRefuelling                 INTEGER
+  Workers                        Double
+  WorkerDesciption               TEXT
+  ThermalSignature               Double
+  EMsignature                    Double
+  TargetSize                     INTEGER
+  CivilianInstallation           Numeric
+  SwarmUse                       Numeric
+  NoBuild                        Numeric
+  CivMove                        Numeric
+  DisplayOrder                   Double
+  RequiredTechID                 INTEGER
+  Duranium                       Double
+  Neutronium                     Double
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Mercassium                     Double
+  Vendarite                      Double
+  Sorium                         Double
+  Uridium                        Double
+  Corundium                      Double
+  Gallicite                      Double
+  NavalHeadquartersValue         INTEGER
+  MassOrdnanceTransfer           INTEGER
+  Abbreviation                   TEXT
+  TaxableWorkers                 Boolean
+
+DIM_PlanetaryTerrain (41 rows, 16 cols):
+  TerrainID                      INTEGER
+  Name                           TEXT
+  Abbreviation                   TEXT
+  FortificationModifier          Double
+  ToHitModifier                  Double
+  MinimumHydro                   Double
+  MinimumOxygen                  Double
+  MaximumHydro                   Double
+  MinimumTemperature             Double
+  MaximumTemperature             Double
+  MaximumTectonics               INTEGER
+  MinimumTectonics               INTEGER
+  BaseTerrainType                INTEGER
+  MinTempRange                   INTEGER
+  DesertTerrain                  Boolean
+  JungleTerrain                  Boolean
+
+DIM_PopPoliticalStatus (8 rows, 9 cols):
+  StatusID                       INTEGER
+  StatusName                     VARCHAR(50)
+  ProductionMod                  DOUBLE
+  WealthMod                      DOUBLE
+  SPRequired                     INTEGER
+  NextStatusID                   INTEGER
+  OccupationForceMod             DOUBLE
+  ProtectionRequired             DOUBLE
+  ServiceSector                  DOUBLE
+
+DIM_RankThemeTypes (77 rows, 3 cols):
+  ThemeID                        INTEGER
+  ThemeName                      TEXT
+  RankDone                       Numeric
+
+DIM_RankThemes (560 rows, 7 cols):
+  ThemeID                        INTEGER
+  ThemeRankID                    INTEGER
+  RankName                       TEXT
+  GFRankName                     TEXT
+  CivilianRank                   Boolean
+  NavalRankAbbrev                TEXT
+  GroundRankAbbrev               TEXT
+
+DIM_ResearchCategories (33 rows, 26 cols):
+  CategoryID                     INTEGER
+  CheckTech                      Numeric
+  Name                           TEXT
+  CompanyNameType                INTEGER
+  PlayerDefined                  Numeric
+  SourceTechType0                INTEGER
+  SecondPrimaryTech              INTEGER
+  SourceTechType1                INTEGER
+  SourceTechType2                INTEGER
+  SourceTechType3                INTEGER
+  SourceTechType4                INTEGER
+  SourceTechType5                INTEGER
+  SourceTechType6                INTEGER
+  SourceTechType7                INTEGER
+  Sort0                          Numeric
+  Sort1                          Numeric
+  Sort2                          Numeric
+  Sort3                          Numeric
+  Sort4                          Numeric
+  Sort5                          Numeric
+  Sort6                          Numeric
+  Sort7                          Numeric
+  Components                     Numeric
+  NoteField                      TEXT
+  RadioNumber                    INTEGER
+  RadioText                      TEXT
+
+DIM_ResearchField (10 rows, 5 cols):
+  ResearchFieldID                INTEGER
+  FieldName                      TEXT
+  ShortName                      TEXT
+  Abbreviation                   TEXT
+  DoNotDisplay                   Boolean
+
+DIM_Ruin (10 rows, 16 cols):
+  RuinID                         INTEGER
+  MaxChance                      INTEGER
+  Description                    TEXT
+  FactoriesBase                  INTEGER
+  FactoriesRandom                INTEGER
+  DefenceBases                   INTEGER
+  OffenceBases                   INTEGER
+  Fleet                          INTEGER
+  Squadron                       INTEGER
+  Patrol                         INTEGER
+  STO                            INTEGER
+  Regiment                       INTEGER
+  FixedDSTS                      INTEGER
+  RandomDSTS                     INTEGER
+  NoDefenders                    INTEGER
+  EmergenceModifier              Double
+
+DIM_SetAtmosphere (29 rows, 7 cols):
+  AtmosphereID                   INTEGER
+  TempBand                       INTEGER
+  MaxChance                      INTEGER
+  Gas1                           INTEGER
+  Gas2                           INTEGER
+  Gas3                           INTEGER
+  Description                    VARCHAR(100)
+
+DIM_ShipyardCompanies (67 rows, 2 cols):
+  NameID                         INTEGER
+  Suffix                         VARCHAR(150)
+
+DIM_SolSystemBodies (626 rows, 41 cols):
+  SystemBodyID                   INTEGER
+  Name                           TEXT
+  PlanetNumber                   INTEGER
+  OrbitNumber                    INTEGER
+  TrojanPlanet                   INTEGER
+  TrojanLocation                 INTEGER
+  TrojanOffset                   Double
+  OrbitalDistance                Double
+  CurrentDistance                Double
+  HeadingInward                  Numeric
+  Bearing                        Double
+  BodyClass                      INTEGER
+  Density                        Double
+  Radius                         INTEGER
+  Gravity                        Double
+  ParentBodyType                 INTEGER
+  BodyTypeID                     INTEGER
+  Mass                           Double
+  Escape                         Double
+  Year                           Double
+  Day                            Double
+  TidalForce                     Double
+  TidalLock                      Numeric
+  Tilt                           INTEGER
+  Eccentricity                   Double
+  Roche                          Double
+  TectonicActivity               INTEGER
+  Ring                           Numeric
+  MagneticField                  Double
+  BaseTemp                       Double
+  SurfaceTemp                    Double
+  HydroID                        INTEGER
+  HydroExt                       INTEGER
+  AtmosPress                     Double
+  Albedo                         Double
+  GHFactor                       Double
+  RGE                            Numeric
+  Xcor                           Double
+  Ycor                           Double
+  PlanetIcon                     TEXT
+  DominantTerrain                INTEGER
+
+DIM_StandingOrders (47 rows, 8 cols):
+  Description                    TEXT
+  DisplayOrder                   INTEGER
+  NPROnly                        Numeric
+  SystemCheck                    TEXT
+  Standing                       INTEGER
+  Conditional                    INTEGER
+  OrderID                        INTEGER
+  OrderGroupID                   INTEGER
+
+DIM_StellarType (424 rows, 19 cols):
+  StellarTypeID                  INTEGER
+  SpectralClass                  TEXT
+  SpectralNumber                 INTEGER
+  Checked                        Boolean
+  NotPS                          Boolean
+  MaxChance                      INTEGER
+  BDMaxChance                    INTEGER
+  SizeText                       TEXT
+  SizeID                         INTEGER
+  Luminosity                     Double
+  Mass                           Double
+  Temperature                    INTEGER
+  Radius                         Double
+  AgeRangeID                     INTEGER
+  Red                            INTEGER
+  Green                          INTEGER
+  Blue                           INTEGER
+  MaxChanceOld                   INTEGER
+  ExtraJP                        INTEGER
+
+DIM_SystemAbundance (6 rows, 4 cols):
+  AbundanceID                    INTEGER
+  Description                    TEXT
+  MaxChance                      INTEGER
+  Modifier                       INTEGER
+
+DIM_SystemAge (14 rows, 23 cols):
+  AgeID                          INTEGER
+  SpectralClass                  TEXT
+  TotalLife                      Double
+  Lum1                           Double
+  Lum2                           Double
+  Lum3                           Double
+  Lum4                           Double
+  Lum5                           Double
+  Lum6                           Double
+  Lum7                           Double
+  Lum8                           Double
+  Lum9                           Double
+  Lum10                          Double
+  Age1                           Double
+  Age2                           Double
+  Age3                           Double
+  Age4                           Double
+  Age5                           Double
+  Age6                           Double
+  Age7                           Double
+  Age8                           Double
+  Age9                           Double
+  Age10                          Double
+
+DIM_TechType (215 rows, 5 cols):
+  TechTypeID                     INTEGER
+  Description                    TEXT
+  FieldID                        INTEGER
+  DistributeLowerTech            Boolean
+  RuinTechType                   Boolean
+
+DIM_TradeGoods (17 rows, 5 cols):
+  TradeGoodID                    INTEGER
+  Description                    TEXT
+  PopRequired                    Double
+  Category                       INTEGER
+  RareGood                       Boolean
+
+DIM_TraitGroup (6 rows, 4 cols):
+  TraitGroupID                   INTEGER
+  Description                    VARCHAR(50)
+  Opposite1                      INTEGER
+  Opposite2                      INTEGER
+
+DIM_TraitsList (148 rows, 3 cols):
+  TraitID                        INTEGER
+  GroupID                        INTEGER
+  Name                           TEXT
+
+DIM_WealthUse (51 rows, 4 cols):
+  WealthUseID                    INTEGER
+  Description                    VARCHAR(50)
+  Income                         BOOLEAN
+  DisplayOrder                   DOUBLE
+
+DefaultEventColour (98 rows, 6 cols):
+  EventTypeID                    INTEGER
+  RaceID                         INTEGER
+  AlertColour                    INTEGER
+  TextColour                     INTEGER
+  CreationOrder                  INTEGER
+  Test                           TEXT
+
+FCT_AncientConstruct (9 rows, 7 cols):
+  AncientConstructID             INTEGER
+  GameID                         INTEGER
+  SystemBodyID                   INTEGER
+  AncientConstructTypeID         INTEGER
+  ResearchField                  INTEGER
+  ResearchBonus                  Double
+  Active                         Boolean
+
+FCT_AtmosphericGas (288 rows, 6 cols):
+  GameID                         INTEGER
+  SystemBodyID                   INTEGER
+  AtmosGasID                     INTEGER
+  AtmosGasAmount                 Double
+  GasAtm                         Double
+  FrozenOut                      Boolean
+
+FCT_ClassComponent (5897 rows, 6 cols):
+  GameID                         INTEGER
+  ClassID                        INTEGER
+  ComponentID                    INTEGER
+  NumComponent                   Double
+  ChanceToHit                    INTEGER
+  ElectronicCTH                  INTEGER
+
+FCT_ClassGroundTemplates (1 rows, 4 cols):
+  ShipClassID                    INTEGER
+  TemplateID                     INTEGER
+  GameID                         INTEGER
+  Number                         INTEGER
+
+FCT_ClassMaterials (3026 rows, 4 cols):
+  GameID                         INTEGER
+  ClassID                        INTEGER
+  MaterialID                     INTEGER
+  Amount                         Double
+
+FCT_ClassOrdnanceTemplate (232 rows, 4 cols):
+  GameID                         INTEGER
+  ShipClassID                    INTEGER
+  MissileID                      INTEGER
+  Amount                         INTEGER
+
+FCT_ClassSC (1 rows, 4 cols):
+  GameID                         INTEGER
+  ShipClassID                    INTEGER
+  FighterClassID                 INTEGER
+  Number                         INTEGER
+
+FCT_Commander (5185 rows, 38 cols):
+  CommanderID                    INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SpeciesID                      INTEGER
+  Name                           TEXT
+  ResSpecID                      INTEGER
+  CommanderType                  INTEGER
+  Title                          TEXT
+  RankID                         INTEGER
+  PromotionScore                 INTEGER
+  PopPromotionScore              INTEGER
+  GameTimePromoted               Double
+  GameTimeAssigned               Double
+  DoNotRelieve                   INTEGER
+  CommandType                    INTEGER
+  CommandID                      INTEGER
+  PopLocationID                  INTEGER
+  TransportShipID                INTEGER
+  Seniority                      INTEGER
+  RetireStatus                   INTEGER
+  LifepodID                      INTEGER
+  Orders                         TEXT
+  Notes                          TEXT
+  HomeworldID                    INTEGER
+  POWRaceID                      INTEGER
+  CareerStart                    Double
+  Deceased                       Boolean
+  Loyalty                        INTEGER
+  HealthRisk                     INTEGER
+  Female                         Boolean
+  KillTonnageCommercial          INTEGER
+  KillTonnageMilitary            INTEGER
+  EducationColony                INTEGER
+  StoryCharacter                 Boolean
+  DoNotPromote                   Boolean
+  RetainRetired                  Boolean
+  Prisoner                       Boolean
+  Processed                      Boolean
+
+FCT_CommanderBonuses (19475 rows, 4 cols):
+  CommanderID                    INTEGER
+  BonusID                        INTEGER
+  BonusValue                     Double
+  GameID                         INTEGER
+
+FCT_CommanderHistory (15180 rows, 4 cols):
+  GameID                         INTEGER
+  CommanderID                    INTEGER
+  HistoryText                    TEXT
+  GameTime                       Double
+
+FCT_CommanderMeasurement (55 rows, 4 cols):
+  CommanderID                    INTEGER
+  MeasurementType                INTEGER
+  Amount                         Double
+  GameID                         INTEGER
+
+FCT_CommanderMedal (969 rows, 5 cols):
+  NumAwarded                     INTEGER
+  MedalID                        INTEGER
+  CommanderID                    INTEGER
+  GameID                         INTEGER
+  AwardReason                    TEXT
+
+FCT_CommanderTraits (15560 rows, 3 cols):
+  CmdrID                         INTEGER
+  TraitID                        INTEGER
+  GameID                         INTEGER
+
+FCT_DecoyAssignment (1386 rows, 4 cols):
+  GameID                         INTEGER
+  ShipID                         INTEGER
+  LauncherID                     INTEGER
+  LauncherNum                    INTEGER
+
+FCT_DesignPhilosophy (23 rows, 117 cols):
+  GameID                         INTEGER
+  ActiveAntiFAC                  INTEGER
+  ActiveAntiFighter              INTEGER
+  ActiveLarge                    INTEGER
+  ActiveVeryLarge                INTEGER
+  ActiveResolution               INTEGER
+  PrimaryBeamPreference          INTEGER
+  LauncherSize                   INTEGER
+  NumSalvos                      INTEGER
+  WarshipArmour                  INTEGER
+  WarshipEngineering             INTEGER
+  WarshipHullSize                INTEGER
+  ActiveAntiMissile              INTEGER
+  FireControlAntiMissile         INTEGER
+  FireControlAntiFAC             INTEGER
+  FireControlAntiFighter         INTEGER
+  FireControlStandardMissile     INTEGER
+  JumpDriveBattlecruiser         INTEGER
+  FireControlBeamRange           INTEGER
+  FireControlBeamSpeed           INTEGER
+  JumpDriveCruiser               INTEGER
+  JumpDriveDestroyer             INTEGER
+  NumCommercialEngines           INTEGER
+  JumpDriveSurvey                INTEGER
+  EMSensorSize1                  INTEGER
+  EMSensorSize2                  INTEGER
+  EMSensorSize3                  INTEGER
+  EMSensorSize6                  INTEGER
+  EngineCommercial               INTEGER
+  EngineMilitary                 INTEGER
+  EngineFAC                      INTEGER
+  EngineFighter                  INTEGER
+  MissileCaptorMine              INTEGER
+  LauncherFAC                    INTEGER
+  FireControlFACMissile          INTEGER
+  Gauss                          INTEGER
+  LaserLarge                     INTEGER
+  LauncherStandard               INTEGER
+  Meson                          INTEGER
+  LauncherMine                   INTEGER
+  LauncherMineSize               INTEGER
+  MissileMineSecondStage         INTEGER
+  LaserPointDefence              INTEGER
+  LauncherPointDefence           INTEGER
+  MesonPointDefence              INTEGER
+  MissilePointDefence            INTEGER
+  PointDefencePreference         INTEGER
+  PointDefenceWeapon             INTEGER
+  Railgun                        INTEGER
+  MissileStandard                INTEGER
+  EngineSurvey                   INTEGER
+  ParticleBeam                   INTEGER
+  RaceID                         INTEGER
+  Carronade                      INTEGER
+  CIWS                           INTEGER
+  Cloak                          INTEGER
+  ActiveStandard                 INTEGER
+  EngineSizeMilitary             INTEGER
+  EngineSizeCommercial           INTEGER
+  MissileFAC                     INTEGER
+  LaserSpinal                    INTEGER
+  ThermalSensorSize1             INTEGER
+  ThermalSensorSize2             INTEGER
+  ThermalSensorSize3             INTEGER
+  ThermalSensorSize6             INTEGER
+  ShieldProportion               Double
+  NumWarshipEngines              INTEGER
+  WarshipEngineProportion        INTEGER
+  AlternativeBeamPreference      INTEGER
+  SurveyEngineBoost              Double
+  SurveySensors                  INTEGER
+  TerraformModules               INTEGER
+  HarvesterModules               INTEGER
+  MiningModules                  INTEGER
+  HighPowerMicrowaveLarge        INTEGER
+  HighPowerMicrowaveSmall        INTEGER
+  ActiveSmall                    INTEGER
+  ActiveNavigation               INTEGER
+  JumpDriveMediumHive            INTEGER
+  JumpDriveLargeHive             INTEGER
+  JumpDriveVeryLargeHive         INTEGER
+  RailgunPointDefence            INTEGER
+  FireControlBeamShortRange      INTEGER
+  ActiveAntiMissileSmall         INTEGER
+  CloakDD                        INTEGER
+  CloakCA                        INTEGER
+  CloakBC                        INTEGER
+  LauncherSizeModifier           INTEGER
+  NumSalvosAMM                   INTEGER
+  NPRMissileStrategy             INTEGER
+  MaxGeo                         INTEGER
+  MaxGrav                        INTEGER
+  MaxScout                       INTEGER
+  MaxDiplomatic                  INTEGER
+  MaxStabilisation               INTEGER
+  MaxSalvage                     INTEGER
+  MaxTanker                      INTEGER
+  MilitaryEngineBoost            Double
+  UseJumpDrives                  Boolean
+  OrdnanceFactories              Boolean
+  FighterFactories               Boolean
+  ArmourMultiplier               Double
+  GroundForceDeploymentThemeID   INTEGER
+  OpGroupProgressionType         INTEGER
+  LauncherDecoy                  INTEGER
+  LauncherDecoySize              INTEGER
+  DecoyMissile                   INTEGER
+  LauncherAMMSize                Double
+  JumpDriveDreadnought           INTEGER
+  ActiveFighterMissile           INTEGER
+  ActiveFighterBeam              INTEGER
+  FireControlFighterMissile      INTEGER
+  FireControlFighterBeam         INTEGER
+  FighterBeamWeapon              INTEGER
+  FighterEngineSize              Double
+  HybridCarriers                 Boolean
+  MaintenanceModules             INTEGER
+
+FCT_DesignPhilosophyTechProgressionCategories (235 rows, 3 cols):
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  TechProgressionCategoryID      INTEGER
+
+FCT_EventColour (6 rows, 5 cols):
+  EventTypeID                    INTEGER
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  AlertColour                    INTEGER
+  TextColour                     INTEGER
+
+FCT_FireControlAssignment (2646 rows, 14 cols):
+  ShipID                         INTEGER
+  GameID                         INTEGER
+  FCTypeID                       INTEGER
+  FCNum                          INTEGER
+  TargetID                       INTEGER
+  TargetType                     INTEGER
+  OpenFire                       Boolean
+  NodeExpand                     Boolean
+  PointDefenceMode               INTEGER
+  PointDefenceRange              INTEGER
+  FiredThisPhase                 Boolean
+  PointDefencePriority           INTEGER
+  PDFireConcentration            INTEGER
+  MinimumAMMRange                Double
+
+FCT_Fleet (357 rows, 61 cols):
+  FleetID                        INTEGER
+  GameID                         INTEGER
+  FleetName                      TEXT
+  AssignedPopulationID           INTEGER
+  ParentCommandID                INTEGER
+  OrbitBodyID                    INTEGER
+  OrbitDistance                  INTEGER
+  OrbitBearing                   Double
+  RaceID                         INTEGER
+  SystemID                       INTEGER
+  TradeLocation                  INTEGER
+  CivilianFunction               INTEGER
+  NPRHomeGuard                   Boolean
+  TFTraining                     Boolean
+  Speed                          INTEGER
+  MaxNebulaSpeed                 INTEGER
+  Xcor                           Double
+  Ycor                           Double
+  LastXcor                       Double
+  LastYcor                       Double
+  LastMoveTime                   Double
+  IncrementStartX                Double
+  IncrementStartY                Double
+  EntryJPID                      INTEGER
+  CycleMoves                     INTEGER
+  JustDivided                    INTEGER
+  AxisContactID                  INTEGER
+  Distance                       INTEGER
+  OffsetBearing                  INTEGER
+  ConditionOne                   INTEGER
+  ConditionTwo                   INTEGER
+  ConditionalOrderOne            INTEGER
+  ConditionalOrderTwo            INTEGER
+  AvoidDanger                    Boolean
+  AvoidAlienSystems              Boolean
+  NPROperationalGroupID          INTEGER
+  DisplaySensors                 Boolean
+  DisplayWeapons                 Boolean
+  AssignedFormationID            INTEGER
+  ShippingLine                   INTEGER
+  UseMaximumSpeed                Boolean
+  RedeployOrderGiven             Boolean
+  MaxStandingOrderDistance       INTEGER
+  NoSurrender                    Boolean
+  SpecificThreatID               INTEGER
+  AnchorFleetID                  INTEGER
+  AnchorFleetDistance            Double
+  AnchorFleetBearingOffset       Double
+  GuardNearestHostileContact     Boolean
+  UseAnchorDestination           Boolean
+  GuardNearestKnownWarship       Boolean
+  AssumeJumpCapable              Boolean
+  LastTransitTime                Double
+  EscapeTimeRemaining            Double
+  LastFleetDamageTime            Double
+  DetachedStanding               Boolean
+  DetachedConditional            Boolean
+  IncludeSquadrons               Boolean
+  IgnoreStanding                 Boolean
+  IgnoreConditional              Boolean
+  AutoLP                         Boolean
+
+FCT_FleetHistory (119302 rows, 4 cols):
+  GameID                         INTEGER
+  FleetID                        INTEGER
+  Description                    TEXT
+  GameTime                       Double
+
+FCT_FleetStandingOrder (150 rows, 4 cols):
+  FleetID                        INTEGER
+  StandingOrderID                INTEGER
+  Priority                       INTEGER
+  GameID                         INTEGER
+
+FCT_Game (5 rows, 85 cols):
+  GameID                         INTEGER
+  AutoJumpGates                  INTEGER
+  CivilianShippingLinesActive    INTEGER
+  DefaultRaceID                  INTEGER
+  DifficultyModifier             INTEGER
+  GameName                       TEXT
+  GameTime                       Double
+  GenerateNonTNOnly              INTEGER
+  GenerateNPRs                   INTEGER
+  InexpFleets                    INTEGER
+  Invaders                       INTEGER
+  LastGrowthTime                 Double
+  LastViewed                     Double
+  LocalSystemChance              INTEGER
+  LocalSystemSpread              INTEGER
+  MinComets                      INTEGER
+  NewRuinCreationChance          INTEGER
+  NoOverhauls                    INTEGER
+  NonPlayerSystemDetection       INTEGER
+  NumberOfSystems                INTEGER
+  OrbitalMotion                  INTEGER
+  OrbitalMotionAst               INTEGER
+  PlayerExplorationTime          Double
+  PoliticalAdmirals              INTEGER
+  Precursors                     INTEGER
+  RaceChance                     INTEGER
+  RaceChanceNPR                  INTEGER
+  RealisticPromotions            INTEGER
+  SMPassword                     TEXT
+  StarSwarm                      INTEGER
+  StartYear                      INTEGER
+  SubPulseLength                 INTEGER
+  TruceCountdown                 Double
+  UseKnownStars                  INTEGER
+  MinConstructionPeriod          INTEGER
+  MinGroundCombatPeriod          INTEGER
+  LastGroundCombatTime           Double
+  SolDisaster                    INTEGER
+  TechFromConquest               INTEGER
+  ResearchSpeed                  INTEGER
+  TerraformingSpeed              INTEGER
+  AllowCivilianHarvesters        INTEGER
+  Rakhas                         INTEGER
+  HumanNPRs                      INTEGER
+  CurrentGroundCombat            Boolean
+  SurveySpeed                    INTEGER
+  MaxEventDays                   INTEGER
+  MaxEventCount                  INTEGER
+  ConstellationNames             INTEGER
+  NPRsGeneratePrecursors         INTEGER
+  NPRsGenerateSwarm              INTEGER
+  NPRsGenerateRifts              INTEGER
+  Eldar                          INTEGER
+  NPRsEncounterRaiders           INTEGER
+  EldarOpGroupProgression        INTEGER
+  RaiderSystems                  INTEGER
+  SwarmSystems                   INTEGER
+  InvaderSystems                 INTEGER
+  StarEccentricity               INTEGER
+  GasGiantEffects                INTEGER
+  LimitedLabs                    INTEGER
+  OneSecondSubPulse              INTEGER
+  HostilityModifier              INTEGER
+  StartTimeEldar                 Double
+  StartTimeSwarm                 Double
+  StartTimeInvaders              Double
+  MinorRaceChance                INTEGER
+  LimitPlanetaryDistance         INTEGER
+  ParallelUniverse               INTEGER
+  UseThemeInKnownStars           INTEGER
+  NPRMaxSystems                  INTEGER
+  NPRBaseTransits                INTEGER
+  NPRRandomTransits              INTEGER
+  EnhancedInvaders               INTEGER
+  EnhancedSwarm                  INTEGER
+  EnhancedPrecursors             INTEGER
+  SwarmInvasion                  INTEGER
+  MinimumSwarmRP                 INTEGER
+  PreIndustrialChance            INTEGER
+  ConventionalChance             INTEGER
+  chkOrders                      Boolean
+  chkOverhauls                   Boolean
+  chkShowJD                      Boolean
+  AncientRelics                  INTEGER
+  AllowCMC                       INTEGER
+
+FCT_GameLog (8126 rows, 12 cols):
+  IncrementID                    INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SMOnly                         INTEGER
+  Time                           Double
+  EventType                      INTEGER
+  MessageText                    TEXT
+  SystemID                       INTEGER
+  Xcor                           Double
+  Ycor                           Double
+  IDType                         INTEGER
+  PopulationID                   INTEGER
+
+FCT_GroundUnitCapability (14 rows, 3 cols):
+  GroundUnitClassID              INTEGER
+  CapabilityID                   INTEGER
+  GameID                         INTEGER
+
+FCT_GroundUnitClass (178 rows, 41 cols):
+  BaseType                       INTEGER
+  GroundUnitClassID              INTEGER
+  TechSystemID                   INTEGER
+  ClassName                      TEXT
+  ArmourType                     INTEGER
+  ComponentA                     INTEGER
+  ComponentB                     INTEGER
+  ComponentC                     INTEGER
+  ArmourStrengthModifier         Double
+  WeaponStrengthModifier         Double
+  Size                           Double
+  Cost                           Double
+  GameID                         INTEGER
+  STOWeapon                      INTEGER
+  ComponentD                     INTEGER
+  TrackingSpeed                  INTEGER
+  Duranium                       Double
+  Neutronium                     Double
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Mercassium                     Double
+  Vendarite                      Double
+  Sorium                         Double
+  Uridium                        Double
+  Corundium                      Double
+  Gallicite                      Double
+  ECCM                           INTEGER
+  GUClassType                    INTEGER
+  UnitSupplyCost                 Double
+  ActiveSensorRange              INTEGER
+  SensorStrength                 Double
+  RechargeTime                   INTEGER
+  MaxWeaponRange                 INTEGER
+  MaxFireControlRange            INTEGER
+  ConstructionRating             Double
+  HQCapacity                     INTEGER
+  NonCombatClass                 Boolean
+  ClassGroundUnitSeriesPriority  INTEGER
+  ClassGroundUnitSeries          INTEGER
+  PointDefenceWeapon             Boolean
+
+FCT_GroundUnitFormation (410 rows, 21 cols):
+  FormationID                    INTEGER
+  Name                           TEXT
+  Abbreviation                   TEXT
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  OriginalTemplateID             INTEGER
+  PopulationID                   INTEGER
+  ShipID                         INTEGER
+  ParentFormationID              INTEGER
+  BoardingStatus                 INTEGER
+  HideSubUnits                   Boolean
+  FieldPosition                  INTEGER
+  RequiredRank                   INTEGER
+  AssignedFormationID            INTEGER
+  ActiveSensorsOn                Boolean
+  Civilian                       Boolean
+  ReplacementTemplateID          INTEGER
+  UseForReplacements             Boolean
+  ReplacementPriority            INTEGER
+  OrgLinkID                      INTEGER
+  DoNotRecover                   INTEGER
+
+FCT_GroundUnitFormationElement (2292 rows, 12 cols):
+  GameID                         INTEGER
+  FormationID                    INTEGER
+  Units                          INTEGER
+  ClassID                        INTEGER
+  TemplateID                     INTEGER
+  SpeciesID                      INTEGER
+  Morale                         INTEGER
+  FortificationLevel             Double
+  CurrentSupply                  INTEGER
+  TargetSelection                INTEGER
+  FiringDistribution             INTEGER
+  ElementID                      INTEGER
+
+FCT_GroundUnitFormationElementTemplates (284 rows, 4 cols):
+  FormationTemplateID            INTEGER
+  GameID                         INTEGER
+  ClassID                        INTEGER
+  Units                          INTEGER
+
+FCT_GroundUnitFormationTemplate (55 rows, 9 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  Name                           TEXT
+  Abbreviation                   TEXT
+  TemplateID                     INTEGER
+  RequiredRank                   INTEGER
+  AutomatedTemplateID            INTEGER
+  FormationsTrained              INTEGER
+  Obsolete                       INTEGER
+
+FCT_GroundUnitTraining (2 rows, 12 cols):
+  TaskID                         INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  TotalBP                        Double
+  CompletedBP                    Double
+  FormationTemplateID            INTEGER
+  FormationName                  TEXT
+  TaskPercentage                 Double
+  OrganizationLinkID             INTEGER
+  ParentLinkID                   INTEGER
+  FieldPosition                  INTEGER
+
+FCT_GroundUnitTrainingQueue (18 rows, 9 cols):
+  FormationName                  TEXT
+  FormationTemplateID            INTEGER
+  GameID                         INTEGER
+  PopulationID                   INTEGER
+  QueueID                        INTEGER
+  TaskPercentage                 Double
+  OrganizationLinkID             INTEGER
+  ParentLinkID                   INTEGER
+  FieldPosition                  INTEGER
+
+FCT_HideEvents (4 rows, 3 cols):
+  RaceID                         INTEGER
+  EventID                        INTEGER
+  GameID                         INTEGER
+
+FCT_HullDescription (304 rows, 3 cols):
+  HullDescriptionID              INTEGER
+  Description                    VARCHAR(50)
+  HullAbbr                       VARCHAR(10)
+
+FCT_HullNumber (3040 rows, 4 cols):
+  HullTypeID                     INTEGER
+  HullCount                      INTEGER
+  RaceID                         INTEGER
+  GameID                         INTEGER
+
+FCT_Increments (26710 rows, 4 cols):
+  IncrementID                    INTEGER
+  GameID                         INTEGER
+  GameTime                       DOUBLE
+  Length                         INTEGER
+
+FCT_IndustrialProjects (11 rows, 28 cols):
+  ProjectID                      INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  SpeciesID                      INTEGER
+  Percentage                     DOUBLE
+  ProductionType                 INTEGER
+  ProductionID                   INTEGER
+  RefitClassID                   INTEGER
+  WealthUse                      INTEGER
+  Amount                         DOUBLE
+  PartialCompletion              DOUBLE
+  ProdPerUnit                    DOUBLE
+  Description                    VARCHAR(255)
+  Pause                          BOOLEAN
+  Queue                          INTEGER
+  FuelRequired                   INTEGER
+  Duranium                       DOUBLE
+  Neutronium                     DOUBLE
+  Corbomite                      DOUBLE
+  Tritanium                      DOUBLE
+  Boronide                       DOUBLE
+  Mercassium                     DOUBLE
+  Vendarite                      DOUBLE
+  Sorium                         DOUBLE
+  Uridium                        DOUBLE
+  Corundium                      DOUBLE
+  Gallicite                      DOUBLE
+
+FCT_JumpPoint (146 rows, 10 cols):
+  WarpPointID                    INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  Distance                       DOUBLE
+  Bearing                        INTEGER
+  WPLink                         INTEGER
+  Xcor                           DOUBLE
+  Ycor                           DOUBLE
+  JumpGateStrength               INTEGER
+  JumpGateRaceID                 INTEGER
+
+FCT_LagrangePoint (30 rows, 9 cols):
+  LagrangePointID                INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  StarID                         INTEGER
+  PlanetID                       INTEGER
+  Xcor                           DOUBLE
+  Ycor                           DOUBLE
+  Distance                       DOUBLE
+  Bearing                        DOUBLE
+
+FCT_MassDriverPackets (86 rows, 24 cols):
+  PacketID                       INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SysID                          INTEGER
+  DestID                         INTEGER
+  TotalSize                      DOUBLE
+  Speed                          INTEGER
+  Xcor                           DOUBLE
+  Ycor                           DOUBLE
+  LastXcor                       DOUBLE
+  LastYcor                       DOUBLE
+  IncrementStartX                DOUBLE
+  IncrementStartY                DOUBLE
+  Duranium                       DOUBLE
+  Neutronium                     DOUBLE
+  Corbomite                      DOUBLE
+  Tritanium                      DOUBLE
+  Boronide                       DOUBLE
+  Mercassium                     DOUBLE
+  Vendarite                      DOUBLE
+  Sorium                         DOUBLE
+  Uridium                        DOUBLE
+  Corundium                      DOUBLE
+  Gallicite                      DOUBLE
+
+FCT_MedalConditionAssignment (30 rows, 3 cols):
+  MedalConditionID               INTEGER
+  MedalID                        INTEGER
+  GameID                         INTEGER
+
+FCT_MineralDeposit (2835 rows, 8 cols):
+  GameID                         INTEGER
+  MaterialID                     INTEGER
+  SystemID                       INTEGER
+  SystemBodyID                   INTEGER
+  Amount                         Double
+  Accessibility                  Double
+  HalfOriginalAmount             Double
+  OriginalAcc                    Double
+
+FCT_MissileAssignment (13488 rows, 5 cols):
+  ShipID                         INTEGER
+  MissileID                      INTEGER
+  WeaponID                       INTEGER
+  WeaponNum                      INTEGER
+  GameID                         INTEGER
+
+FCT_MissileType (55 rows, 63 cols):
+  MissileID                      INTEGER
+  GameID                         INTEGER
+  Name                           TEXT
+  MissileSeriesID                INTEGER
+  EngineID                       INTEGER
+  NumEngines                     INTEGER
+  PrecursorMissile               Boolean
+  MissilesRequired               INTEGER
+  MissilesAvailable              INTEGER
+  Cost                           Double
+  Size                           Double
+  Speed                          Double
+  RadDamage                      Double
+  FuelRequired                   INTEGER
+  Endurance                      Double
+  MaxRange                       Double
+  WarheadStrength                Double
+  SensorStrength                 Double
+  SensorResolution               INTEGER
+  SensorRange                    INTEGER
+  ThermalStrength                Double
+  EMStrength                     Double
+  Geostrength                    Double
+  TotalFlightTime                Double
+  ECM                            INTEGER
+  MR                             INTEGER
+  SecondStageID                  INTEGER
+  NumSS                          INTEGER
+  SeparationRange                INTEGER
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Uridium                        Double
+  Gallicite                      Double
+  PreTNT                         Boolean
+  MSPReactor                     Double
+  MSPWarhead                     Double
+  MSPEngine                      Double
+  MSPFuel                        Double
+  MSPActive                      Double
+  MSPThermal                     Double
+  MSPEM                          Double
+  MSPGeo                         Double
+  ECCM                           INTEGER
+  EMSensitivity                  INTEGER
+  GroundAP                       Double
+  GroundDamage                   Double
+  GroundShots                    Double
+  GroundBaseDamage               Double
+  PowerMod                       Double
+  ATG                            Double
+  Retargeting                    INTEGER
+  LaserWarhead                   Double
+  MinDetonationRange             Double
+  LaserWarheadRangeModifier      INTEGER
+  NumDecoys                      INTEGER
+  MSPDecoys                      Double
+  MissileECM                     INTEGER
+  MultipleWarheads               INTEGER
+  MSPMultipleWarheads            Double
+  ShipDecoy                      INTEGER
+  MSPShipDecoy                   Double
+  MaxDetonationRange             Double
+
+FCT_MoveOrderTemplate (12 rows, 21 cols):
+  OrderTemplateID                INTEGER
+  PopulationID                   INTEGER
+  MinDistance                    Double
+  OrbDistance                    INTEGER
+  MoveActionID                   INTEGER
+  NewSystemID                    INTEGER
+  Description                    TEXT
+  OrderDelay                     INTEGER
+  DestinationType                INTEGER
+  DestinationID                  INTEGER
+  NewJumpPointID                 INTEGER
+  GameID                         INTEGER
+  DestinationItemID              INTEGER
+  MaxItems                       INTEGER
+  MessageText                    TEXT
+  LoadSubUnits                   Boolean
+  MinQuantity                    Double
+  StartSystemID                  INTEGER
+  MoveIndex                      INTEGER
+  DestinationItemType            INTEGER
+  SurveyPointsRequired           Double
+
+FCT_MoveOrders (203 rows, 26 cols):
+  MoveOrderID                    INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  FleetID                        INTEGER
+  MoveActionID                   INTEGER
+  MoveOrder                      INTEGER
+  StartSystemID                  INTEGER
+  DestinationType                INTEGER
+  DestinationID                  INTEGER
+  PopulationID                   INTEGER
+  DestinationItemType            INTEGER
+  DestinationItemID              INTEGER
+  MaxItems                       Double
+  OrderDelay                     INTEGER
+  OrbDistance                    INTEGER
+  MinDistance                    Double
+  NewSystemID                    INTEGER
+  NewWarpPointID                 INTEGER
+  Description                    TEXT
+  Arrived                        Boolean
+  SurveyPointsRequired           Double
+  TimeRequired                   INTEGER
+  MessageText                    TEXT
+  LoadSubUnits                   Boolean
+  MinQuantity                    Double
+  OrderDelayRemaining            INTEGER
+
+FCT_NavalAdminCommand (66 rows, 15 cols):
+  NavalAdminCommandID            INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  ParentAdminCommandID           INTEGER
+  AdminCommandName               TEXT
+  AdminCommandTypeID             INTEGER
+  BonusOne                       INTEGER
+  BonusTwo                       INTEGER
+  BonusThree                     INTEGER
+  AutoAssign                     Boolean
+  CommandPriority                INTEGER
+  MinimumRankPriority            INTEGER
+  FleetNodeExpanded              Boolean
+  ShipID                         INTEGER
+
+FCT_OrderTemplate (3 rows, 5 cols):
+  OrderTemplateID                INTEGER
+  TemplateName                   TEXT
+  StartSystemID                  INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+
+FCT_OrganizationNode (6 rows, 8 cols):
+  OrganizationID                 INTEGER
+  OrganizationName               TEXT
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  ParentOrganizationID           INTEGER
+  FormationTemplateID            INTEGER
+  NodeExpanded                   Boolean
+  FieldPosition                  INTEGER
+
+FCT_PausedResearch (2 rows, 4 cols):
+  TechSystemID                   INTEGER
+  GameID                         INTEGER
+  PointsAccumulated              INTEGER
+  RaceID                         INTEGER
+
+FCT_PopComponent (3 rows, 4 cols):
+  ComponentID                    INTEGER
+  PopulationID                   INTEGER
+  GameID                         INTEGER
+  Amount                         DOUBLE
+
+FCT_PopInstallationDemand (52 rows, 6 cols):
+  PopulationID                   INTEGER
+  InstallationID                 INTEGER
+  Amount                         Double
+  Export                         Boolean
+  GameID                         INTEGER
+  NonEssential                   Boolean
+
+FCT_PopMDChanges (8 rows, 13 cols):
+  PopulationID                   INTEGER
+  GameID                         INTEGER
+  Duranium                       DOUBLE
+  Neutronium                     DOUBLE
+  Corbomite                      DOUBLE
+  Tritanium                      DOUBLE
+  Boronide                       DOUBLE
+  Mercassium                     DOUBLE
+  Vendarite                      DOUBLE
+  Sorium                         DOUBLE
+  Uridium                        DOUBLE
+  Corundium                      DOUBLE
+  Gallicite                      DOUBLE
+
+FCT_PopTradeBalance (289 rows, 6 cols):
+  PopulationID                   INTEGER
+  TradeGoodID                    INTEGER
+  GameID                         INTEGER
+  ProductionRate                 Double
+  TradeBalance                   Double
+  LastTradeBalance               Double
+
+FCT_Population (72 rows, 93 cols):
+  PopulationID                   INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SpeciesID                      INTEGER
+  PopName                        TEXT
+  AcademyOfficers                REAL
+  Capital                        Numeric
+  TerraformStatus                INTEGER
+  PurchaseCivilianMinerals       Numeric
+  ColonistDestination            INTEGER
+  Efficiency                     REAL
+  FighterDestFleetID             INTEGER
+  FuelProdStatus                 Numeric
+  FuelStockpile                  REAL
+  GenModSpeciesID                INTEGER
+  GroundAttackID                 INTEGER
+  GroundAttackType               INTEGER
+  LastColonyCost                 REAL
+  MaintenanceStockpile           REAL
+  MaintProdStatus                Numeric
+  MassDriverDest                 INTEGER
+  MaxAtm                         REAL
+  NoStatusChange                 INTEGER
+  PoliticalStatus                INTEGER
+  Population                     REAL
+  PreviousUnrest                 REAL
+  ProvideColonists               INTEGER
+  ReqInf                         INTEGER
+  StatusPoints                   REAL
+  SystemID                       INTEGER
+  SystemBodyID                   INTEGER
+  TempMF                         INTEGER
+  TerraformingGasID              INTEGER
+  UnrestPoints                   REAL
+  Duranium                       REAL
+  Neutronium                     REAL
+  Corbomite                      REAL
+  Tritanium                      REAL
+  Boronide                       REAL
+  Mercassium                     REAL
+  Vendarite                      REAL
+  Sorium                         REAL
+  Uridium                        REAL
+  Corundium                      REAL
+  Gallicite                      REAL
+  LastDuranium                   REAL
+  LastNeutronium                 REAL
+  LastCorbomite                  REAL
+  LastTritanium                  REAL
+  LastBoronide                   REAL
+  LastMercassium                 REAL
+  LastVendarite                  REAL
+  LastSorium                     REAL
+  LastUridium                    REAL
+  LastCorundium                  REAL
+  LastGallicite                  REAL
+  ReserveDuranium                REAL
+  ReserveNeutronium              REAL
+  ReserveCorbomite               REAL
+  ReserveTritanium               REAL
+  ReserveBoronide                REAL
+  ReserveMercassium              REAL
+  ReserveVendarite               REAL
+  ReserveSorium                  REAL
+  ReserveUridium                 REAL
+  ReserveCorundium               REAL
+  ReserveGallicite               REAL
+  GroundGeoSurvey                REAL
+  DestroyedInstallationSize      INTEGER
+  AIValue                        INTEGER
+  InvasionStagingPoint           Numeric
+  OriginalRaceID                 INTEGER
+  DoNotDelete                    Numeric
+  MilitaryRestrictedColony       Numeric
+  AcademyName                    TEXT
+  SpaceStationDestFleetID        INTEGER
+  Importance                     INTEGER
+  AutoAssign                     INTEGER
+  BonusOne                       INTEGER
+  BonusTwo                       INTEGER
+  BonusThree                     INTEGER
+  AutoRefuel                     Boolean
+  ParasiteSourceID               INTEGER
+  GeneticProdStatus              Boolean
+  AvailableColonists             Double
+  ColonizationPressure           Double
+  WarningFuel                    INTEGER
+  WarningMSP                     INTEGER
+  WarningConstant                INTEGER
+  BuildReplacements              INTEGER
+  ReplacementCapacity            Double
+  AcademyNameThemeID             INTEGER
+  UseAcademyNameTheme            INTEGER
+
+FCT_PopulationInstallations (259 rows, 4 cols):
+  GameID                         INTEGER
+  PopID                          INTEGER
+  PlanetaryInstallationID        INTEGER
+  Amount                         Double
+
+FCT_PopulationWeapon (12 rows, 4 cols):
+  GameID                         INTEGER
+  PopulationID                   INTEGER
+  MissileID                      INTEGER
+  Amount                         Double
+
+FCT_Race (28 rows, 223 cols):
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  NPR                            Numeric
+  SpecialNPRID                   INTEGER
+  RaceGridSize                   INTEGER
+  RaceName                       TEXT
+  RaceTitle                      TEXT
+  WealthPoints                   REAL
+  PreviousWealth                 REAL
+  StartingWealth                 REAL
+  AnnualWealth                   INTEGER
+  GovTypeID                      INTEGER
+  UnreadMessages                 Numeric
+  FlagPic                        TEXT
+  HullPic                        TEXT
+  Contacts                       INTEGER
+  Colour                         INTEGER
+  Red                            INTEGER
+  Green                          INTEGER
+  Blue                           INTEGER
+  Password                       TEXT
+  ThemeID                        INTEGER
+  ClassThemeID                   INTEGER
+  SystemThemeID                  INTEGER
+  NameThemeID                    INTEGER
+  MinSystem                      INTEGER
+  MaxSystem                      INTEGER
+  MapSize                        INTEGER
+  DisplayGrade                   INTEGER
+  ShowHighlight                  INTEGER
+  MapRed                         INTEGER
+  MapGreen                       INTEGER
+  MapBlue                        INTEGER
+  FleetViewOption                INTEGER
+  SelectRace                     INTEGER
+  FleetsVisible                  Numeric
+  LastMapSystemViewed            INTEGER
+  chkAllowAny                    INTEGER
+  chkAutoAssign                  INTEGER
+  chkTons                        INTEGER
+  StandardTour                   INTEGER
+  LastAssignment                 REAL
+  CurrentXenophobia              INTEGER
+  AcademyCrewmen                 Double
+  MaintenanceCapacity            INTEGER
+  OrdnanceCapacity               REAL
+  FighterCapacity                REAL
+  ShipBuilding                   REAL
+  FuelProduction                 REAL
+  ConstructionProduction         REAL
+  OrdnanceProduction             REAL
+  FighterProduction              REAL
+  MineProduction                 REAL
+  Research                       INTEGER
+  PlanetarySensorStrength        INTEGER
+  TrainingLevel                  INTEGER
+  GUStrength                     INTEGER
+  GUTrained                      INTEGER
+  TerraformingRate               REAL
+  ColonizationSkill              REAL
+  StartTechPoints                INTEGER
+  StartBuildPoints               INTEGER
+  WealthCreationRate             REAL
+  EconomicProdModifier           REAL
+  ShipyardOperations             REAL
+  MSPProduction                  INTEGER
+  MaxRefuellingRate              INTEGER
+  UnderwayReplenishmentRate      Double
+  Hostile                        INTEGER
+  Neutral                        INTEGER
+  Friendly                       INTEGER
+  Allied                         INTEGER
+  Civilian                       INTEGER
+  DisplayFunction                INTEGER
+  chkPlanets                     INTEGER
+  chkDwarf                       INTEGER
+  chkMoons                       INTEGER
+  chkAst                         INTEGER
+  chkWP                          INTEGER
+  chkStarOrbits                  INTEGER
+  chkPlanetOrbits                INTEGER
+  chkDwarfOrbits                 INTEGER
+  chkMoonOrbits                  INTEGER
+  chkAsteroidOrbits              INTEGER
+  chkStarNames                   INTEGER
+  chkPlanetNames                 INTEGER
+  chkDwarfNames                  INTEGER
+  chkMoonNames                   INTEGER
+  chkAstNames                    INTEGER
+  chkFleets                      INTEGER
+  chkMoveTail                    INTEGER
+  chkColonies                    INTEGER
+  chkCentre                      INTEGER
+  chkSL                          INTEGER
+  chkWaypoint                    INTEGER
+  chkOrder                       INTEGER
+  chkNoOverlap                   INTEGER
+  chkActiveSensors               INTEGER
+  chkTracking                    INTEGER
+  chkActiveOnly                  INTEGER
+  chkShowDist                    INTEGER
+  chkSBSurvey                    INTEGER
+  chkMinerals                    INTEGER
+  chkCometPath                   INTEGER
+  chkAstColOnly                  INTEGER
+  chkAstMinOnly                  INTEGER
+  chkTAD                         INTEGER
+  chkFiringRanges                INTEGER
+  chkSalvoOrigin                 INTEGER
+  chkSalvoTarget                 INTEGER
+  chkEscorts                     INTEGER
+  chkFireControlRange            INTEGER
+  PassiveSensor                  INTEGER
+  ActiveSensor                   INTEGER
+  DetRange                       INTEGER
+  chkHideIDs                     INTEGER
+  chkHideSL                      INTEGER
+  chkEvents                      INTEGER
+  chkPackets                     INTEGER
+  chkMPC                         INTEGER
+  chkLifepods                    INTEGER
+  chkWrecks                      INTEGER
+  chkHostileSensors              INTEGER
+  chkGeoPoints                   INTEGER
+  chkBearing                     INTEGER
+  chkCoordinates                 INTEGER
+  chkLostContacts                INTEGER
+  chkHideCivNames                INTEGER
+  chkSystemOnly                  INTEGER
+  chkShowCivilianOOB             INTEGER
+  chkHostile                     INTEGER
+  chkFriendly                    INTEGER
+  chkAllied                      INTEGER
+  chkNeutral                     INTEGER
+  chkCivilian                    INTEGER
+  chkContactsCurrentSystem       INTEGER
+  chkTranspondersOn              INTEGER
+  RankScientist                  TEXT
+  RankAdministrator              TEXT
+  chkUnexJP                      INTEGER
+  chkJPSurveyStatus              INTEGER
+  chkSurveyLocationPoints        INTEGER
+  chkSurveyedSystemBodies        INTEGER
+  chkDistanceFromSelected        INTEGER
+  chkWarshipLocation             INTEGER
+  chkAllFleetLocations           INTEGER
+  chkKnownAlienForces            INTEGER
+  chkAlienControlledSystems      INTEGER
+  chkPopulatedSystem             INTEGER
+  chkShipyardComplexes           INTEGER
+  chkNavalHeadquarters           INTEGER
+  chkSectors                     INTEGER
+  chkPossibleDormantJP           INTEGER
+  chkSecurityStatus              INTEGER
+  chkDiscoveryDate               INTEGER
+  chkHabRangeWorlds              INTEGER
+  chkLowCCNormalG                INTEGER
+  chkMediumCCNormalG             INTEGER
+  chkLowCCLowG                   INTEGER
+  chkMediumCCLowG                INTEGER
+  SpaceStationPic                TEXT
+  MaxOrdnanceTransferRate        INTEGER
+  CargoShuttleLoadModifier       INTEGER
+  GroundFormationConstructionRate INTEGER
+  DesignThemeID                  INTEGER
+  ResearchTargetCost             INTEGER
+  CurrentResearchTotal           INTEGER
+  chkPassive10                   INTEGER
+  chkPassive100                  INTEGER
+  chkPassive1000                 INTEGER
+  GroundThemeID                  INTEGER
+  MaximumOrbitalMiningDiameter   INTEGER
+  ColonyDensity                  INTEGER
+  MissileThemeID                 INTEGER
+  NeutralRace                    Boolean
+  chkNumCometsPlanetlessSystem   INTEGER
+  chkPassive10000                INTEGER
+  chkGroundSurveyLocations       INTEGER
+  chkML                          INTEGER
+  chkBlocked                     INTEGER
+  chkMilitaryRestricted          INTEGER
+  HideCMCPop                     Boolean
+  ShowPopStar                    Boolean
+  ShowPopSystemBody              Boolean
+  PopByFunction                  Boolean
+  chkLostContactsOneYear         INTEGER
+  chkDisplayMineralSearch        INTEGER
+  chkLostContactsOneDay          INTEGER
+  chkHabRangeWorldsLowG          INTEGER
+  chkAllRace                     INTEGER
+  chkDisplayAllForms             INTEGER
+  TonnageSent                    Double
+  LastProgressionOrder           INTEGER
+  chkHideOrbitFleets             INTEGER
+  chkEventsAllRaces              INTEGER
+  chkUseMaxCCDisplay             INTEGER
+  chkSelectedOrbit               INTEGER
+  chkMilitaryRestrictedJP        INTEGER
+  chkDistanceFromSelectedMR      INTEGER
+  chkUseHullNumbers              INTEGER
+  chkDistanceRealSpace           INTEGER
+  chkSupernovaImpactTime         INTEGER
+  UseRoman                       INTEGER
+  chkAetherRift                  INTEGER
+  chkNumWrecks                   INTEGER
+  GeneticConversionRate          Double
+  chkHideWreckIDs                INTEGER
+  MaxOrganizationLinkID          INTEGER
+  ShippingLineTax                Double
+  SelectedAdminIcon              INTEGER
+  SelectedClassIcon              INTEGER
+  chkClassIcon                   INTEGER
+  chkAdminIcon                   TEXT
+  ZoomSetting                    Double
+  MinMapFontSize                 Double
+  chkSystemIconOnly              INTEGER
+  CrewDesignEfficiency           Double
+  chkHullCategory                INTEGER
+  RaceStartingLevel              INTEGER
+  BioShips                       Boolean
+  chkComets                      INTEGER
+  chkCometNames                  INTEGER
+  RandomClassName                INTEGER
+
+FCT_RaceJumpPointSurvey (168 rows, 9 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  WarpPointID                    INTEGER
+  Explored                       INTEGER
+  Charted                        INTEGER
+  AlienUnits                     Boolean
+  Hide                           INTEGER
+  MilitaryRestricted             INTEGER
+  IgnoreForDistance              INTEGER
+
+FCT_RaceMedals (80 rows, 9 cols):
+  RaceID                         INTEGER
+  MedalFileName                  TEXT
+  MedalName                      TEXT
+  MedalDescription               TEXT
+  MedalPoints                    INTEGER
+  GameID                         INTEGER
+  MultipleAwards                 Boolean
+  MedalID                        INTEGER
+  Abbreviation                   TEXT
+
+FCT_RaceMineralData (320497 rows, 7 cols):
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  PopulationID                   INTEGER
+  MineralID                      INTEGER
+  MineralDataType                INTEGER
+  Time                           Double
+  Amount                         Numeric
+
+FCT_RaceNameThemes (28 rows, 4 cols):
+  RaceID                         INTEGER
+  NameThemeID                    INTEGER
+  Chance                         INTEGER
+  GameID                         INTEGER
+
+FCT_RaceOperationalGroupElements (465 rows, 6 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  OperationalGroupID             INTEGER
+  NumShips                       INTEGER
+  AutomatedDesignID              INTEGER
+  KeyElement                     Boolean
+
+FCT_RaceSurveyLocation (732 rows, 4 cols):
+  RaceID                         INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  LocationNumber                 INTEGER
+
+FCT_RaceSysSurvey (54 rows, 26 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SystemID                       INTEGER
+  Name                           TEXT
+  DangerRating                   INTEGER
+  SysTPStatus                    Boolean
+  ControlRaceID                  INTEGER
+  ForeignFleetRaceID             INTEGER
+  SectorID                       INTEGER
+  NameThemeID                    INTEGER
+  Discovered                     TEXT
+  Xcor                           INTEGER
+  Ycor                           INTEGER
+  ClosedWP                       INTEGER
+  SurveyDone                     Boolean
+  SelectedBodyXcor               Double
+  SelectedBodyYcor               Double
+  KmPerPixel                     Double
+  GeoSurveyDefaultDone           Boolean
+  DiscoveredTime                 Double
+  NoAutoRoute                    Boolean
+  MilitaryRestrictedSystem       Boolean
+  SystemValue                    INTEGER
+  AutoProtectionStatus           INTEGER
+  MineralSearchFlag              Boolean
+  RaidRating                     INTEGER
+
+FCT_RaceTech (11823 rows, 4 cols):
+  GameID                         INTEGER
+  TechID                         INTEGER
+  RaceID                         INTEGER
+  Obsolete                       Boolean
+
+FCT_Ranks (400 rows, 7 cols):
+  RankID                         INTEGER
+  RaceID                         INTEGER
+  RankName                       TEXT
+  Priority                       INTEGER
+  RankType                       INTEGER
+  RankAbbrev                     TEXT
+  GameID                         INTEGER
+
+FCT_ResearchProject (15 rows, 10 cols):
+  ProjectID                      INTEGER
+  GameID                         INTEGER
+  TechID                         INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  Facilities                     INTEGER
+  ResSpecID                      INTEGER
+  ResearchPointsRequired         Double
+  Pause                          Boolean
+  AssignNew                      Boolean
+
+FCT_ResearchQueue (5 rows, 5 cols):
+  GameID                         INTEGER
+  PopulationID                   INTEGER
+  TechSystemID                   INTEGER
+  CurrentProjectID               INTEGER
+  ResearchOrder                  INTEGER
+
+FCT_RuinRace (24 rows, 7 cols):
+  RuinRaceID                     INTEGER
+  GameID                         INTEGER
+  Title                          TEXT
+  Name                           TEXT
+  RacePic                        TEXT
+  FlagPic                        TEXT
+  Level                          INTEGER
+
+FCT_SectorCommand (1 rows, 6 cols):
+  SectorCommandID                INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  SectorName                     VARCHAR(100)
+  Colour                         INTEGER
+  GameID                         INTEGER
+
+FCT_Ship (888 rows, 69 cols):
+  ShipID                         INTEGER
+  GameID                         INTEGER
+  FleetID                        INTEGER
+  ShipName                       TEXT
+  SubFleetID                     INTEGER
+  ActiveSensorsOn                Boolean
+  AssignedMSID                   INTEGER
+  Autofire                       INTEGER
+  BoardingCombatClock            INTEGER
+  Constructed                    Double
+  CrewMorale                     Double
+  CurrentCrew                    INTEGER
+  CurrentShieldStrength          Double
+  DamageControlID                INTEGER
+  Destroyed                      Boolean
+  FireDelay                      INTEGER
+  Fuel                           Double
+  GradePoints                    Double
+  HoldTechData                   INTEGER
+  KillTonnageCommercial          INTEGER
+  KillTonnageMilitary            INTEGER
+  LastLaunchTime                 Double
+  LastOverhaul                   Double
+  LastShoreLeave                 Double
+  LaunchMorale                   Double
+  MaintenanceState               INTEGER
+  MothershipID                   INTEGER
+  RaceID                         INTEGER
+  RefuelPriority                 INTEGER
+  RefuelStatus                   INTEGER
+  ScrapFlag                      Boolean
+  SensorDelay                    INTEGER
+  ShieldsActive                  Boolean
+  ShipClassID                    INTEGER
+  ShipFuelEfficiency             Double
+  ShipNotes                      TEXT
+  ShippingLineID                 INTEGER
+  SpeciesID                      INTEGER
+  SyncFire                       INTEGER
+  TFPoints                       Double
+  TransponderActive              INTEGER
+  OrdnanceTransferStatus         INTEGER
+  HangarLoadType                 INTEGER
+  ResupplyPriority               INTEGER
+  CurrentMaintSupplies           Double
+  AutomatedDamageControl         Boolean
+  TractorTargetShipID            INTEGER
+  TractorTargetShipyardID        INTEGER
+  TractorParentShipID            INTEGER
+  OverhaulFactor                 Double
+  BioEnergy                      Double
+  LastMissileHitTime             Double
+  LastBeamHitTime                Double
+  LastShipDamageTime             Double
+  LastPenetratingDamageTime      Double
+  AssignedFormationID            INTEGER
+  DistanceTravelled              Double
+  HullNumber                     INTEGER
+  ParentSquadronID               INTEGER
+  AssignedSquadronID             INTEGER
+  LastTransitTime                Double
+  LastFiringTime                 Double
+  ResupplyStatus                 INTEGER
+  ActiveJammerOn                 Boolean
+  DecoyThreshold                 INTEGER
+  DesignateAsTarget              INTEGER
+  LoadDistance                   Double
+  SLRetire                       Boolean
+  MaxActiveResolution            INTEGER
+
+FCT_ShipCargo (74 rows, 8 cols):
+  GameID                         INTEGER
+  ShipID                         INTEGER
+  CargoTypeID                    Numeric
+  CargoID                        INTEGER
+  Amount                         Double
+  SpeciesID                      INTEGER
+  StartingPop                    INTEGER
+  Neutral                        Boolean
+
+FCT_ShipClass (413 rows, 104 cols):
+  ShipClassID                    INTEGER
+  ClassName                      TEXT
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  ActiveSensorStrength           INTEGER
+  ArmourThickness                INTEGER
+  ArmourWidth                    INTEGER
+  BaseFailureChance              Double
+  CargoCapacity                  INTEGER
+  ClassCrossSection              Double
+  ClassThermal                   Double
+  Collier                        INTEGER
+  ColonistCapacity               INTEGER
+  CommanderPriority              INTEGER
+  MilitaryEngines                Boolean
+  ControlRating                  INTEGER
+  ConscriptOnly                  INTEGER
+  Cost                           Double
+  Crew                           INTEGER
+  CrewQuartersHS                 Double
+  DCRating                       INTEGER
+  EMSensorStrength               INTEGER
+  EnginePower                    INTEGER
+  ESMaxDACRoll                   INTEGER
+  FighterClass                   Boolean
+  Commercial                     Boolean
+  FuelCapacity                   INTEGER
+  FuelEfficiency                 Double
+  FuelTanker                     INTEGER
+  GeoSurvey                      Double
+  GravSurvey                     INTEGER
+  Harvesters                     INTEGER
+  HullDescriptionID              INTEGER
+  JGConstructionTime             INTEGER
+  JumpDistance                   INTEGER
+  JumpRating                     INTEGER
+  Locked                         Boolean
+  MagazineCapacity               Double
+  MaxChance                      INTEGER
+  MaxDACRoll                     INTEGER
+  MaxSpeed                       INTEGER
+  MaintModules                   INTEGER
+  MinimumFuel                    INTEGER
+  MiningModules                  INTEGER
+  NameThemeID                    INTEGER
+  NoArmour                       INTEGER
+  Notes                          TEXT
+  MainFunction                   INTEGER
+  Obsolete                       INTEGER
+  OtherRaceClassID               INTEGER
+  ParasiteCapacity               Double
+  PassiveSensorStrength          INTEGER
+  PlannedDeployment              Double
+  PreTNT                         Boolean
+  ProtectionValue                Double
+  RankRequired                   INTEGER
+  ReactorPower                   INTEGER
+  RecreationalModule             Boolean
+  RefuelPriority                 INTEGER
+  RefuellingRate                 INTEGER
+  RefuellingStations             INTEGER
+  RequiredPower                  INTEGER
+  SalvageRate                    INTEGER
+  SensorReduction                Double
+  ShieldStrength                 INTEGER
+  Size                           Double
+  STSTractor                     INTEGER
+  SupplyShip                     INTEGER
+  Terraformers                   INTEGER
+  TotalNumber                    INTEGER
+  CargoShuttleStrength           INTEGER
+  TroopCapacity                  INTEGER
+  WorkerCapacity                 INTEGER
+  MaintPriority                  INTEGER
+  CommercialHangar               Boolean
+  ClassShippingLineID            INTEGER
+  MoraleCheckRequired            Boolean
+  OrdnanceTransferHub            INTEGER
+  OrdnanceTransferRate           INTEGER
+  TroopTransportType             INTEGER
+  AutomatedDesignID              INTEGER
+  MinimumSupplies                INTEGER
+  ResupplyPriority               INTEGER
+  MaintSupplies                  INTEGER
+  ELINTRating                    INTEGER
+  DiplomacyRating                INTEGER
+  CommercialJumpDrive            INTEGER
+  BioEnergyCapacity              INTEGER
+  SeniorCO                       INTEGER
+  RandomShipNameFromTheme        INTEGER
+  PrefixName                     TEXT
+  SuffixName                     TEXT
+  ClassHullNumbers               INTEGER
+  NoOfficers                     INTEGER
+  RepairYardCapacity             INTEGER
+  ArkShip                        Boolean
+  PDProtectionPriority           INTEGER
+  ActiveJammerStrength           INTEGER
+  FireControlJammerStrength      INTEGER
+  MissileJammerStrength          INTEGER
+  MissileJammerCount             INTEGER
+  DecoyCapacity                  Double
+  CrewDesignEfficiency           Double
+  FlagBridge                     Boolean
+
+FCT_ShipComponentTemplate (9 rows, 18 cols):
+  BGTech1                        INTEGER
+  BGTech2                        INTEGER
+  BGTech3                        INTEGER
+  BGTech4                        INTEGER
+  BGTech6                        INTEGER
+  BGTech5                        INTEGER
+  ComponentTypeID                INTEGER
+  ShipComponentTemplateID        INTEGER
+  BGTech7                        INTEGER
+  Resolution                     INTEGER
+  NumberOfShots                  INTEGER
+  ExtraHTK                       INTEGER
+  ComponentSize                  Double
+  EnginePowerMod                 Double
+  ComponentName                  TEXT
+  TurretWeaponTemplateID         INTEGER
+  TrackingSpeed                  INTEGER
+  ComponentValue                 Double
+
+FCT_ShipDesignComponents (1838 rows, 72 cols):
+  SDComponentID                  INTEGER
+  GameID                         INTEGER
+  Name                           TEXT
+  NoScrap                        Boolean
+  MilitarySystem                 Boolean
+  ShippingLineSystem             Boolean
+  BeamWeapon                     Boolean
+  Crew                           INTEGER
+  Size                           Double
+  Cost                           Double
+  ComponentTypeID                INTEGER
+  ComponentValue                 Double
+  PowerRequirement               Double
+  RechargeRate                   Double
+  ElectronicSystem               Boolean
+  ElectronicCTD                  INTEGER
+  TrackingSpeed                  INTEGER
+  SpecialFunction                INTEGER
+  MaxSensorRange                 Double
+  Resolution                     Double
+  HTK                            INTEGER
+  FuelUse                        Double
+  NoMaintFailure                 Boolean
+  HangarReloadOnly               Boolean
+  ExplosionChance                Double
+  MaxExplosionSize               INTEGER
+  DamageOutput                   INTEGER
+  NumberOfShots                  INTEGER
+  RangeModifier                  Double
+  MaxWeaponRange                 INTEGER
+  SpinalWeapon                   Boolean
+  JumpDistance                   INTEGER
+  JumpRating                     INTEGER
+  RateOfFire                     INTEGER
+  MaxPercentage                  INTEGER
+  FuelEfficiency                 Double
+  IgnoreShields                  Boolean
+  IgnoreArmour                   Boolean
+  ElectronicOnly                 Boolean
+  StealthRating                  Double
+  CloakRating                    Double
+  Weapon                         Boolean
+  BGTech1                        INTEGER
+  BGTech2                        INTEGER
+  BGTech3                        INTEGER
+  BGTech4                        INTEGER
+  BGTech5                        INTEGER
+  BGTech6                        INTEGER
+  Duranium                       Double
+  Neutronium                     Double
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Mercassium                     Double
+  Vendarite                      Double
+  Sorium                         Double
+  Uridium                        Double
+  Corundium                      Double
+  Gallicite                      Double
+  SingleSystemOnly               INTEGER
+  ShipyardRepairOnly             Boolean
+  ECCM                           Double
+  ArmourRetardation              Double
+  WeaponToHitModifier            Double
+  Prototype                      INTEGER
+  TurretWeaponID                 INTEGER
+  ShipComponentTemplateID        INTEGER
+  BGTech7                        INTEGER
+  EnginePowerMod                 Double
+  ExtraHTK                       INTEGER
+  FCRangeModifier                Double
+  FCSpeedModifier                Double
+
+FCT_ShipHistory (3661 rows, 4 cols):
+  GameID                         INTEGER
+  ShipID                         INTEGER
+  Description                    TEXT
+  GameTime                       Double
+
+FCT_ShipMeasurement (20 rows, 5 cols):
+  ShipID                         INTEGER
+  GameID                         INTEGER
+  MeasurementType                INTEGER
+  Amount                         Double
+  StrikeGroup                    Boolean
+
+FCT_ShipWeapon (686 rows, 4 cols):
+  GameID                         INTEGER
+  ShipID                         INTEGER
+  MissileID                      INTEGER
+  Amount                         INTEGER
+
+FCT_ShippingLines (24 rows, 13 cols):
+  ShippingLineID                 INTEGER
+  GameID                         INTEGER
+  EmpireID                       INTEGER
+  NPRace                         Boolean
+  LineName                       TEXT
+  ShortName                      TEXT
+  ShipNum                        INTEGER
+  WealthBalance                  Double
+  LastDividendPaid               Double
+  LastDividendTime               Double
+  MaxAssets                      Double
+  CommEngineID                   INTEGER
+  CommercialEngines              INTEGER
+
+FCT_ShippingWealthData (726 rows, 11 cols):
+  GameID                         INTEGER
+  ShippingLineID                 INTEGER
+  ShipID                         INTEGER
+  Contract                       Boolean
+  Colonist                       Boolean
+  Fuel                           Boolean
+  Amount                         Double
+  TradeGood                      INTEGER
+  TradeTime                      Double
+  OriginPop                      INTEGER
+  DestinationPop                 INTEGER
+
+FCT_Shipyard (52 rows, 22 cols):
+  ShipyardID                     INTEGER
+  GameID                         INTEGER
+  TractorParentShipID            INTEGER
+  PopulationID                   INTEGER
+  SYType                         INTEGER
+  ShipyardName                   TEXT
+  Slipways                       Double
+  Capacity                       Double
+  BuildClassID                   INTEGER
+  RetoolClassID                  INTEGER
+  TaskType                       INTEGER
+  RequiredBP                     Double
+  CompletedBP                    Double
+  PauseActivity                  Boolean
+  DefaultFleetID                 INTEGER
+  Xcor                           Double
+  Ycor                           Double
+  RaceID                         INTEGER
+  CapacityTarget                 INTEGER
+  ParentShipID                   INTEGER
+  DefaultNavalAdminID            INTEGER
+  UseAdmin                       INTEGER
+
+FCT_ShipyardTask (10 rows, 29 cols):
+  TaskID                         INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  PopulationID                   INTEGER
+  ShipyardID                     INTEGER
+  TaskTypeID                     INTEGER
+  Freighter                      Boolean
+  FleetID                        INTEGER
+  ShipID                         INTEGER
+  ClassID                        INTEGER
+  NPRShip                        Boolean
+  RefitID                        INTEGER
+  TotalBP                        Double
+  CompletedBP                    Double
+  Paused                         Boolean
+  UnitName                       TEXT
+  Duranium                       Double
+  Neutronium                     Double
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Mercassium                     Double
+  Vendarite                      Double
+  Sorium                         Double
+  Uridium                        Double
+  Corundium                      Double
+  Gallicite                      Double
+  UseComponents                  Boolean
+  NavalAdminID                   INTEGER
+
+FCT_Species (28 rows, 28 cols):
+  SpeciesID                      INTEGER
+  GameID                         INTEGER
+  TechSystemID                   INTEGER
+  HomeworldID                    INTEGER
+  DerivedSpeciesID               INTEGER
+  SpeciesName                    TEXT
+  RacePic                        TEXT
+  BreatheID                      INTEGER
+  Oxygen                         Double
+  OxyDev                         Double
+  PressMax                       Double
+  Temperature                    Double
+  TempDev                        Double
+  Gravity                        Double
+  GravDev                        Double
+  Xenophobia                     INTEGER
+  Diplomacy                      INTEGER
+  Translation                    INTEGER
+  Militancy                      INTEGER
+  Expansionism                   INTEGER
+  Determination                  INTEGER
+  Trade                          INTEGER
+  SpecialNPRID                   INTEGER
+  ProductionRateModifier         Double
+  ResearchRateModifier           Double
+  PopulationGrowthModifier       Double
+  PopulationDensityModifier      Double
+  GraduationAge                  INTEGER
+
+FCT_Squadron (3 rows, 4 cols):
+  SquadronID                     INTEGER
+  GameID                         INTEGER
+  SquadronName                   TEXT
+  ParentShipID                   INTEGER
+
+FCT_StandingOrderTemplate (2 rows, 4 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  TemplateName                   TEXT
+  TemplateID                     INTEGER
+
+FCT_StandingOrderTemplateOrder (6 rows, 7 cols):
+  TemplateID                     INTEGER
+  Priority                       INTEGER
+  OrderID                        INTEGER
+  ConditionID                    INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  CreateFWP                      INTEGER
+
+FCT_Star (61 rows, 21 cols):
+  StarID                         INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  StarTypeID                     INTEGER
+  Name                           TEXT
+  Protostar                      INTEGER
+  Xcor                           Double
+  Ycor                           Double
+  Component                      INTEGER
+  OrbitingComponent              INTEGER
+  Bearing                        Double
+  Luminosity                     Double
+  OrbitalPeriod                  Double
+  OrbitalDistance                Double
+  DisasterStatus                 INTEGER
+  Eccentricity                   Double
+  EccentricityDirection          Double
+  MeanOrbitalSpeed               Double
+  DistanceToOrbitCentre          Double
+  DistanceToParent               Double
+  CurrentOrbitalSpeed            Double
+
+FCT_SurveyLocation (1410 rows, 6 cols):
+  SurveyLocationID               INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  LocationNumber                 INTEGER
+  Xcor                           Double
+  Ycor                           Double
+
+FCT_System (47 rows, 13 cols):
+  SystemID                       INTEGER
+  SystemNumber                   INTEGER
+  Age                            Double
+  AbundanceModifier              INTEGER
+  Stars                          INTEGER
+  GameID                         INTEGER
+  JumpPointSurveyPoints          INTEGER
+  SystemTypeID                   INTEGER
+  DustDensity                    INTEGER
+  SolSystem                      Numeric
+  NoSensorChecks                 INTEGER
+  SupernovaForce                 Double
+  SupernovaElapsedTime           Double
+
+FCT_SystemBody (6466 rows, 56 cols):
+  SystemBodyID                   INTEGER
+  SystemID                       INTEGER
+  StarID                         INTEGER
+  GameID                         INTEGER
+  Name                           TEXT
+  PlanetNumber                   INTEGER
+  OrbitNumber                    INTEGER
+  TrojanAsteroid                 Double
+  OrbitalDistance                Double
+  Bearing                        Double
+  BodyClass                      INTEGER
+  Density                        Double
+  Radius                         INTEGER
+  Gravity                        Double
+  ParentBodyID                   INTEGER
+  ParentBodyType                 INTEGER
+  BodyTypeID                     INTEGER
+  Mass                           Double
+  EscapeVelocity                 Double
+  Year                           Double
+  TidalForce                     Double
+  TidalLock                      Boolean
+  Tilt                           INTEGER
+  Eccentricity                   Double
+  DayValue                       Double
+  Roche                          Double
+  TectonicActivity               INTEGER
+  Ring                           Boolean
+  MagneticField                  Double
+  BaseTemp                       Double
+  SurfaceTemp                    Double
+  HydroID                        INTEGER
+  HydroExt                       Double
+  AtmosPress                     Double
+  Albedo                         Double
+  GHFactor                       Double
+  RGE                            Boolean
+  Xcor                           Double
+  Ycor                           Double
+  PlanetIcon                     TEXT
+  RuinID                         INTEGER
+  RuinRaceID                     INTEGER
+  RadiationLevel                 Double
+  DustLevel                      Double
+  AbandonedFactories             INTEGER
+  DominantTerrain                INTEGER
+  GroundMineralSurvey            INTEGER
+  AsteroidBeltID                 INTEGER
+  AGHFactor                      Double
+  EccentricityDirection          Double
+  MeanOrbitalSpeed               Double
+  DistanceToOrbitCentre          Double
+  DistanceToParent               Double
+  CurrentOrbitalSpeed            Double
+  FixedBody                      Boolean
+  FixedBodyParentID              INTEGER
+
+FCT_SystemBodyName (3157 rows, 5 cols):
+  RaceID                         INTEGER
+  SystemBodyID                   INTEGER
+  GameID                         INTEGER
+  SystemID                       INTEGER
+  Name                           VARCHAR(50)
+
+FCT_SystemBodySurveys (5103 rows, 3 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SystemBodyID                   INTEGER
+
+FCT_TechProgressionRace (854 rows, 3 cols):
+  ProgressionOrder               INTEGER
+  RaceID                         INTEGER
+  GameID                         INTEGER
+
+FCT_TechSystem (3080 rows, 20 cols):
+  TechSystemID                   INTEGER
+  Name                           TEXT
+  ComponentName                  TEXT
+  CategoryID                     INTEGER
+  RaceID                         INTEGER
+  TechTypeID                     INTEGER
+  NoTechScan                     Boolean
+  RuinOnly                       Boolean
+  Prerequisite1                  INTEGER
+  Prerequisite2                  INTEGER
+  StartingSystem                 Boolean
+  ConventionalSystem             Boolean
+  DevelopCost                    INTEGER
+  AdditionalInfo                 Double
+  AdditionalInfo2                Double
+  AdditionalInfo3                Double
+  AdditionalInfo4                Double
+  TechDescription                TEXT
+  GameID                         INTEGER
+  AutomaticResearch              Boolean
+
+FCT_WealthData (266341 rows, 5 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  Amount                         Double
+  UseID                          INTEGER
+  TimeUsed                       Double
+
+FCT_WealthHistory (31416 rows, 4 cols):
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  IncrementTime                  Double
+  WealthAmount                   Double
+
+FCT_WeaponAssignment (14071 rows, 6 cols):
+  ShipID                         INTEGER
+  WeaponID                       INTEGER
+  WeaponNum                      INTEGER
+  FCTypeID                       INTEGER
+  FCNum                          INTEGER
+  GameID                         INTEGER
+
+FCT_WindowPosition (36 rows, 4 cols):
+  GameID                         INTEGER
+  WindowName                     TEXT
+  Left                           INTEGER
+  Top                            INTEGER
+
+FCT_WreckComponents (23 rows, 4 cols):
+  WreckID                        INTEGER
+  ComponentID                    INTEGER
+  GameID                         INTEGER
+  Amount                         INTEGER
+
+FCT_WreckTech (10 rows, 4 cols):
+  GameID                         INTEGER
+  WreckID                        INTEGER
+  TechID                         INTEGER
+  Percentage                     INTEGER
+
+FCT_Wrecks (5 rows, 24 cols):
+  WreckID                        INTEGER
+  GameID                         INTEGER
+  RaceID                         INTEGER
+  SystemID                       INTEGER
+  OrbitBodyID                    INTEGER
+  ClassID                        INTEGER
+  Size                           Double
+  EffectiveSize                  INTEGER
+  StarSwarmHatching              INTEGER
+  QueenStatus                    INTEGER
+  Xcor                           Double
+  Ycor                           Double
+  Duranium                       Double
+  Neutronium                     Double
+  Corbomite                      Double
+  Tritanium                      Double
+  Boronide                       Double
+  Mercassium                     Double
+  Vendarite                      Double
+  Sorium                         Double
+  Uridium                        Double
+  Corundium                      Double
+  Gallicite                      Double
+  ShipID                         INTEGER
+
+FGNicknames (479 rows, 2 cols):
+  NicknameID                     INTEGER
+  Nickname                       VARCHAR(22)
+
+ForeignAid (5 rows, 4 cols):
+  RaceID                         INTEGER
+  AlienID                        INTEGER
+  GameID                         INTEGER
+  Amount                         INTEGER
+
+GovType (38 rows, 27 cols):
+  GovTypeID                      INTEGER
+  GovName                        VARCHAR(30)
+  MissileBases                   DOUBLE
+  TotalIndustrial                INTEGER
+  ResearchRate                   DOUBLE
+  TrainingLevel                  INTEGER
+  SYPerAcademy                   INTEGER
+  MaxChance                      SMALLINT
+  GrowthMod                      DOUBLE
+  ConstMod                       DOUBLE
+  Shipyards                      INTEGER
+  Labs                           INTEGER
+  Construction                   INTEGER
+  Refineries                     DOUBLE
+  Mines                          INTEGER
+  Sensors                        INTEGER
+  XenophobiaMod                  INTEGER
+  DiplomacyMod                   INTEGER
+  MilitancyMod                   INTEGER
+  ExpansionismMod                INTEGER
+  DeterminationMod               INTEGER
+  TradeMod                       INTEGER
+  UserDefined                    BOOLEAN
+  HA                             INTEGER
+  MI                             INTEGER
+  AI                             INTEGER
+  GAR                            INTEGER
+
+MissileSeries (6 rows, 3 cols):
+  SeriesID                       INTEGER
+  RaceID                         INTEGER
+  SeriesName                     VARCHAR(50)
+
+PhoneticNames (26 rows, 2 cols):
+  PhoneticID                     INTEGER
+  PhoneticName                   VARCHAR(50)
+
+RaceCompare (17 rows, 16 cols):
+  RaceID                         INTEGER
+  RaceName                       VARCHAR(255)
+  Pop                            DOUBLE
+  NavalSY                        INTEGER
+  CommercialSY                   INTEGER
+  Research                       INTEGER
+  Factories                      INTEGER
+  Mines                          INTEGER
+  AM                             INTEGER
+  Refineries                     INTEGER
+  Naval                          INTEGER
+  Commercial                     INTEGER
+  Civilian                       INTEGER
+  DSTS                           INTEGER
+  Academies                      INTEGER
+  Fuel                           INTEGER
+
+sqlite_sequence (52 rows, 2 cols):
+  name                           ?
+  seq                            ?
+
+sqlite_stat1 (269 rows, 3 cols):
+  tbl                            ?
+  idx                            ?
+  stat                           ?
+
+sqlite_stat4 (1380 rows, 6 cols):
+  tbl                            ?
+  idx                            ?
+  neq                            ?
+  nlt                            ?
+  ndlt                           ?
+  sample                         ?

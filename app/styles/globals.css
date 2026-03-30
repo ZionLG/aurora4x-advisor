@@ -1,0 +1,116 @@
+@import 'tailwindcss';
+@source '@/app';
+@source '@/lib';
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
+  :root {
+    --background: hsl(215 20% 97%);
+    --foreground: hsl(220 20% 12%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(220 20% 12%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(220 20% 12%);
+    --primary: hsl(215 60% 35%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(215 15% 93%);
+    --secondary-foreground: hsl(220 20% 12%);
+    --muted: hsl(215 15% 93%);
+    --muted-foreground: hsl(215 10% 45%);
+    --accent: hsl(215 15% 93%);
+    --accent-foreground: hsl(220 20% 12%);
+    --destructive: hsl(0 72% 51%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --border: hsl(215 15% 88%);
+    --input: hsl(215 15% 88%);
+    --ring: hsl(215 60% 35%);
+    --chart-1: hsl(215 70% 45%);
+    --chart-2: hsl(160 55% 38%);
+    --chart-3: hsl(35 80% 48%);
+    --chart-4: hsl(280 55% 50%);
+    --chart-5: hsl(340 65% 50%);
+    --radius: 0.5rem;
+
+    /* Light tactical palette — deep navy tones on light backgrounds */
+    --cic-amber: hsl(35 85% 42%);
+    --cic-amber-dim: hsl(35 50% 35%);
+    --cic-amber-glow: hsl(35 85% 42% / 0.08);
+    --cic-cyan: hsl(205 70% 38%);
+    --cic-cyan-dim: hsl(205 45% 32%);
+    --cic-cyan-glow: hsl(205 70% 38% / 0.06);
+    --cic-green: hsl(155 55% 32%);
+    --cic-red: hsl(0 65% 45%);
+    --cic-panel: hsl(215 18% 98%);
+    --cic-panel-edge: hsl(215 15% 86%);
+    --cic-void: hsl(215 20% 95%);
+  }
+
+  .dark {
+    --background: hsl(220 20% 4%);
+    --foreground: hsl(210 20% 88%);
+    --card: hsl(220 18% 6%);
+    --card-foreground: hsl(210 20% 88%);
+    --popover: hsl(220 18% 6%);
+    --popover-foreground: hsl(210 20% 88%);
+    --primary: hsl(45 90% 55%);
+    --primary-foreground: hsl(220 20% 4%);
+    --secondary: hsl(220 15% 12%);
+    --secondary-foreground: hsl(210 20% 88%);
+    --muted: hsl(220 15% 12%);
+    --muted-foreground: hsl(210 10% 50%);
+    --accent: hsl(220 15% 14%);
+    --accent-foreground: hsl(210 20% 88%);
+    --destructive: hsl(0 62.8% 40%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(210 15% 14%);
+    --input: hsl(220 15% 12%);
+    --ring: hsl(195 70% 45%);
+    --chart-1: hsl(195 80% 50%);
+    --chart-2: hsl(160 60% 45%);
+    --chart-3: hsl(45 90% 55%);
+    --chart-4: hsl(280 65% 60%);
+    --chart-5: hsl(340 75% 55%);
+
+    /* Tactical palette */
+    --cic-amber: hsl(45 90% 55%);
+    --cic-amber-dim: hsl(45 60% 35%);
+    --cic-amber-glow: hsl(45 90% 55% / 0.08);
+    --cic-cyan: hsl(195 80% 55%);
+    --cic-cyan-dim: hsl(195 50% 40%);
+    --cic-cyan-glow: hsl(195 80% 55% / 0.08);
+    --cic-green: hsl(145 60% 45%);
+    --cic-red: hsl(0 70% 50%);
+    --cic-panel: hsl(220 18% 7%);
+    --cic-panel-edge: hsl(210 15% 16%);
+    --cic-void: hsl(220 20% 3%);
+  }
+}

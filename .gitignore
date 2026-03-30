@@ -2,14 +2,14 @@ node_modules
 dist
 out
 .DS_Store
-.eslintcache
 *.log*
-.vscode
-.claude
-build
-docs
-.mcp.json
-*.md
-!README.md
-!ROADMAP.md
-!SAVE_METHOD_MAPPING.md
+temp
+Dump
+
+# C# AuroraPatch build artifacts
+AuroraPatch/**/[Bb]in/
+AuroraPatch/**/[Oo]bj/
+AuroraPatch/.vs/
+AuroraPatch/packages/
+AuroraPatch/**/*.user
+AuroraPatch/**/*.suo

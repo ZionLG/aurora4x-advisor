@@ -1,8 +1,8 @@
 # Aurora 4X Companion
 
-A tactical companion and visualization tool for [Aurora 4X](https://aurora4x.com/). Connects to a running Aurora instance via a C# Harmony patch, providing real-time system maps, fleet overlays, context-aware data panels, and an advisor persona system — all while Aurora remains your primary interface.
+A tactical companion and visualization tool for [Aurora 4X](https://aurora4x.com/). Connects to a running Aurora instance via a C# Harmony patch, providing real-time system maps, fleet overlays, context-aware data panels, and an AI-powered advisor — all while Aurora remains your primary interface.
 
-> **Status:** Actively developed. The Electron companion app, C# bridge, and real-time memory reader are functional. Advisor persona system is implemented. Dashboard with tactical map viewer, data explorer, and memory inspector are in progress.
+> **Status:** Active refactor. Infrastructure complete (IPC, state management, data hooks, routing). Feature migration in progress.
 
 ## Important Note
 
@@ -17,13 +17,11 @@ Aurora 4X is a closed-source .NET WinForms application with obfuscated type name
 3. **MemoryReader** uses cached reflection to read game objects (stars, planets, fleets, ships) directly from Aurora's live memory
 4. **The Electron app** connects to the bridge, reads game state, and renders companion visualizations alongside Aurora
 
-> **Note on AuroraPatch:** The `AuroraPatch-master/` directory is a **modified fork** of the original [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project. The **Lib** library has been significantly extended with new components (`DatabaseManager`, `SignatureManager`, `KnowledgeBase`, `UIManager`) that provide the infrastructure AdvisorBridge depends on. **AdvisorBridge** is the new project added by this repo. The **Automation** project is from the original AuroraPatch and kept as a reference example of the patching API. The **Example** project originated from AuroraPatch but has been heavily modified into a dev tool for discovering Aurora's obfuscated types and field mappings (F12 inspector, type candidate search, GameState collection dumping). The core AuroraPatch launcher and `Patch` base class remain largely unchanged.
-
 ```
 ┌──────────────────────────────────────────────────────┐
 │        Companion App (Electron + React + TS)         │
 │                                                      │
-│  Tactical Map ─ Fleet Overlay ─ Advisor ─ Analytics  │
+│  Tactical Map ─ Fleet Overlay ─ AI Advisor ─ Tools   │
 └──────────────────┬───────────────────────────────────┘
                    │  WebSocket (ws://localhost:47842)
 ┌──────────────────┴───────────────────────────────────┐
@@ -41,12 +39,7 @@ Aurora 4X is a closed-source .NET WinForms application with obfuscated type name
 └──────────────────────────────────────────────────────┘
 ```
 
-### Data Pipeline
-
-Aurora's types and fields are obfuscated (e.g., type `kc` = SystemBody, field `v` = SystemBodyID). The conversion from raw memory to usable data is split across both sides:
-
-- **C# Bridge (MemoryReader):** Reads obfuscated fields from Aurora's live objects via cached reflection, and maps them to human-readable keys before sending (`SystemBodyID`, `FleetName`, `OrbitalDistance`, etc.). Each entity type has a static `XxxFieldNameMap` dictionary in `MemoryReader.cs` that defines the obfuscated-to-readable mapping (e.g., `"v"` -> `"SystemBodyID"` for bodies, `"f"` -> `"StarID"` for stars). A shared `BuildFastFields` / `ReadMappedFields` pattern handles all types consistently.
-- **Electron App:** Receives JSON with readable keys over WebSocket and renders directly — no client-side field translation needed.
+> **Note on AuroraPatch:** The `AuroraPatch-master/` directory is a **modified fork** of the original [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project. The **Lib** library has been significantly extended with new components (`DatabaseManager`, `SignatureManager`, `KnowledgeBase`, `UIManager`). **AdvisorBridge** is the new project added by this repo. The **Automation** project is from the original AuroraPatch and kept as a reference. The **Example** project has been modified into a dev tool for discovering Aurora's obfuscated types (F12 inspector).
 
 ## Features
 
@@ -55,72 +48,83 @@ Aurora's types and fields are obfuscated (e.g., type `kc` = SystemBody, field `v
 - Canvas-based system map with orbital body rendering alongside Aurora's own map
 - Fleet position overlays with movement tracking
 
-### Context-Aware Data Panels
+### Unified Empire Data
 
-- Fleet, planet, and system intel panels that update in real-time
-- Data explorer for querying Aurora's game state without digging through menus
-- Memory inspector for advanced users exploring game internals
+- Single data layer merging SQL and real-time memory — the client never knows the source
+- Fleet, ship, mineral, research, and route data through clean domain hooks
+- Automatic refresh on game ticks
 
-### Live Game Date
+### AI-Powered Advisor
 
-- Real-time game date display from Aurora's TacticalMap title bar
-- Pushes on every game tick and on initial connection
+- LLM-driven advisor that speaks in character based on government archetype and ideology
+- Supports Claude (Anthropic), OpenAI, and local Ollama models via Vercel AI SDK
+- Interactive chat — ask your advisor about strategy, threats, priorities
+- Event-driven alerts — briefings, warnings, and alerts generated on game ticks
+- 8 personality archetypes: Nationalist, Technocrat, Communist, Monarchist, Military, Corporate, Diplomatic, Religious
 
-### Advisor Personas
+### Planning Tools
 
-- 8 built-in advisor archetypes (Nationalist, Technocrat, Communist, Monarchist, Military, Corporate, Diplomatic, Religious)
-- Each shaped by Aurora's ideology stats (Xenophobia, Diplomacy, Militancy, Expansionism, etc.)
-- Context-aware guidance and observation messages that match the advisor's personality
-- Tutorial system that adapts to your empire's development stage
+- Fleet composition tables with filtering and search
+- Route planning engine with fuel burn calculations
+- Mineral tracking with historical charts
+- Research tree viewer
 
 ### Game Bridge
 
 - WebSocket server embedded in the Aurora process via Harmony patching
-- Uses [Fleck](https://github.com/statianzo/Fleck) for raw TCP WebSocket support (compatible with Wine/Proton for Linux users)
-- Direct memory reads of game objects (systems, bodies, stars, fleets, ships) — no file polling
-- **Smart SQL queries with selective save** — the `query` endpoint auto-detects `FCT_*` table names in your SQL (including JOINs and subqueries), and only refreshes the save methods that write to those tables. A query touching `FCT_Fleet` + `FCT_Ship` calls 2 methods instead of all 88, reducing UI thread freeze from seconds to milliseconds. See [SAVE_METHOD_MAPPING.md](AuroraPatch-master/SAVE_METHOD_MAPPING.md) for the full mapping.
-- Push notifications on game tick (time advancement) for subscribed systems
-- Quick commands that trigger visible Aurora UI actions (opening forms, clicking toolbar buttons)
-- Protocol version handshake — the app warns users when the bridge DLL is outdated
+- Direct memory reads of game objects — no file polling
+- **Smart SQL queries with selective save** — auto-detects `FCT_*` tables and only refreshes the relevant save methods
+- Push notifications on game tick
+- Protocol version handshake
 
 ### Auto-Updater
 
 - Built-in auto-update via GitHub Releases (`electron-updater`)
-- Automatic version bumping and release creation on push to main via GitHub Actions
-- Builds for Windows and Linux (AppImage, deb, snap)
+
+## Architecture
+
+The app uses a clean 4-domain IPC architecture:
+
+| Domain       | Purpose                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| **SESSION**  | Game lifecycle — campaign selection, bridge connection (hidden internally), game detection  |
+| **EMPIRE**   | All game data — fleets, ships, bodies, systems, minerals, research, routes. Source-agnostic |
+| **ADVISOR**  | LLM chat, event-driven alerts, personality/archetype matching                               |
+| **SETTINGS** | App config, AI provider selection, DB path                                                  |
+
+IPC uses the **Conveyor** system — type-safe with Zod validation, organized as schema + handler + API per domain.
 
 ## Project Structure
 
 ```
 aurora4x-companion/
-├── src/                          # Electron + React companion app
-│   ├── main/                     # Electron main process
-│   │   ├── advisor/              # Advisor persona system
-│   │   ├── services/             # Bridge client, DB watcher, game detection
-│   │   └── index.ts              # IPC handlers
-│   ├── renderer/src/             # React frontend
-│   │   ├── components/           # UI components (dashboard, system map, etc.)
-│   │   ├── contexts/             # React contexts (game state, aurora data)
-│   │   └── hooks/                # Custom hooks
-│   ├── preload/                  # Electron IPC bridge
-│   └── shared/                   # Shared TypeScript types
+├── app/                          # Renderer (React)
+│   ├── components/               # UI components (layout, window, shadcn)
+│   ├── hooks/data/               # Unified data hooks (useFleets, useBodies, etc.)
+│   ├── pages/                    # Route pages (dashboard, planning, advisor, settings)
+│   ├── stores/                   # Zustand stores (session, settings, advisor)
+│   └── router.tsx                # Hash router
+├── lib/                          # Main + Preload + Shared library
+│   ├── main/                     # Electron main process (app, bootstrap, broadcast)
+│   ├── preload/                  # Context bridge (Conveyor API exposure)
+│   ├── conveyor/                 # Type-safe IPC system
+│   │   ├── schemas/              # Zod schemas (session, empire, advisor, settings)
+│   │   ├── handlers/             # Main process handlers
+│   │   └── api/                  # Preload API classes
+│   ├── services/                 # Internal services (bridge, game session, persistence, AI)
+│   ├── compute/                  # Pure game calculations (routes, fleets, minerals)
+│   └── advisor/                  # Archetype definitions and ideology matching
+├── shared/                       # Shared types and schemas (main + renderer)
 ├── AuroraPatch-master/           # C# codebase (.NET Framework 4.8)
 │   ├── AuroraPatch/              # Harmony patch loader and launcher
 │   ├── Lib/                      # Core library (type resolution, DB, UI helpers)
-│   │   └── DatabaseManager.cs    # In-memory SQLite with selective save
 │   ├── AdvisorBridge/            # WebSocket bridge plugin (Fleck)
-│   │   ├── BridgeServer.cs       # WebSocket message router
-│   │   ├── MemoryReader.cs       # Live game object reader (cached reflection)
-│   │   └── Providers/            # Domain providers (Fleet, System, GameState)
 │   ├── Automation/               # Example automation patch
-│   ├── Example/                  # Dev tool for discovering Aurora's obfuscated types
-│   └── SAVE_METHOD_MAPPING.md    # Complete save method -> table mapping
-└── resources/config/             # Advisor personality profiles (JSON)
+│   └── Example/                  # Dev tool for type discovery
+└── resources/                    # Build assets and config
 ```
 
 ## Getting Started (User)
-
-If you just want to **use** the tool with your Aurora installation:
 
 ### Prerequisites
 
@@ -128,7 +132,7 @@ If you just want to **use** the tool with your Aurora installation:
 
 ### Setup
 
-1. Download the latest [companion app release](https://github.com/ZionLG/aurora4x-advisor/releases/latest) for your platform (Windows installer or Linux AppImage/deb)
+1. Download the latest [companion app release](https://github.com/ZionLG/aurora4x-advisor/releases/latest) for your platform
 2. Download the latest C# bridge release
 3. Place `AuroraPatch.exe`, `0Harmony.dll`, and other root-level dependencies into your Aurora 4X installation directory (next to `Aurora.exe`)
 4. Place the `Lib` and `AdvisorBridge` patch folders into the `Patches/` directory
@@ -139,165 +143,67 @@ If you just want to **use** the tool with your Aurora installation:
 Your Aurora installation/
 ├── Aurora.exe                  # The game (untouched)
 ├── AuroraPatch.exe             # Launches Aurora with patches
-├── 0Harmony.dll                # Harmony runtime patching library
-├── Newtonsoft.Json.dll          # JSON serialization
-├── System.Data.SQLite.dll       # SQLite bindings
-├── EntityFramework.dll          # EF for Aurora's DB access
-├── AuroraDB.db                 # Aurora's save database
+├── 0Harmony.dll
+├── Newtonsoft.Json.dll
+├── System.Data.SQLite.dll
+├── EntityFramework.dll
+├── AuroraDB.db
 ├── Patches/
-│   ├── Lib/                    # Core patch library
+│   ├── Lib/
 │   │   ├── Lib.dll
-│   │   ├── signatures.json     # Cached type fingerprints
-│   │   └── ... (SQLite/EF DLLs)
+│   │   └── signatures.json
 │   └── AdvisorBridge/
-│       ├── AdvisorBridge.dll   # WebSocket bridge plugin
-│       └── Fleck.dll           # WebSocket library
-└── ... (Aurora's other files)
+│       ├── AdvisorBridge.dll
+│       └── Fleck.dll
+└── ...
 ```
 
 ### Linux (via Proton)
 
-Aurora runs through Steam Proton on Linux. The companion app runs natively. The bridge uses Fleck (raw TCP sockets) instead of Windows HttpListener, so WebSocket connections work correctly across the Wine/Proton boundary.
+Aurora runs through Steam Proton on Linux. The companion app runs natively. The bridge uses Fleck (raw TCP sockets) so WebSocket connections work across the Wine/Proton boundary.
 
 ## Getting Started (Developer)
 
-If you want to **build from source** and debug:
-
 ### Prerequisites
 
-- **Node.js 18+** with pnpm
+- **Node.js 18+** with npm
 - **Visual Studio 2022** (or MSBuild) with .NET Framework 4.8 targeting pack
 - **Aurora 4X** C# version installed
-
-### C# Bridge (local dev setup)
-
-Building the AuroraPatch project outputs `AuroraPatch.exe` into `AuroraPatch-master/AuroraPatch/bin/Debug/`. For the patcher to work, that directory needs to be a full Aurora installation — AuroraPatch looks for `Aurora.exe` and loads patches from a `Patches/` subfolder relative to itself.
-
-1. Open `AuroraPatch-master/AuroraPatch.sln` in Visual Studio
-2. Copy your entire Aurora 4X installation into `AuroraPatch-master/AuroraPatch/bin/Debug/` (everything — `Aurora.exe`, `AuroraDB.db`, `Flags/`, `Medals/`, etc.)
-3. Create `Patches/` subfolders for each patch inside that same directory
-4. Build and deploy with the included script (close Aurora first):
-   ```
-   cd AuroraPatch-master
-   build-deploy.bat
-   ```
-   This builds the solution and copies Lib.dll + AdvisorBridge.dll into the Patches folders.
-5. Run/debug `AuroraPatch.exe` from Visual Studio — it launches `Aurora.exe` from the same directory and loads patches from `Patches/`
-
-```
-AuroraPatch-master/AuroraPatch/bin/Debug/
-├── Aurora.exe                     # Copied from your Aurora installation
-├── AuroraDB.db                    # Copied from your Aurora installation
-├── AuroraPatch.exe                # Built by the AuroraPatch project
-├── AuroraPatch.pdb                # Debug symbols
-├── 0Harmony.dll                   # Harmony runtime (build output)
-├── Newtonsoft.Json.dll            # JSON lib (build output)
-├── System.Data.SQLite.dll         # SQLite bindings (build output)
-├── EntityFramework.dll            # EF (build output)
-├── Patches/
-│   ├── Lib/                       # Copy Lib build output here
-│   │   ├── Lib.dll
-│   │   ├── signatures.json
-│   │   └── ... (SQLite/EF DLLs)
-│   ├── AdvisorBridge/             # Copy AdvisorBridge build output here
-│   │   ├── AdvisorBridge.dll
-│   │   └── Fleck.dll
-│   └── Example/                   # Copy Example build output here (optional)
-│       └── Example.dll
-├── Flags/                         # Copied from Aurora installation
-├── Medals/                        # Copied from Aurora installation
-└── ... (other Aurora files)
-```
-
-> The `bin/` directories are gitignored. Your local Aurora files never enter version control.
 
 ### Electron Companion App
 
 ```bash
 git clone https://github.com/ZionLG/aurora4x-advisor.git
 cd aurora4x-advisor
-pnpm install
-pnpm dev          # Start in development mode with hot reload
+git checkout companion-refactor
+npm install
+npm run dev          # Start with hot reload
 ```
 
-## Development Reference
+### C# Bridge
 
-### Electron Commands
+1. Open `AuroraPatch-master/AuroraPatch.sln` in Visual Studio
+2. Copy your Aurora 4X installation into `AuroraPatch-master/AuroraPatch/bin/Debug/`
+3. Build and deploy:
+   ```
+   cd AuroraPatch-master
+   build-deploy.bat
+   ```
+4. Run/debug `AuroraPatch.exe` from Visual Studio
 
-| Command          | Description                         |
-| ---------------- | ----------------------------------- |
-| `pnpm dev`       | Run with hot reload                 |
-| `pnpm build`     | Type-check and build for production |
-| `pnpm typecheck` | Type-check without building         |
-| `pnpm lint`      | Lint with ESLint                    |
-| `pnpm format`    | Format with Prettier                |
-| `pnpm build:win` | Package for Windows                 |
-| `pnpm build:linux` | Package for Linux                 |
+## Development Commands
 
-### WebSocket Protocol
-
-The bridge uses a JSON request/response protocol over WebSocket:
-
-```jsonc
-// Request
-{ "Id": "req-1", "Type": "getbodies", "Payload": "{\"SystemId\": 21859}" }
-
-// Response
-{ "Id": "req-1", "Type": "result", "Success": true, "Payload": [...] }
-
-// Push notification (no Id, sent on game tick)
-{ "Id": null, "Type": "push", "Success": true, "Payload": { "pushType": "bodies", "data": {...} } }
-```
-
-**Supported message types:**
-
-| Type                   | Description                                                     |
-| ---------------------- | --------------------------------------------------------------- |
-| `ping`                 | Health check, returns "pong" with `protocolVersion`             |
-| `query`                | Smart SQL — auto-detects FCT_* tables, selectively refreshes only those |
-| `query.full`           | Full-refresh SQL — refreshes all tables (for PRAGMA, sqlite_master) |
-| `getsystems`           | All star systems with resolved names (memory reader)            |
-| `getknownsystems`      | Player-known systems from TacticalMap ComboBox (memory reader)  |
-| `getsystembodies`      | Stars in a system with StarDetails (memory reader)              |
-| `getbodies`            | Planets/moons/asteroids (memory reader)                         |
-| `getfleets`            | All fleets with positions and ship counts (memory reader)       |
-| `getships`             | Ships, optionally filtered by fleet (memory reader)             |
-| `subscribe`            | Subscribe to push updates for a system on each game tick        |
-| `enumerategamestate`   | List all fields on the GameState object                         |
-| `enumeratecollections` | List all collection-type fields on GameState                    |
-| `readcollection`       | Read items from a GameState collection (paginated)              |
-| `readfield`            | Read a single field from GameState                              |
-| `action`               | Execute a UI action (click button, open form, read/set control) |
-| `inspect`              | Inspect all controls on an Aurora form                          |
-| `gettablemapping`      | View the save method -> table mapping (diagnostic)              |
-| `rediscovermapping`    | Re-run trigger-based mapping discovery (diagnostic)             |
-
-**Push types:**
-
-| Push Type   | Description                                          |
-| ----------- | ---------------------------------------------------- |
-| `gameDate`  | Current game date from TacticalMap title bar          |
-| `bodies`    | System bodies for the subscribed system               |
-| `fleets`    | All fleet positions and states                        |
-
-### Aurora Version Support
-
-Aurora obfuscates its type and field names, which change between versions. The project identifies versions by a SHA256 checksum of `Aurora.exe` (first 6 chars). Currently supported:
-
-| Checksum | Notes                      |
-| -------- | -------------------------- |
-| `chm1c7` | Older version              |
-| `OdxONo` | Current development target |
-
-To add support for a new version:
-
-1. Run the `Example` patch and press F12 in any Aurora form to dump type discovery data
-2. Add a new `else if` block in `KnowledgeBase.GetKnownTypeNames()` with the new checksum's type mappings
-3. Update field name references in `MemoryReader.cs` if they changed
+| Command               | Description          |
+| --------------------- | -------------------- |
+| `npm run dev`         | Run with hot reload  |
+| `npm run lint`        | Lint with ESLint     |
+| `npm run format`      | Format with Prettier |
+| `npm run build:win`   | Package for Windows  |
+| `npm run build:linux` | Package for Linux    |
 
 ## Tech Stack
 
-**Companion App:** Electron 39, React 19, TypeScript 5.9, Tailwind CSS 4, Radix UI, TanStack Query, Vite 7
+**Companion App:** Electron 40, React 19, TypeScript 5.9, Tailwind CSS 4, Radix UI / shadcn, TanStack Query, Zustand, Vercel AI SDK, Vite 7
 
 **C# Bridge:** .NET Framework 4.8, Harmony 2.2, Fleck 1.2, System.Data.SQLite, Newtonsoft.Json, EntityFramework 6
 
@@ -307,20 +213,17 @@ Areas where help is needed:
 
 - **Aurora Version Mappings** — Add obfuscated type/field mappings for new Aurora builds
 - **Visualizations** — New tactical overlays, analytics views, and data panels
-- **Advisor Personas** — Additional personality profiles and observation detectors
+- **Advisor Events** — Additional game event detectors for the AI advisor
 - **Testing** — Test with various Aurora save files and game states
 
 ## License
 
 This project is source-available and free to use, modify, and distribute.
 
-Please note: this is intended as a companion tool and not a replacement client for Aurora 4X.
-
-We aim to respect the original developer’s work and boundaries, and ask that public distributions follow that spirit.
+Please note: this is intended as a companion tool and not a replacement client for Aurora 4X. We aim to respect the original developer's work and boundaries, and ask that public distributions follow that spirit.
 
 ## Acknowledgments
 
 - Steve Walmsley for creating Aurora 4X
 - The [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project for the Harmony patching framework
-- The [SolarisTheme](https://github.com/simast/SolarisTheme) project for the toolbar icons
 - The Aurora 4X modding community

@@ -1,26 +1,55 @@
 import { resolve } from 'path'
-import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+
+// Shared alias configuration
+const aliases = {
+  '@/app': resolve(__dirname, 'app'),
+  '@/lib': resolve(__dirname, 'lib'),
+  '@/resources': resolve(__dirname, 'resources'),
+  '@/shared': resolve(__dirname, 'shared'),
+}
 
 export default defineConfig({
-  main: {},
-  preload: {},
-  renderer: {
-    resolve: {
-      alias: {
-        '@renderer': resolve('src/renderer/src'),
-        '@shared': resolve('src/shared'),
-        '@components': resolve('src/renderer/src/components')
-      }
+  main: {
+    build: {
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, 'lib/main/main.ts'),
+        },
+      },
     },
-    plugins: [
-      react({
-        babel: {
-          plugins: ['babel-plugin-react-compiler']
-        }
-      }),
-      tailwindcss()
-    ]
-  }
+    resolve: {
+      alias: aliases,
+    },
+    plugins: [externalizeDepsPlugin()],
+  },
+  preload: {
+    build: {
+      rollupOptions: {
+        input: {
+          preload: resolve(__dirname, 'lib/preload/preload.ts'),
+        },
+      },
+    },
+    resolve: {
+      alias: aliases,
+    },
+    plugins: [externalizeDepsPlugin()],
+  },
+  renderer: {
+    root: './app',
+    build: {
+      rollupOptions: {
+        input: {
+          index: resolve(__dirname, 'app/index.html'),
+        },
+      },
+    },
+    resolve: {
+      alias: aliases,
+    },
+    plugins: [tailwindcss(), react()],
+  },
 })
