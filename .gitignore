@@ -13,3 +13,5 @@ AuroraPatch/.vs/
 AuroraPatch/packages/
 AuroraPatch/**/*.user
 AuroraPatch/**/*.suo
+
+RELEASE_*.md

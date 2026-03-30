@@ -2,16 +2,22 @@
  * Shared utilities for the compute layer.
  */
 
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+
+/**
+ * Convert Aurora's GameTime (seconds since epoch) to a formatted date string.
+ *
+ * Uses the same approach as Aurora Electrons:
+ *   dayjs.utc(0).set('year', startYear).add(seconds, 'second')
+ *
+ * Aurora stores time as seconds elapsed since Jan 1 of the game's start year.
+ */
 export function formatGameDate(timeSeconds: number, startYear: number): string {
-  const totalDays = timeSeconds / 86400
-  const yearsElapsed = Math.floor(totalDays / 365.25)
-  const remainingDays = totalDays - yearsElapsed * 365.25
-  const year = startYear + yearsElapsed
-  const month = Math.floor(remainingDays / 30.44) + 1
-  const day = Math.floor(remainingDays % 30.44) + 1
-  const m = month < 10 ? `0${month}` : month
-  const d = day < 10 ? `0${day}` : day
-  return `${year}-${m}-${d}`
+  const date = dayjs.utc(0).set('year', startYear).set('hour', 0).set('minute', 0).set('second', 0).add(timeSeconds, 'second')
+  return date.format('YY-MM-DD')
 }
 
 export function euclidean(x1: number, y1: number, x2: number, y2: number): number {

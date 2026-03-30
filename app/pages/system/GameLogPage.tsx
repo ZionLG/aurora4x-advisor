@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useReactTable, getCoreRowModel, flexRender, type ColumnDef } from '@tanstack/react-table'
 import { useGameLog, useEventTypes } from '@/app/hooks/data'
+import { DataSettingsButton } from '@/app/components/DataSettingsPanel'
 import { Badge } from '@/app/components/ui/badge'
 import { Button } from '@/app/components/ui/button'
 import { Input } from '@/app/components/ui/input'
@@ -331,6 +332,7 @@ export function GameLogPage() {
               <ChevronRight className="size-3" />
             </Button>
           </div>
+          <DataSettingsButton invalidateKey={['empire', 'gameLog']} />
         </div>
       </div>
 

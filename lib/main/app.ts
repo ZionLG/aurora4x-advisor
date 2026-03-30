@@ -101,6 +101,22 @@ export function createPopoutWindow(moduleId: string, route: string, x: number, y
     popout.setTitle(title || moduleId)
   })
 
+  // Keyboard shortcuts for zoom (same as main window)
+  popout.webContents.on('before-input-event', (event, input) => {
+    if (input.type !== 'keyDown' || !input.control || input.alt || input.shift) return
+    const wc = popout.webContents
+    if (input.key === '=' || input.key === '+') {
+      wc.setZoomLevel(wc.zoomLevel + 0.5)
+      event.preventDefault()
+    } else if (input.key === '-') {
+      wc.setZoomLevel(wc.zoomLevel - 0.5)
+      event.preventDefault()
+    } else if (input.key === '0') {
+      wc.setZoomLevel(0)
+      event.preventDefault()
+    }
+  })
+
   const query = `?mode=popout&module=${encodeURIComponent(moduleId)}&route=${encodeURIComponent(route)}`
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {

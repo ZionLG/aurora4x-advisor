@@ -274,9 +274,15 @@ export const registerEmpireHandlers = () => {
   // Game log
   handle(
     'empire:getGameLog',
-    async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean) => {
+    async (limit?: number, offset?: number, eventTypes?: number[], onlyCustomized?: boolean, showHidden?: boolean, forceOffline?: boolean) => {
       const ctx = getGameCtx()
-      return compute.getGameLog(getQuery(), ctx, { limit, offset, eventTypes, onlyCustomized, showHidden })
+      const queryFn = forceOffline ? (() => {
+        const offlineQuery = getOfflineQuery()
+        if (offlineQuery) return offlineQuery
+        const dbPath = auroraBridge.auroraDbPath
+        return dbPath ? makeDirectQuery(dbPath) : getQuery()
+      })() : getQuery()
+      return compute.getGameLog(queryFn, ctx, { limit, offset, eventTypes, onlyCustomized, showHidden })
     }
   )
 

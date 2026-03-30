@@ -11,6 +11,23 @@ function useEmpireEnabled(): boolean {
   return !!game && (mode === 'bridge' || mode === 'offline')
 }
 
+// ── Shared settings helpers ───────────────────────────────────────────
+
+function useRecapStaleTime(baseStale: number): number | undefined {
+  const interval = useRecapSettingsStore((s) => s.refreshInterval)
+  if (interval === 0) return Infinity as unknown as undefined
+  return Math.max(interval, baseStale)
+}
+
+function useRecapRefetchInterval(): number | false {
+  const interval = useRecapSettingsStore((s) => s.refreshInterval)
+  return interval === 0 ? false : interval
+}
+
+function useRecapForceOffline(): boolean {
+  return useRecapSettingsStore((s) => s.forceOffline)
+}
+
 // ── Game date (used by sidebar) ──────────────────────────────────────
 
 export function useGameDate() {
@@ -32,10 +49,15 @@ export function useGameLog(
   showHidden?: boolean
 ) {
   const enabled = useEmpireEnabled()
+  const staleTime = useRecapStaleTime(10_000)
+  const refetchInterval = useRecapRefetchInterval()
+  const forceOffline = useRecapForceOffline()
   return useQuery({
-    queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized, showHidden],
-    queryFn: () => window.conveyor.empire.getGameLog(limit, offset, eventTypes, onlyCustomized, showHidden),
+    queryKey: ['empire', 'gameLog', limit, offset, eventTypes, onlyCustomized, showHidden, { forceOffline }],
+    queryFn: () => window.conveyor.empire.getGameLog(limit, offset, eventTypes, onlyCustomized, showHidden, forceOffline),
     enabled,
+    staleTime,
+    refetchInterval,
     placeholderData: (prev) => prev,
   })
 }
@@ -46,25 +68,11 @@ export function useEventTypes() {
     queryKey: ['empire', 'eventTypes'],
     queryFn: () => window.conveyor.empire.getEventTypes(),
     enabled,
+    staleTime: 60_000,
   })
 }
 
 // ── Production Recap (granular, shared cache) ────────────────────────
-
-function useRecapStaleTime(baseStale: number): number | undefined {
-  const interval = useRecapSettingsStore((s) => s.refreshInterval)
-  if (interval === 0) return Infinity as unknown as undefined
-  return Math.max(interval, baseStale)
-}
-
-function useRecapForceOffline(): boolean {
-  return useRecapSettingsStore((s) => s.forceOffline)
-}
-
-function useRecapRefetchInterval(): number | false {
-  const interval = useRecapSettingsStore((s) => s.refreshInterval)
-  return interval === 0 ? false : interval // 0 = manual only, otherwise poll at interval
-}
 
 function useRecapTypeQuery<T>(type: string, queryFn: (forceOffline: boolean) => Promise<T>) {
   const enabled = useEmpireEnabled()

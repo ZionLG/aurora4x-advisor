@@ -116,15 +116,10 @@ export async function bootstrap(): Promise<void> {
     }
   })
 
-  // 5. Push-triggered LLM analysis (throttled to 5s)
-  let lastAnalysis = 0
+  // 5. Tick broadcast (every push) + LLM analysis (throttled to 5s)
 
-  auroraBridge.onPush(async () => {
-    const now = Date.now()
-    if (now - lastAnalysis < 5000) return
-    lastAnalysis = now
-
-    // Parse game date from title bar and persist it
+  // Broadcast empire:tick on every push — client controls refresh via staleTime/refetchInterval
+  auroraBridge.onPush(() => {
     const titleBar = auroraBridge.lastTitleBarText
     const dateMatch = titleBar?.match(
       /\s{2,}(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/
@@ -132,18 +127,8 @@ export async function bootstrap(): Promise<void> {
     let gameDateStr: string | null = null
     if (dateMatch) {
       const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
       ]
       const day = parseInt(dateMatch[1])
       const month = monthNames.indexOf(dateMatch[2]) + 1
@@ -161,8 +146,17 @@ export async function bootstrap(): Promise<void> {
       game.lastGameDate = gameDateStr
       addOrUpdateGame(game).catch(() => {})
     }
+  })
 
-    // Government briefing generation — will be expanded with ministry routing
+  // LLM analysis — throttled to 5s
+  let lastAnalysis = 0
+
+  auroraBridge.onPush(async () => {
+    const now = Date.now()
+    if (now - lastAnalysis < 5000) return
+    lastAnalysis = now
+
+    const game = gameSession.currentGame
     const gov = game?.government
     if (!gov) return
 

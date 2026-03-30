@@ -90,6 +90,7 @@ export const empireIpcSchema = {
       z.array(z.number()).optional(),
       z.boolean().optional(),
       z.boolean().optional(),
+      z.boolean().optional(), // forceOffline
     ]),
     return: z.any(),
   },

@@ -74,8 +74,9 @@ export class EmpireApi extends ConveyorApi {
     offset?: number,
     eventTypes?: number[],
     onlyCustomized?: boolean,
-    showHidden?: boolean
-  ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden)
+    showHidden?: boolean,
+    forceOffline?: boolean
+  ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden, forceOffline)
   getEventTypes = () => this.invoke('empire:getEventTypes')
 
   // Bridge diagnostics
