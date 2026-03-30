@@ -1,5 +1,0 @@
-export { PersonalityMatcher } from './PersonalityMatcher'
-export { ArchetypeSelector } from './ArchetypeSelector'
-export { IdeologyInputs } from './IdeologyInputs'
-export { MatchResultCard } from './MatchResultCard'
-export { MatchResultsList } from './MatchResultsList'
