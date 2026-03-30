@@ -27,10 +27,12 @@ export function PopoutShell({ moduleId }: { moduleId: string }) {
 
   if (!mod) {
     return (
-      <div className="
-        flex h-screen items-center justify-center bg-(--cic-void) text-sm
-        text-muted-foreground
-      ">
+      <div
+        className="
+          flex h-screen items-center justify-center bg-(--cic-void) text-sm
+          text-muted-foreground
+        "
+      >
         Module not found: {moduleId}
       </div>
     )

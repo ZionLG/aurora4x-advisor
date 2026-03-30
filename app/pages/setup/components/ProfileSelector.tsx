@@ -46,10 +46,12 @@ function CompatGauge({ value }: { value: number }) {
 
   return (
     <div className="flex shrink-0 items-center gap-2">
-      <div className="
-        relative h-[5px] w-16 overflow-hidden rounded-sm border
-        border-(--cic-panel-edge)/30 bg-(--cic-void)
-      ">
+      <div
+        className="
+          relative h-[5px] w-16 overflow-hidden rounded-sm border
+          border-(--cic-panel-edge)/30 bg-(--cic-void)
+        "
+      >
         <div
           className="
             absolute inset-y-0 left-0 rounded-sm transition-all duration-700
@@ -91,9 +93,12 @@ function PersonalitySection({ flavor }: { flavor: string }) {
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="h-3 w-1 rounded-full bg-(--cic-cyan-dim)/50" />
-          <span className="
-            text-[8px] font-semibold tracking-wider text-foreground/30 uppercase
-          ">
+          <span
+            className="
+              text-[8px] font-semibold tracking-wider text-foreground/30
+              uppercase
+            "
+          >
             Personality Profile
           </span>
           <div className="h-px w-12 bg-(--cic-cyan-dim)/15" />
@@ -171,27 +176,35 @@ export function ProfileSelector({
   }, [ideology, customProfiles])
 
   return (
-    <div className="
-      grid grid-cols-1 gap-4
-      lg:grid-cols-5
-    ">
+    <div
+      className="
+        grid grid-cols-1 gap-4
+        lg:grid-cols-5
+      "
+    >
       {/* ── Profile Dossier List ── */}
-      <div className="
-        flex h-[420px] flex-col overflow-hidden rounded-md border
-        border-(--cic-panel-edge) bg-(--cic-panel)
-        lg:col-span-2
-      ">
+      <div
+        className="
+          flex h-[420px] flex-col overflow-hidden rounded-md border
+          border-(--cic-panel-edge) bg-(--cic-panel)
+          lg:col-span-2
+        "
+      >
         {/* Header */}
-        <div className="
-          flex shrink-0 items-center justify-between border-b
-          border-(--cic-panel-edge) bg-(--cic-void)/40 px-3 py-2
-        ">
+        <div
+          className="
+            flex shrink-0 items-center justify-between border-b
+            border-(--cic-panel-edge) bg-(--cic-void)/40 px-3 py-2
+          "
+        >
           <div className="flex items-center gap-2">
             <div className="size-1.5 rounded-full bg-(--cic-cyan-dim)/60" />
-            <span className="
-              text-[8px] font-semibold tracking-[0.15em] text-foreground/30
-              uppercase
-            ">
+            <span
+              className="
+                text-[8px] font-semibold tracking-[0.15em] text-foreground/30
+                uppercase
+              "
+            >
               {scoredProfiles.length} Profiles
             </span>
           </div>
@@ -213,9 +226,7 @@ export function ProfileSelector({
                 className={`
                   group relative w-full px-4 py-3 text-left transition-all
                   duration-200
-                  ${
-                  i > 0 ? 'border-t border-(--cic-panel-edge)' : ''
-                }
+                  ${i > 0 ? 'border-t border-(--cic-panel-edge)' : ''}
                 `}
                 style={{
                   background: isSelected ? 'var(--cic-cyan-glow)' : 'transparent',
@@ -233,11 +244,13 @@ export function ProfileSelector({
                   }}
                 />
                 {!isSelected && (
-                  <div className="
-                    absolute inset-y-0 left-0 w-[2px] bg-(--cic-cyan-dim)
-                    opacity-0 transition-opacity duration-200
-                    group-hover:opacity-60
-                  " />
+                  <div
+                    className="
+                      absolute inset-y-0 left-0 w-[2px] bg-(--cic-cyan-dim)
+                      opacity-0 transition-opacity duration-200
+                      group-hover:opacity-60
+                    "
+                  />
                 )}
 
                 {/* Top accent line — archetype color, visible on selected */}
@@ -255,22 +268,26 @@ export function ProfileSelector({
                       absolute top-2 right-2 z-10 transition-opacity
                       duration-200
                       ${
-                      isSelected ? 'opacity-70' : `
-                        opacity-0
-                        group-hover:opacity-100
-                      `
-                    }
+                        isSelected
+                          ? 'opacity-70'
+                          : `
+                            opacity-0
+                            group-hover:opacity-100
+                          `
+                      }
                     `}
                     onClick={(e) => {
                       e.stopPropagation()
                       deleteMutation.mutate(preset.profile.id)
                     }}
                   >
-                    <X className="
-                      size-3.5 cursor-pointer text-muted-foreground/70
-                      transition-colors
-                      hover:text-(--cic-red)
-                    " />
+                    <X
+                      className="
+                        size-3.5 cursor-pointer text-muted-foreground/70
+                        transition-colors
+                        hover:text-(--cic-red)
+                      "
+                    />
                   </div>
                 )}
 
@@ -281,13 +298,13 @@ export function ProfileSelector({
                       className={`
                         size-3.5 shrink-0 transition-colors duration-200
                         ${
-                        isSelected
-                          ? 'text-(--cic-cyan)'
-                          : `
-                            text-muted-foreground/50
-                            group-hover:text-foreground/30
-                          `
-                      }
+                          isSelected
+                            ? 'text-(--cic-cyan)'
+                            : `
+                              text-muted-foreground/50
+                              group-hover:text-foreground/30
+                            `
+                        }
                       `}
                     />
                     <span
@@ -295,11 +312,13 @@ export function ProfileSelector({
                         truncate text-xs font-semibold transition-colors
                         duration-200
                         ${
-                        isSelected ? 'text-(--cic-cyan)' : `
-                          text-foreground/65
-                          group-hover:text-foreground/90
-                        `
-                      }
+                          isSelected
+                            ? 'text-(--cic-cyan)'
+                            : `
+                              text-foreground/65
+                              group-hover:text-foreground/90
+                            `
+                        }
                       `}
                     >
                       {preset.profile.name}
@@ -311,11 +330,13 @@ export function ProfileSelector({
                 {/* Row 2: Badge + File designation */}
                 <div className="mt-1.5 flex items-center gap-2">
                   {isCustom ? (
-                    <span className="
-                      shrink-0 rounded-sm border border-(--cic-cyan-dim)/20
-                      bg-(--cic-cyan-glow) px-1.5 py-0.5 text-[7px] font-bold
-                      tracking-wider text-(--cic-cyan-dim) uppercase
-                    ">
+                    <span
+                      className="
+                        shrink-0 rounded-sm border border-(--cic-cyan-dim)/20
+                        bg-(--cic-cyan-glow) px-1.5 py-0.5 text-[7px] font-bold
+                        tracking-wider text-(--cic-cyan-dim) uppercase
+                      "
+                    >
                       Custom
                     </span>
                   ) : (
@@ -333,16 +354,20 @@ export function ProfileSelector({
                       {presetArch?.name}
                     </span>
                   )}
-                  <span className="
-                    font-mono text-[7px] text-muted-foreground/25
-                  ">PRF-{fileNum}</span>
+                  <span
+                    className="font-mono text-[7px] text-muted-foreground/25"
+                  >
+                    PRF-{fileNum}
+                  </span>
                 </div>
 
                 {/* Row 3: Description */}
-                <p className="
-                  mt-1 line-clamp-2 pr-5 text-[9px] leading-relaxed
-                  text-muted-foreground
-                ">
+                <p
+                  className="
+                    mt-1 line-clamp-2 pr-5 text-[9px] leading-relaxed
+                    text-muted-foreground
+                  "
+                >
                   {preset.profile.description}
                 </p>
               </button>
@@ -376,24 +401,26 @@ export function ProfileSelector({
                 className={`
                   size-3 transition-colors
                   ${
-                  creatingCustom
-                    ? 'text-(--cic-amber)'
-                    : `
-                      text-muted-foreground
-                      group-hover:text-(--cic-amber-dim)
-                    `
-                }
+                    creatingCustom
+                      ? 'text-(--cic-amber)'
+                      : `
+                        text-muted-foreground
+                        group-hover:text-(--cic-amber-dim)
+                      `
+                  }
                 `}
               />
               <span
                 className={`
                   text-[11px] font-semibold transition-colors
                   ${
-                  creatingCustom ? 'text-(--cic-amber)' : `
-                    text-foreground/35
-                    group-hover:text-foreground/60
-                  `
-                }
+                    creatingCustom
+                      ? 'text-(--cic-amber)'
+                      : `
+                        text-foreground/35
+                        group-hover:text-foreground/60
+                      `
+                  }
                 `}
               >
                 Create Custom Profile
@@ -404,16 +431,18 @@ export function ProfileSelector({
       </div>
 
       {/* ── Detail / Editor Panel ── */}
-      <div className="
-        flex h-[420px] flex-col overflow-hidden rounded-md border
-        border-(--cic-panel-edge) bg-(--cic-panel)
-        lg:col-span-3
-      ">
+      <div
+        className="
+          flex h-[420px] flex-col overflow-hidden rounded-md border
+          border-(--cic-panel-edge) bg-(--cic-panel)
+          lg:col-span-3
+        "
+      >
         {/* Empty state */}
         {!selectedProfile && !creatingCustom && (
-          <div className="
-            flex h-full flex-col items-center justify-center gap-3
-          ">
+          <div
+            className="flex h-full flex-col items-center justify-center gap-3"
+          >
             <div className="relative">
               <FileText className="size-8 text-(--cic-panel-edge)" />
             </div>
@@ -434,19 +463,27 @@ export function ProfileSelector({
             return (
               <div className="flex h-full flex-col">
                 {/* Classification bar */}
-                <div className="
-                  flex shrink-0 items-center justify-between border-b
-                  border-(--cic-panel-edge)/50 bg-(--cic-void)/60 px-4 py-1
-                ">
-                  <span className="
-                    font-mono text-[7px] tracking-wider text-muted-foreground/35
-                    uppercase
-                  ">
+                <div
+                  className="
+                    flex shrink-0 items-center justify-between border-b
+                    border-(--cic-panel-edge)/50 bg-(--cic-void)/60 px-4 py-1
+                  "
+                >
+                  <span
+                    className="
+                      font-mono text-[7px] tracking-wider
+                      text-muted-foreground/35 uppercase
+                    "
+                  >
                     Classification: {archetypes.find((a) => a.id === selectedProfile.archetype)?.name ?? 'Custom'}
                   </span>
-                  <span className="
-                    font-mono text-[7px] text-(--cic-cyan-dim)/40 uppercase
-                  ">Dossier Active</span>
+                  <span
+                    className="
+                      font-mono text-[7px] text-(--cic-cyan-dim)/40 uppercase
+                    "
+                  >
+                    Dossier Active
+                  </span>
                 </div>
 
                 {/* Dossier header */}
@@ -512,13 +549,15 @@ export function ProfileSelector({
                   {/* Keywords */}
                   <div>
                     <div className="mb-2 flex items-center gap-2">
-                      <div className="
-                        h-3 w-1 rounded-full bg-(--cic-amber-dim)/50
-                      " />
-                      <span className="
-                        text-[8px] font-semibold tracking-wider
-                        text-foreground/30 uppercase
-                      ">
+                      <div
+                        className="h-3 w-1 rounded-full bg-(--cic-amber-dim)/50"
+                      />
+                      <span
+                        className="
+                          text-[8px] font-semibold tracking-wider
+                          text-foreground/30 uppercase
+                        "
+                      >
                         Signature Keywords
                       </span>
                       <div className="h-px w-12 bg-(--cic-amber-dim)/15" />
@@ -543,10 +582,12 @@ export function ProfileSelector({
                   <div>
                     <div className="mb-2 flex items-center gap-2">
                       <div className="h-3 w-1 rounded-full bg-(--cic-green)/40" />
-                      <span className="
-                        text-[8px] font-semibold tracking-wider
-                        text-foreground/30 uppercase
-                      ">
+                      <span
+                        className="
+                          text-[8px] font-semibold tracking-wider
+                          text-foreground/30 uppercase
+                        "
+                      >
                         Default Ministries
                       </span>
                       <div className="h-px w-12 bg-(--cic-green)/15" />
@@ -561,16 +602,24 @@ export function ProfileSelector({
                             px-2.5 py-1.5
                           "
                         >
-                          <div className="
-                            size-1.5 rounded-full bg-(--cic-green)/60
-                          " />
-                          <span className="
-                            text-[9px] font-medium text-foreground/50
-                          ">{m.name}</span>
-                          <span className="
-                            ml-auto font-mono text-[7px]
-                            text-muted-foreground/50
-                          ">
+                          <div
+                            className="
+                              size-1.5 rounded-full bg-(--cic-green)/60
+                            "
+                          />
+                          <span
+                            className="
+                              text-[9px] font-medium text-foreground/50
+                            "
+                          >
+                            {m.name}
+                          </span>
+                          <span
+                            className="
+                              ml-auto font-mono text-[7px]
+                              text-muted-foreground/50
+                            "
+                          >
                             {m.tags.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(' \u00b7 ')}
                           </span>
                         </div>

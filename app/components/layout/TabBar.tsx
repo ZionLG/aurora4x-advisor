@@ -43,13 +43,13 @@ function SortableTab({
         group flex max-w-[180px] min-w-[100px] cursor-pointer items-center
         gap-1.5 border-b-2 px-3 py-1.5 transition-colors select-none
         ${
-        isActive
-          ? `border-(--cic-cyan) bg-(--cic-void) text-(--cic-cyan)`
-          : `
-            border-transparent text-muted-foreground/60
-            hover:bg-(--cic-void)/50 hover:text-foreground/70
-          `
-      }
+          isActive
+            ? `border-(--cic-cyan) bg-(--cic-void) text-(--cic-cyan)`
+            : `
+              border-transparent text-muted-foreground/60
+              hover:bg-(--cic-void)/50 hover:text-foreground/70
+            `
+        }
         ${isDragging ? 'rounded-t shadow-lg' : ''}
       `}
     >
@@ -61,17 +61,17 @@ function SortableTab({
         className={`
           shrink-0 rounded-sm p-0.5 transition-colors
           ${
-          isActive
-            ? `
-              text-(--cic-cyan)/50
-              hover:bg-(--cic-cyan-glow) hover:text-(--cic-cyan)
-            `
-            : `
-              text-muted-foreground/40 opacity-0
-              group-hover:opacity-100
-              hover:bg-(--cic-panel-edge) hover:text-foreground/60
-            `
-        }
+            isActive
+              ? `
+                text-(--cic-cyan)/50
+                hover:bg-(--cic-cyan-glow) hover:text-(--cic-cyan)
+              `
+              : `
+                text-muted-foreground/40 opacity-0
+                group-hover:opacity-100
+                hover:bg-(--cic-panel-edge) hover:text-foreground/60
+              `
+          }
         `}
       >
         <X className="size-2.5" />
@@ -163,10 +163,12 @@ export function TabBar() {
   }
 
   return (
-    <div className="
-      flex shrink-0 items-end overflow-x-auto border-b border-(--cic-panel-edge)
-      bg-(--cic-panel) px-1
-    ">
+    <div
+      className="
+        flex shrink-0 items-end overflow-x-auto border-b
+        border-(--cic-panel-edge) bg-(--cic-panel) px-1
+      "
+    >
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={tabs.map((t) => t.id)} strategy={horizontalListSortingStrategy}>
           {tabs.map((tab) => (

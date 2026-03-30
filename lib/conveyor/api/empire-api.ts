@@ -55,8 +55,18 @@ export class EmpireApi extends ConveyorApi {
   getHabitability = () => this.invoke('empire:getHabitability')
   getSpeciesRequirements = () => this.invoke('empire:getSpeciesRequirements')
 
-  // Production recap
+  // Production recap (monolithic)
   getProductionRecap = () => this.invoke('empire:getProductionRecap')
+
+  // Production recap (granular - shared cache, forceOffline bypasses bridge)
+  getBodyMap = (forceOffline?: boolean) => this.invoke('empire:getBodyMap', forceOffline ?? false)
+  getPopCapacities = (forceOffline?: boolean) => this.invoke('empire:getPopCapacities', forceOffline ?? false)
+  getRecapResearch = (forceOffline?: boolean) => this.invoke('empire:getRecapResearch', forceOffline ?? false)
+  getRecapIndustrial = (forceOffline?: boolean) => this.invoke('empire:getRecapIndustrial', forceOffline ?? false)
+  getRecapShips = (forceOffline?: boolean) => this.invoke('empire:getRecapShips', forceOffline ?? false)
+  getRecapShipyards = (forceOffline?: boolean) => this.invoke('empire:getRecapShipyards', forceOffline ?? false)
+  getRecapTraining = (forceOffline?: boolean) => this.invoke('empire:getRecapTraining', forceOffline ?? false)
+  getRecapTerraforming = (forceOffline?: boolean) => this.invoke('empire:getRecapTerraforming', forceOffline ?? false)
 
   // Game log
   getGameLog = (

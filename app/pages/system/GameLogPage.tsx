@@ -128,9 +128,11 @@ const columns: ColumnDef<GameLogEntry>[] = [
     header: 'Date',
     size: 80,
     cell: ({ row }) => (
-      <span className="
-        font-mono text-[9px] whitespace-nowrap text-muted-foreground/60
-      ">
+      <span
+        className="
+          font-mono text-[9px] whitespace-nowrap text-muted-foreground/60
+        "
+      >
         {row.original.formattedDate}
       </span>
     ),
@@ -256,10 +258,12 @@ export function GameLogPage() {
   return (
     <div className="flex h-full flex-col bg-(--cic-void)">
       {/* Header */}
-      <div className="
-        flex shrink-0 items-center justify-between border-b
-        border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2.5
-      ">
+      <div
+        className="
+          flex shrink-0 items-center justify-between border-b
+          border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2.5
+        "
+      >
         <div className="flex items-center gap-3">
           <ScrollText className="size-4 text-(--cic-amber)" />
           <span className="text-xs font-semibold text-foreground/80">Game Log</span>
@@ -267,9 +271,11 @@ export function GameLogPage() {
             {totalCount.toLocaleString()} events
             {entries.length !== allEntries.length && ` (${entries.length} shown)`}
           </span>
-          {isFetching && !isLoading && <Loader2 className="
-            size-3 animate-spin text-(--cic-cyan-dim)
-          " />}
+          {isFetching && !isLoading && (
+            <Loader2
+              className="size-3 animate-spin text-(--cic-cyan-dim)"
+            />
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Input
@@ -295,17 +301,21 @@ export function GameLogPage() {
           >
             <Filter className="size-3" />
             {selectedTypes.length > 0 && (
-              <span className="
-                ml-1 rounded-full bg-(--cic-cyan) px-1 text-[8px]
-                text-(--cic-void)
-              ">
+              <span
+                className="
+                  ml-1 rounded-full bg-(--cic-cyan) px-1 text-[8px]
+                  text-(--cic-void)
+                "
+              >
                 {selectedTypes.length}
               </span>
             )}
           </Button>
-          <div className="
-            flex items-center gap-1 font-mono text-[9px] text-muted-foreground
-          ">
+          <div
+            className="
+              flex items-center gap-1 font-mono text-[9px] text-muted-foreground
+            "
+          >
             <Button size="icon-xs" variant="ghost" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
               <ChevronLeft className="size-3" />
             </Button>
@@ -326,10 +336,12 @@ export function GameLogPage() {
 
       {/* Filter panel */}
       {filterOpen && (
-        <div className="
-          shrink-0 space-y-2 border-b border-(--cic-panel-edge)
-          bg-(--cic-panel)/80 px-4 py-2.5
-        ">
+        <div
+          className="
+            shrink-0 space-y-2 border-b border-(--cic-panel-edge)
+            bg-(--cic-panel)/80 px-4 py-2.5
+          "
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
@@ -361,10 +373,10 @@ export function GameLogPage() {
               className={`
                 text-[8px] text-muted-foreground
                 ${
-                selectedTypes.length > 0 || hideNonCustomized || showHidden || searchText || tagSearch
-                  ? 'visible'
-                  : 'invisible'
-              }
+                  selectedTypes.length > 0 || hideNonCustomized || showHidden || searchText || tagSearch
+                    ? 'visible'
+                    : 'invisible'
+                }
               `}
               onClick={clearFilters}
             >
@@ -462,9 +474,11 @@ export function GameLogPage() {
                   Active in Log ({withEntries.length})
                 </button>
                 {expandedSections.has('active') && (
-                  <div className="
-                    mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
-                  ">
+                  <div
+                    className="
+                      mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
+                    "
+                  >
                     {withEntries.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
@@ -474,13 +488,18 @@ export function GameLogPage() {
                           className={`
                             h-5 cursor-pointer px-2 py-0.5 text-[8px]
                             transition-all
-                            ${active ? `
-                              border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
-                              text-(--cic-cyan)
-                            ` : `
-                              border-(--cic-panel-edge) text-muted-foreground/60
-                              hover:text-foreground/70
-                            `}
+                            ${
+                              active
+                                ? `
+                                  border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                                  text-(--cic-cyan)
+                                `
+                                : `
+                                  border-(--cic-panel-edge)
+                                  text-muted-foreground/60
+                                  hover:text-foreground/70
+                                `
+                            }
                           `}
                           onClick={() => toggleType(t.id)}
                         >
@@ -529,13 +548,17 @@ export function GameLogPage() {
                           className={`
                             h-5 cursor-pointer px-2 py-0.5 text-[8px]
                             transition-all
-                            ${active ? `
-                              border-(--cic-red)/40 bg-(--cic-red)/5
-                              text-(--cic-red)
-                            ` : `
-                              border-(--cic-panel-edge) text-muted-foreground/40
-                              line-through
-                            `}
+                            ${
+                              active
+                                ? `
+                                  border-(--cic-red)/40 bg-(--cic-red)/5
+                                  text-(--cic-red)
+                                `
+                                : `
+                                  border-(--cic-panel-edge)
+                                  text-muted-foreground/40 line-through
+                                `
+                            }
                           `}
                           onClick={() => toggleType(t.id)}
                         >
@@ -575,9 +598,11 @@ export function GameLogPage() {
                   All Types ({noEntries.length})
                 </button>
                 {expandedSections.has('all') && (
-                  <div className="
-                    mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
-                  ">
+                  <div
+                    className="
+                      mt-1 flex max-h-[120px] flex-wrap gap-1 overflow-y-auto
+                    "
+                  >
                     {noEntries.map((t) => {
                       const active = selectedTypes.includes(t.id)
                       return (
@@ -587,13 +612,18 @@ export function GameLogPage() {
                           className={`
                             h-4 cursor-pointer px-1.5 py-0 text-[7px]
                             transition-all
-                            ${active ? `
-                              border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
-                              text-(--cic-cyan)
-                            ` : `
-                              border-(--cic-panel-edge) text-muted-foreground/30
-                              hover:text-muted-foreground/50
-                            `}
+                            ${
+                              active
+                                ? `
+                                  border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                                  text-(--cic-cyan)
+                                `
+                                : `
+                                  border-(--cic-panel-edge)
+                                  text-muted-foreground/30
+                                  hover:text-muted-foreground/50
+                                `
+                            }
                           `}
                           onClick={() => toggleType(t.id)}
                         >
@@ -615,10 +645,12 @@ export function GameLogPage() {
           <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="
-          flex flex-1 items-center justify-center text-[10px]
-          text-muted-foreground
-        ">
+        <div
+          className="
+            flex flex-1 items-center justify-center text-[10px]
+            text-muted-foreground
+          "
+        >
           {allEntries.length > 0 ? 'All entries hidden by filters' : 'No log entries found'}
         </div>
       ) : (
@@ -626,10 +658,13 @@ export function GameLogPage() {
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-(--cic-panel)">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="
-                  border-b border-(--cic-panel-edge)
-                  hover:bg-transparent
-                ">
+                <TableRow
+                  key={headerGroup.id}
+                  className="
+                    border-b border-(--cic-panel-edge)
+                    hover:bg-transparent
+                  "
+                >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}

@@ -58,8 +58,18 @@ export const empireIpcSchema = {
   // Actions (bridge UI automation)
   'empire:executeAction': { args: z.tuple([ActionRequestSchema]), return: z.any() },
 
-  // Production recap
+  // Production recap (monolithic - kept for compat)
   'empire:getProductionRecap': { args: z.tuple([]), return: z.any() },
+
+  // Production recap (granular - shared cache, forceOffline param)
+  'empire:getBodyMap': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getPopCapacities': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapResearch': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapIndustrial': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapShips': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapShipyards': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapTraining': { args: z.tuple([z.boolean()]), return: z.any() },
+  'empire:getRecapTerraforming': { args: z.tuple([z.boolean()]), return: z.any() },
 
   // Production & shipyards
   'empire:getProduction': { args: z.tuple([]), return: z.any() },

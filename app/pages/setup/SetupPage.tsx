@@ -84,23 +84,33 @@ function SectionDivider({
 }) {
   return (
     <div className="mb-4 flex items-center gap-3">
-      <div className="
-        flex size-7 items-center justify-center rounded-sm border
-        border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
-      ">
+      <div
+        className="
+          flex size-7 items-center justify-center rounded-sm border
+          border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
+        "
+      >
         <Icon className="size-3.5 text-(--cic-amber)" />
       </div>
       <div className="flex flex-1 items-center gap-2">
-        <span className="
-          text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
-          uppercase
-        ">{label}</span>
-        <div className="
-          h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
-        " />
-        <span className="
-          font-mono text-[8px] text-(--cic-amber-dim)/50 uppercase
-        ">{tag}</span>
+        <span
+          className="
+            text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
+            uppercase
+          "
+        >
+          {label}
+        </span>
+        <div
+          className="
+            h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
+          "
+        />
+        <span
+          className="font-mono text-[8px] text-(--cic-amber-dim)/50 uppercase"
+        >
+          {tag}
+        </span>
       </div>
     </div>
   )
@@ -247,19 +257,21 @@ export function SetupPage() {
   return (
     <div className="flex h-full flex-col bg-(--cic-void)">
       {/* Header */}
-      <div className="
-        shrink-0 border-b border-(--cic-panel-edge) bg-(--cic-panel)
-      ">
+      <div
+        className="shrink-0 border-b border-(--cic-panel-edge) bg-(--cic-panel)"
+      >
         <div className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="
-                cic-glow-pulse size-2 rounded-full bg-(--cic-amber)
-              " />
-              <span className="
-                text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
-                uppercase
-              ">
+              <div
+                className="cic-glow-pulse size-2 rounded-full bg-(--cic-amber)"
+              />
+              <span
+                className="
+                  text-[10px] font-semibold tracking-[0.2em] text-(--cic-amber)
+                  uppercase
+                "
+              >
                 New Campaign
               </span>
             </div>
@@ -286,10 +298,12 @@ export function SetupPage() {
           <div className="flex h-full items-center justify-center p-8">
             <div className="cic-slide-up w-full max-w-xl">
               <div className="mb-4 flex items-center gap-3">
-                <div className="
-                  flex size-8 items-center justify-center rounded-sm border
-                  border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
-                ">
+                <div
+                  className="
+                    flex size-8 items-center justify-center rounded-sm border
+                    border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
+                  "
+                >
                   <Target className="size-4 text-(--cic-cyan)" />
                 </div>
                 <div>
@@ -297,26 +311,32 @@ export function SetupPage() {
                   <p className="text-[9px] text-foreground/40">Select a campaign from Aurora&apos;s database</p>
                 </div>
               </div>
-              <div className="
-                overflow-hidden rounded-md border border-(--cic-panel-edge)
-                bg-(--cic-panel)
-              ">
+              <div
+                className="
+                  overflow-hidden rounded-md border border-(--cic-panel-edge)
+                  bg-(--cic-panel)
+                "
+              >
                 {isLoading && (
                   <div className="flex flex-col items-center gap-3 py-12">
-                    <Loader2 className="
-                      size-5 animate-spin text-(--cic-cyan-dim)
-                    " />
-                    <span className="
-                      font-mono text-[10px] text-(--cic-cyan-dim)
-                    ">Scanning...</span>
+                    <Loader2
+                      className="size-5 animate-spin text-(--cic-cyan-dim)"
+                    />
+                    <span
+                      className="font-mono text-[10px] text-(--cic-cyan-dim)"
+                    >
+                      Scanning...
+                    </span>
                   </div>
                 )}
                 {error && (
                   <div className="space-y-3 p-5">
-                    <div className="
-                      rounded-sm border-l-2 border-(--cic-red) bg-(--cic-red)/5
-                      p-3
-                    ">
+                    <div
+                      className="
+                        rounded-sm border-l-2 border-(--cic-red)
+                        bg-(--cic-red)/5 p-3
+                      "
+                    >
                       <p className="text-[10px] text-foreground/40">Check database path in Settings.</p>
                     </div>
                     <Button size="sm" variant="outline" onClick={() => refetch()}>
@@ -349,10 +369,10 @@ export function SetupPage() {
                             transition-[background-color,box-shadow]
                             duration-300 ease-out
                             ${
-                            isSel ? 'bg-(--cic-cyan-glow)' : `
-                              hover:bg-(--cic-cyan-glow)
-                            `
-                          }
+                              isSel
+                                ? 'bg-(--cic-cyan-glow)'
+                                : `hover:bg-(--cic-cyan-glow)`
+                            }
                           `}
                         >
                           {/* Left accent bar */}
@@ -361,11 +381,13 @@ export function SetupPage() {
                               absolute inset-y-0 left-0 transition-all
                               duration-300 ease-out
                               ${
-                              isSel ? 'w-[3px]' : `
-                                w-[2px]
-                                group-hover:w-[3px]
-                              `
-                            }
+                                isSel
+                                  ? 'w-[3px]'
+                                  : `
+                                    w-[2px]
+                                    group-hover:w-[3px]
+                                  `
+                              }
                             `}
                             style={{
                               background: isSel ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)',
@@ -393,9 +415,7 @@ export function SetupPage() {
                                 className={`
                                   size-1.5 rounded-full transition-all
                                   duration-300 ease-out
-                                  ${
-                                  !isSel ? 'group-hover:scale-110' : ''
-                                }
+                                  ${!isSel ? 'group-hover:scale-110' : ''}
                                 `}
                                 style={{
                                   background: isSel ? 'var(--cic-cyan)' : 'var(--cic-panel-edge)',
@@ -407,21 +427,25 @@ export function SetupPage() {
                                   text-[11px] font-medium transition-colors
                                   duration-300 ease-out
                                   ${
-                                  isSel ? 'text-(--cic-cyan)' : `
-                                    text-foreground/50
-                                    group-hover:text-foreground
-                                  `
-                                }
+                                    isSel
+                                      ? 'text-(--cic-cyan)'
+                                      : `
+                                        text-foreground/50
+                                        group-hover:text-foreground
+                                      `
+                                  }
                                 `}
                               >
                                 {game.gameName}
                               </span>
                             </div>
-                            <span className="
-                              rounded-sm border border-(--cic-amber-dim)/20
-                              bg-(--cic-amber-glow) px-1.5 py-0.5 text-[7px]
-                              font-bold text-(--cic-amber-dim) uppercase
-                            ">
+                            <span
+                              className="
+                                rounded-sm border border-(--cic-amber-dim)/20
+                                bg-(--cic-amber-glow) px-1.5 py-0.5 text-[7px]
+                                font-bold text-(--cic-amber-dim) uppercase
+                              "
+                            >
                               {game.techLevel}
                             </span>
                           </div>
@@ -430,11 +454,13 @@ export function SetupPage() {
                               mt-1 ml-3.5 text-[9px] transition-colors
                               duration-300 ease-out
                               ${
-                              isSel ? 'text-foreground/40' : `
-                                text-foreground/30
-                                group-hover:text-foreground/50
-                              `
-                            }
+                                isSel
+                                  ? 'text-foreground/40'
+                                  : `
+                                    text-foreground/30
+                                    group-hover:text-foreground/50
+                                  `
+                              }
                             `}
                           >
                             {game.empireName} — Year {game.startingYear}
@@ -445,33 +471,45 @@ export function SetupPage() {
                   </div>
                 )}
                 {alreadyTracked.length > 0 && (
-                  <div className="
-                    border-t border-(--cic-panel-edge) bg-(--cic-void)/50 px-4
-                    py-3
-                  ">
-                    <p className="
-                      mb-1.5 text-[8px] font-semibold tracking-wider
-                      text-muted-foreground/70 uppercase
-                    ">
+                  <div
+                    className="
+                      border-t border-(--cic-panel-edge) bg-(--cic-void)/50 px-4
+                      py-3
+                    "
+                  >
+                    <p
+                      className="
+                        mb-1.5 text-[8px] font-semibold tracking-wider
+                        text-muted-foreground/70 uppercase
+                      "
+                    >
                       Already Tracked ({alreadyTracked.length})
                     </p>
                     {alreadyTracked.map((g: GameInfo) => (
-                      <p key={g.auroraGameId} className="
-                        ml-3.5 py-0.5 text-[9px] text-muted-foreground/70
-                      ">
+                      <p
+                        key={g.auroraGameId}
+                        className="
+                          ml-3.5 py-0.5 text-[9px] text-muted-foreground/70
+                        "
+                      >
                         {g.gameName}
                       </p>
                     ))}
                   </div>
                 )}
-                <div className="
-                  flex items-center justify-between border-t
-                  border-(--cic-panel-edge) bg-(--cic-void)/30 px-4 py-3
-                ">
+                <div
+                  className="
+                    flex items-center justify-between border-t
+                    border-(--cic-panel-edge) bg-(--cic-void)/30 px-4 py-3
+                  "
+                >
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" className="
-                      text-foreground/40
-                    " onClick={() => navigate('/')}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-foreground/40"
+                      onClick={() => navigate('/')}
+                    >
                       <ArrowLeft className="size-3" />
                       Cancel
                     </Button>
@@ -517,9 +555,11 @@ export function SetupPage() {
               <div>
                 <h2 className="text-base font-semibold text-foreground/90">
                   Form Government{' '}
-                  <span className="
-                    ml-2 text-[11px] font-normal text-(--cic-cyan)
-                  ">{selectedGame?.gameName}</span>
+                  <span
+                    className="ml-2 text-[11px] font-normal text-(--cic-cyan)"
+                  >
+                    {selectedGame?.gameName}
+                  </span>
                 </h2>
                 <p className="mt-0.5 text-[10px] text-foreground/35">
                   Select a government profile — this defines how your AI government speaks and thinks.
@@ -529,18 +569,24 @@ export function SetupPage() {
                 <Button size="sm" variant="ghost" className="text-foreground/40" onClick={() => setStep('pick-game')}>
                   <ArrowLeft className="size-3" /> Back
                 </Button>
-                <div className="
-                  flex items-center gap-2 rounded-md border
-                  border-(--cic-panel-edge) bg-(--cic-panel) px-2.5 py-1.5
-                ">
-                  <BrainCog className={`
-                    size-3
-                    ${noAi ? `text-(--cic-amber)` : `text-muted-foreground`}
-                  `} />
-                  <span className={`
-                    text-[9px] font-medium
-                    ${noAi ? `text-(--cic-amber)` : `text-foreground/30`}
-                  `}>
+                <div
+                  className="
+                    flex items-center gap-2 rounded-md border
+                    border-(--cic-panel-edge) bg-(--cic-panel) px-2.5 py-1.5
+                  "
+                >
+                  <BrainCog
+                    className={`
+                      size-3
+                      ${noAi ? `text-(--cic-amber)` : `text-muted-foreground`}
+                    `}
+                  />
+                  <span
+                    className={`
+                      text-[9px] font-medium
+                      ${noAi ? `text-(--cic-amber)` : `text-foreground/30`}
+                    `}
+                  >
                     No AI
                   </span>
                   <Switch
@@ -561,10 +607,10 @@ export function SetupPage() {
                 className={`
                   flex items-start gap-3 rounded-md border px-4 py-3
                   ${
-                  aiUnavailable
-                    ? 'border-(--cic-red)/30 bg-(--cic-red)/5'
-                    : `border-(--cic-amber-dim)/40 bg-(--cic-amber-glow)`
-                }
+                    aiUnavailable
+                      ? 'border-(--cic-red)/30 bg-(--cic-red)/5'
+                      : `border-(--cic-amber-dim)/40 bg-(--cic-amber-glow)`
+                  }
                 `}
               >
                 <AlertTriangle
@@ -577,16 +623,20 @@ export function SetupPage() {
                   <p
                     className={`
                       text-[10px] font-semibold
-                      ${aiUnavailable ? `text-(--cic-red)` : `
-                        text-(--cic-amber)
-                      `}
+                      ${
+                        aiUnavailable
+                          ? `text-(--cic-red)`
+                          : `text-(--cic-amber)`
+                      }
                     `}
                   >
                     {aiUnavailable ? 'AI Provider Not Available' : 'AI Advisor Disabled'}
                   </p>
-                  <p className="
-                    mt-0.5 text-[9px] leading-relaxed text-foreground/40
-                  ">
+                  <p
+                    className="
+                      mt-0.5 text-[9px] leading-relaxed text-foreground/40
+                    "
+                  >
                     {aiUnavailable
                       ? 'No AI provider is configured or reachable. Configure one in Settings to enable AI-generated briefings. You can still create ministries for event routing.'
                       : 'Events will display as raw data only — no AI-generated briefings, analysis, or in-character responses. You can still create ministries for event routing and categorization.'}{' '}
@@ -597,15 +647,19 @@ export function SetupPage() {
             )}
 
             {/* Ideology — disabled when noAi */}
-            <section className={`
-              relative
-              ${noAi ? 'pointer-events-none' : ''}
-            `}>
+            <section
+              className={`
+                relative
+                ${noAi ? 'pointer-events-none' : ''}
+              `}
+            >
               {noAi && (
-                <div className="
-                  absolute inset-0 z-10 flex items-center justify-center
-                  rounded-md bg-(--cic-void)/70
-                ">
+                <div
+                  className="
+                    absolute inset-0 z-10 flex items-center justify-center
+                    rounded-md bg-(--cic-void)/70
+                  "
+                >
                   <span className="font-mono text-[10px] text-muted-foreground">AI features disabled</span>
                 </div>
               )}
@@ -619,15 +673,19 @@ export function SetupPage() {
             </section>
 
             {/* Government Profile — disabled when noAi */}
-            <section className={`
-              relative
-              ${noAi ? 'pointer-events-none' : ''}
-            `}>
+            <section
+              className={`
+                relative
+                ${noAi ? 'pointer-events-none' : ''}
+              `}
+            >
               {noAi && (
-                <div className="
-                  absolute inset-0 z-10 flex items-center justify-center
-                  rounded-md bg-(--cic-void)/70
-                ">
+                <div
+                  className="
+                    absolute inset-0 z-10 flex items-center justify-center
+                    rounded-md bg-(--cic-void)/70
+                  "
+                >
                   <span className="font-mono text-[10px] text-muted-foreground">AI features disabled</span>
                 </div>
               )}
@@ -653,13 +711,15 @@ export function SetupPage() {
 
             {/* Validation + Footer */}
             {!noEmptyMinistries && ministries.length > 0 && (
-              <div className="
-                flex items-start gap-2 rounded-md border border-(--cic-red)/20
-                bg-(--cic-red)/5 px-4 py-2.5
-              ">
-                <AlertTriangle className="
-                  mt-0.5 size-3 shrink-0 text-(--cic-red)
-                " />
+              <div
+                className="
+                  flex items-start gap-2 rounded-md border border-(--cic-red)/20
+                  bg-(--cic-red)/5 px-4 py-2.5
+                "
+              >
+                <AlertTriangle
+                  className="mt-0.5 size-3 shrink-0 text-(--cic-red)"
+                />
                 <p className="text-[9px] text-(--cic-red)/70">
                   {ministries
                     .filter((m) => m.tags.length === 0)
@@ -671,13 +731,15 @@ export function SetupPage() {
               </div>
             )}
             {!allTagsCovered && noEmptyMinistries && (
-              <div className="
-                flex items-start gap-2 rounded-md border border-(--cic-red)/20
-                bg-(--cic-red)/5 px-4 py-2.5
-              ">
-                <AlertTriangle className="
-                  mt-0.5 size-3 shrink-0 text-(--cic-red)
-                " />
+              <div
+                className="
+                  flex items-start gap-2 rounded-md border border-(--cic-red)/20
+                  bg-(--cic-red)/5 px-4 py-2.5
+                "
+              >
+                <AlertTriangle
+                  className="mt-0.5 size-3 shrink-0 text-(--cic-red)"
+                />
                 <p className="text-[9px] text-(--cic-red)/70">
                   Unassigned domains:{' '}
                   {EVENT_TAGS.filter((t) => !allAssignedTags.has(t.id))
@@ -688,10 +750,12 @@ export function SetupPage() {
               </div>
             )}
             {!noAi && !activeProfile && (
-              <div className="
-                flex items-start gap-2 rounded-md border
-                border-(--cic-amber-dim)/20 bg-(--cic-amber-glow) px-4 py-2.5
-              ">
+              <div
+                className="
+                  flex items-start gap-2 rounded-md border
+                  border-(--cic-amber-dim)/20 bg-(--cic-amber-glow) px-4 py-2.5
+                "
+              >
                 <Crown className="mt-0.5 size-3 shrink-0 text-(--cic-amber-dim)" />
                 <p className="text-[9px] text-(--cic-amber-dim)/70">
                   Select a government profile above, or create a custom one.

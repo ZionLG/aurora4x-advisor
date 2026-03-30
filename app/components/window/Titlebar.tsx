@@ -28,12 +28,18 @@ export const Titlebar = () => {
   }, [menusVisible, closeActiveMenu, setMenusVisible, menuItems])
 
   return (
-    <div className={`
+    <div
+      className={`
       window-titlebar
-      ${wcontext?.platform ? `
+      ${
+        wcontext?.platform
+          ? `
         platform-${wcontext.platform}
-      ` : ''}
-    `}>
+      `
+          : ''
+      }
+    `}
+    >
       {wcontext?.platform !== 'darwin' && (
         <div className="window-titlebar-icon">
           <img src={icon} />

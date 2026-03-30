@@ -282,10 +282,20 @@ namespace AdvisorBridge
             { "a4", "GHFactor" },
             { "cd", "AGHFactor" },
 
-            // Surface
+            // Surface & Hydro
             { "a5", "DominantTerrain" },
+            { "a6", "HydroExt" },
             { "q",  "HydroType" },
             { "r",  "TectonicActivity" },
+            { "ac", "Tilt" },
+
+            // Environment
+            { "ak", "RadiationLevel" },
+            { "bm", "DustLevel" },
+            { "bq", "RGE" },
+
+            // Meta
+            { "bt", "PlanetIcon" },
 
             // Fixed body (e.g. stars, special bodies)
             { "ce", "FixedBody" },

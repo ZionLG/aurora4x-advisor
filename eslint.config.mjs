@@ -14,18 +14,26 @@ export default [
     },
     rules: {
       ...tailwindcss.configs['recommended-warn'].rules,
-      'better-tailwindcss/no-unknown-classes': ['warn', {
-        ignore: [
-          // tailwindcss-animate classes (used by shadcn/ui)
-          'animate-in', 'animate-out',
-          'fade-in-\\d*', 'fade-out-\\d*',
-          'zoom-in-\\d*', 'zoom-out-\\d*',
-          'slide-in-from-.*', 'slide-out-to-.*',
-          'spin-in-\\d*', 'spin-out-\\d*',
-          // CIC custom classes
-          'cic-.*',
-        ],
-      }],
+      'better-tailwindcss/no-unknown-classes': [
+        'warn',
+        {
+          ignore: [
+            // tailwindcss-animate classes (used by shadcn/ui)
+            'animate-in',
+            'animate-out',
+            'fade-in-\\d*',
+            'fade-out-\\d*',
+            'zoom-in-\\d*',
+            'zoom-out-\\d*',
+            'slide-in-from-.*',
+            'slide-out-to-.*',
+            'spin-in-\\d*',
+            'spin-out-\\d*',
+            // CIC custom classes
+            'cic-.*',
+          ],
+        },
+      ],
     },
   },
   {
@@ -49,7 +57,7 @@ export default [
       '.eslintignore',
       '.eslintrc',
       '.prettierrc',
-      'scripts'
+      'scripts',
     ],
   },
   eslint.configs.recommended,

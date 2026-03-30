@@ -91,10 +91,12 @@ export function Sidebar() {
   // ── Collapsed sidebar ──────────────────────────────
   if (collapsed) {
     return (
-      <aside className="
-        flex w-12 flex-col items-center border-r border-(--cic-panel-edge)
-        bg-(--cic-panel) py-2 transition-all duration-200
-      ">
+      <aside
+        className="
+          flex w-12 flex-col items-center border-r border-(--cic-panel-edge)
+          bg-(--cic-panel) py-2 transition-all duration-200
+        "
+      >
         <button
           onClick={toggleCollapsed}
           className="
@@ -119,31 +121,37 @@ export function Sidebar() {
                     flex size-8 items-center justify-center rounded-sm
                     transition-colors
                     ${
-                    isActive
-                      ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
-                      : `
-                        text-muted-foreground/60
-                        hover:bg-(--cic-cyan-glow) hover:text-foreground/70
-                      `
-                  }
+                      isActive
+                        ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
+                        : `
+                          text-muted-foreground/60
+                          hover:bg-(--cic-cyan-glow) hover:text-foreground/70
+                        `
+                    }
                   `}
                   title={cat.label}
                 >
                   <Icon className="size-3.5" />
                 </button>
                 {/* Flyout — padding-left creates a hover bridge between button and menu */}
-                <div className="
-                  absolute top-0 left-full z-50 hidden pl-1
-                  group-hover/fly:block
-                ">
-                  <div className="
-                    min-w-[160px] rounded-md border border-(--cic-panel-edge)
-                    bg-(--cic-panel) py-1 shadow-lg
-                  ">
-                    <p className="
-                      px-3 py-1 text-[8px] font-semibold tracking-wider
-                      text-(--cic-amber-dim) uppercase
-                    ">
+                <div
+                  className="
+                    absolute top-0 left-full z-50 hidden pl-1
+                    group-hover/fly:block
+                  "
+                >
+                  <div
+                    className="
+                      min-w-[160px] rounded-md border border-(--cic-panel-edge)
+                      bg-(--cic-panel) py-1 shadow-lg
+                    "
+                  >
+                    <p
+                      className="
+                        px-3 py-1 text-[8px] font-semibold tracking-wider
+                        text-(--cic-amber-dim) uppercase
+                      "
+                    >
                       {cat.label}
                     </p>
                     {modules.map((mod) => (
@@ -170,10 +178,12 @@ export function Sidebar() {
         </div>
 
         <div className="mt-auto pt-2 pb-4" title={statusLabel}>
-          <div className={`
-            size-1.5 shrink-0 rounded-full
-            ${statusDotClass}
-          `} />
+          <div
+            className={`
+              size-1.5 shrink-0 rounded-full
+              ${statusDotClass}
+            `}
+          />
         </div>
       </aside>
     )
@@ -181,10 +191,12 @@ export function Sidebar() {
 
   // ── Expanded sidebar ───────────────────────────────
   return (
-    <aside className="
-      flex h-full w-52 flex-col overflow-hidden border-r
-      border-(--cic-panel-edge) bg-(--cic-panel) transition-all duration-200
-    ">
+    <aside
+      className="
+        flex h-full w-52 flex-col overflow-hidden border-r
+        border-(--cic-panel-edge) bg-(--cic-panel) transition-all duration-200
+      "
+    >
       {/* Collapse button */}
       <div className="flex justify-end px-2 pt-2">
         <button
@@ -221,9 +233,13 @@ export function Sidebar() {
                 >
                   <Icon className="size-3" />
                   <span className="flex-1 text-left">{cat.label}</span>
-                  {isOpen ? <ChevronDown className="size-2.5" /> : <ChevronRight className="
-                    size-2.5
-                  " />}
+                  {isOpen ? (
+                    <ChevronDown className="size-2.5" />
+                  ) : (
+                    <ChevronRight
+                      className="size-2.5"
+                    />
+                  )}
                 </button>
                 {/* Module links */}
                 {isOpen && (
@@ -241,10 +257,12 @@ export function Sidebar() {
         {/* Campaigns */}
         {sortedGames.length > 0 && (
           <div className="border-t border-(--cic-panel-edge) p-2">
-            <p className="
-              mb-1 px-2 text-[8px] font-semibold tracking-[0.12em]
-              text-muted-foreground/40 uppercase
-            ">
+            <p
+              className="
+                mb-1 px-2 text-[8px] font-semibold tracking-[0.12em]
+                text-muted-foreground/40 uppercase
+              "
+            >
               Campaigns
             </p>
             {sortedGames.map((game) => {
@@ -257,15 +275,17 @@ export function Sidebar() {
                   className={`
                     group/card rounded-sm px-2 py-1.5
                     ${
-                    isActive
-                      ? `border border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)`
-                      : canSelect
+                      isActive
                         ? `
-                          cursor-pointer border border-transparent opacity-60
-                          hover:bg-(--cic-cyan-glow) hover:opacity-90
+                          border border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
                         `
-                        : 'border border-transparent opacity-40'
-                  }
+                        : canSelect
+                          ? `
+                            cursor-pointer border border-transparent opacity-60
+                            hover:bg-(--cic-cyan-glow) hover:opacity-90
+                          `
+                          : 'border border-transparent opacity-40'
+                    }
                   `}
                 >
                   <div className="flex items-center justify-between">
@@ -278,9 +298,11 @@ export function Sidebar() {
                       {game.gameInfo.gameName}
                     </span>
                     <div className="flex items-center gap-1">
-                      {isActive && <CircleDot className="
-                        size-2 shrink-0 text-(--cic-green)
-                      " />}
+                      {isActive && (
+                        <CircleDot
+                          className="size-2 shrink-0 text-(--cic-green)"
+                        />
+                      )}
                       {!isActive && (
                         <button
                           className="
@@ -316,10 +338,12 @@ export function Sidebar() {
       <div className="shrink-0 border-t border-(--cic-panel-edge) px-3 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className={`
-              size-1.5 shrink-0 rounded-full
-              ${statusDotClass}
-            `} />
+            <div
+              className={`
+                size-1.5 shrink-0 rounded-full
+                ${statusDotClass}
+              `}
+            />
             <span className="font-mono text-[9px] text-muted-foreground/60">{statusLabel}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -424,9 +448,13 @@ function ModuleLink({ mod }: { mod: ModuleDefinition }) {
     >
       <mod.icon className="size-3 shrink-0" />
       <span className="truncate">{mod.name}</span>
-      {mod.status === 'coming-soon' && <span className="
-        ml-auto text-[6px] text-muted-foreground/30
-      ">SOON</span>}
+      {mod.status === 'coming-soon' && (
+        <span
+          className="ml-auto text-[6px] text-muted-foreground/30"
+        >
+          SOON
+        </span>
+      )}
     </NavLink>
   )
 }

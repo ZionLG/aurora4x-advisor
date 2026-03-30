@@ -29,16 +29,20 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="
-            flex min-h-screen items-center justify-center bg-background p-4
-          ">
+          <div
+            className="
+              flex min-h-screen items-center justify-center bg-background p-4
+            "
+          >
             <div className="w-full max-w-lg space-y-6">
               {/* Error Icon */}
               <div className="flex justify-center">
-                <div className="
-                  flex size-16 items-center justify-center rounded-full
-                  bg-destructive/10
-                ">
+                <div
+                  className="
+                    flex size-16 items-center justify-center rounded-full
+                    bg-destructive/10
+                  "
+                >
                   <svg
                     className="size-8 text-destructive"
                     fill="none"
@@ -67,12 +71,17 @@ export class ErrorBoundary extends Component<Props, State> {
 
                 {/* Stack Trace */}
                 {this.state.error?.stack && (
-                  <ScrollArea className="
-                    mt-3 h-32 rounded-lg border border-border/50 bg-muted/50 p-4
-                  ">
-                    <pre className="
-                      text-left text-sm text-foreground select-text
-                    ">{this.state.error.stack}</pre>
+                  <ScrollArea
+                    className="
+                      mt-3 h-32 rounded-lg border border-border/50 bg-muted/50
+                      p-4
+                    "
+                  >
+                    <pre
+                      className="text-left text-sm text-foreground select-text"
+                    >
+                      {this.state.error.stack}
+                    </pre>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 )}

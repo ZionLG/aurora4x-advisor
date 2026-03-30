@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(cmd.exe //c \"C:\\\\Programming\\\\aurora4x-companion\\\\AuroraPatch\\\\build-deploy.bat Debug\" 2>&1)",
+      "mcp__aurora-4x-mcp__query"
+    ]
+  }
+}

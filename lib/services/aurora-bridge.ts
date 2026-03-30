@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron'
 import type { BridgeStatus, ActionRequest } from '@/shared/types'
 
 // Must match BridgeProtocol.Version in C# AdvisorBridge/Protocol.cs
-const EXPECTED_PROTOCOL_VERSION = 2
+const EXPECTED_PROTOCOL_VERSION = 3
 
 interface PendingRequest {
   resolve: (value: unknown) => void
@@ -188,7 +188,7 @@ class AuroraBridge {
   // Private
   // ---------------------------------------------------------------------------
 
-  private send(type: string, payload: unknown, timeoutMs = 10000): Promise<unknown> {
+  send(type: string, payload: unknown, timeoutMs = 10000): Promise<unknown> {
     const id = this.nextId()
     const request = {
       Id: id,

@@ -809,6 +809,36 @@ namespace Lib
 
                 // Jump points: WHERE GameID = ?
                 "CREATE INDEX IF NOT EXISTS idx_JumpPoint_GameID ON FCT_JumpPoint(GameID)",
+
+                // Commander bonuses: JOIN ON CommanderID (most frequent automatic index warning)
+                "CREATE INDEX IF NOT EXISTS idx_CommanderBonuses_CmdID ON FCT_CommanderBonuses(CommanderID)",
+                "CREATE INDEX IF NOT EXISTS idx_Commander_CommandID ON FCT_Commander(CommandID)",
+                "CREATE INDEX IF NOT EXISTS idx_Commander_GameType ON FCT_Commander(GameID, CommandType)",
+
+                // Population installations: JOIN ON PopID
+                "CREATE INDEX IF NOT EXISTS idx_PopInstallations_PopID ON FCT_PopulationInstallations(PopID)",
+                "CREATE INDEX IF NOT EXISTS idx_PopInstallations_Game ON FCT_PopulationInstallations(GameID)",
+
+                // Surveys: JOIN ON SystemID
+                "CREATE INDEX IF NOT EXISTS idx_RaceSysSurvey_SystemID ON FCT_RaceSysSurvey(SystemID)",
+
+                // Ancient constructs: JOIN ON SystemBodyID
+                "CREATE INDEX IF NOT EXISTS idx_AncientConstruct_BodyID ON FCT_AncientConstruct(SystemBodyID)",
+
+                // Species: JOIN ON SpeciesID
+                "CREATE INDEX IF NOT EXISTS idx_Species_SpeciesID ON FCT_Species(SpeciesID)",
+
+                // Ground units: production recap JOINs
+                "CREATE INDEX IF NOT EXISTS idx_GroundUnitFormation_Game ON FCT_GroundUnitFormation(GameID, RaceID)",
+                "CREATE INDEX IF NOT EXISTS idx_GroundUnitFormElement_FormID ON FCT_GroundUnitFormationElement(FormationID)",
+
+                // Industrial projects / shipyards
+                "CREATE INDEX IF NOT EXISTS idx_IndustrialProjects_Game ON FCT_IndustrialProjects(GameID, RaceID)",
+                "CREATE INDEX IF NOT EXISTS idx_Shipyard_Game ON FCT_Shipyard(GameID, RaceID)",
+                "CREATE INDEX IF NOT EXISTS idx_ShipyardTask_Game ON FCT_ShipyardTask(GameID, RaceID)",
+
+                // Training
+                "CREATE INDEX IF NOT EXISTS idx_GroundUnitTraining_Game ON FCT_GroundUnitTraining(GameID, RaceID)",
             };
 
             foreach (var idx in indexes)
@@ -820,6 +850,79 @@ namespace Lib
                     cmd.ExecuteNonQuery();
                 }
                 catch { }
+            }
+
+            // Copy DIM_* (dimension/reference) tables from on-disk DB into memory.
+            // These are static lookup tables with no save method — they never change during gameplay.
+            // Without this, any SQL JOIN on DIM_* tables returns empty results.
+            try
+            {
+                int dimTablesCopied = 0;
+                using (var diskConn = new SQLiteConnection("Data Source=AuroraDB.db;Version=3;New=False;Compress=True;"))
+                {
+                    diskConn.Open();
+
+                    // Find all DIM_* tables
+                    var dimCmd = diskConn.CreateCommand();
+                    dimCmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'DIM_%'";
+                    var dimTables = new List<string>();
+                    using (var reader = dimCmd.ExecuteReader())
+                    {
+                        while (reader.Read()) dimTables.Add(reader.GetString(0));
+                    }
+
+                    foreach (var tableName in dimTables)
+                    {
+                        try
+                        {
+                            // Read all rows from disk
+                            var readCmd = diskConn.CreateCommand();
+                            readCmd.CommandText = $"SELECT * FROM [{tableName}]";
+                            using (var adapter = new SQLiteDataAdapter(readCmd))
+                            {
+                                var ds = new DataSet();
+                                adapter.Fill(ds, tableName);
+                                var table = ds.Tables[tableName];
+                                if (table == null || table.Rows.Count == 0) continue;
+
+                                // Build INSERT statements for in-memory DB
+                                var cols = new List<string>();
+                                for (int i = 0; i < table.Columns.Count; i++)
+                                    cols.Add($"[{table.Columns[i].ColumnName}]");
+                                var colList = string.Join(",", cols);
+
+                                foreach (DataRow row in table.Rows)
+                                {
+                                    var vals = new List<string>();
+                                    for (int i = 0; i < table.Columns.Count; i++)
+                                    {
+                                        var val = row[i];
+                                        if (val is DBNull) vals.Add("NULL");
+                                        else if (val is string s) vals.Add($"'{s.Replace("'", "''")}'");
+                                        else if (val is bool b) vals.Add(b ? "1" : "0");
+                                        else vals.Add(val.ToString());
+                                    }
+                                    var insertCmd = Connection.CreateCommand();
+                                    insertCmd.CommandText = $"INSERT OR IGNORE INTO [{tableName}] ({colList}) VALUES ({string.Join(",", vals)})";
+                                    insertCmd.ExecuteNonQuery();
+                                }
+
+                                dimTablesCopied++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Lib.LogError($"Failed to copy DIM table {tableName}: {ex.Message}");
+                        }
+                    }
+
+                    diskConn.Close();
+                }
+                Lib.LogInfo($"Copied {dimTablesCopied} DIM_* tables from disk to in-memory DB");
+            }
+            catch (Exception ex)
+            {
+                Lib.LogError($"Failed to copy DIM tables: {ex.Message}");
             }
 
             Lib.LogInfo($"In-memory DB ready: {commands.Count} schema objects, {indexes.Length} indexes added");

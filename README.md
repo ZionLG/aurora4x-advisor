@@ -44,15 +44,18 @@ Aurora 4X is a closed-source .NET WinForms application with obfuscated type name
 ## Features
 
 ### Real-Time Tactical Map Viewer
+
 - Canvas-based system map with orbital body rendering alongside Aurora's own map
 - Fleet position overlays with movement tracking
 
 ### Unified Empire Data
+
 - Single data layer merging SQL and real-time memory — the client never knows the source
 - Fleet, ship, mineral, research, and route data through clean domain hooks
 - Automatic refresh on game ticks
 
 ### AI-Powered Advisor
+
 - LLM-driven advisor that speaks in character based on government archetype and ideology
 - Supports Claude (Anthropic), OpenAI, and local Ollama models via Vercel AI SDK
 - Interactive chat — ask your advisor about strategy, threats, priorities
@@ -60,12 +63,14 @@ Aurora 4X is a closed-source .NET WinForms application with obfuscated type name
 - 8 personality archetypes: Nationalist, Technocrat, Communist, Monarchist, Military, Corporate, Diplomatic, Religious
 
 ### Planning Tools
+
 - Fleet composition tables with filtering and search
 - Route planning engine with fuel burn calculations
 - Mineral tracking with historical charts
 - Research tree viewer
 
 ### Game Bridge
+
 - WebSocket server embedded in the Aurora process via Harmony patching
 - Direct memory reads of game objects — no file polling
 - **Smart SQL queries with selective save** — auto-detects `FCT_*` tables and only refreshes the relevant save methods
@@ -73,18 +78,19 @@ Aurora 4X is a closed-source .NET WinForms application with obfuscated type name
 - Protocol version handshake
 
 ### Auto-Updater
+
 - Built-in auto-update via GitHub Releases (`electron-updater`)
 
 ## Architecture
 
 The app uses a clean 4-domain IPC architecture:
 
-| Domain | Purpose |
-|--------|---------|
-| **SESSION** | Game lifecycle — campaign selection, bridge connection (hidden internally), game detection |
-| **EMPIRE** | All game data — fleets, ships, bodies, systems, minerals, research, routes. Source-agnostic |
-| **ADVISOR** | LLM chat, event-driven alerts, personality/archetype matching |
-| **SETTINGS** | App config, AI provider selection, DB path |
+| Domain       | Purpose                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| **SESSION**  | Game lifecycle — campaign selection, bridge connection (hidden internally), game detection  |
+| **EMPIRE**   | All game data — fleets, ships, bodies, systems, minerals, research, routes. Source-agnostic |
+| **ADVISOR**  | LLM chat, event-driven alerts, personality/archetype matching                               |
+| **SETTINGS** | App config, AI provider selection, DB path                                                  |
 
 IPC uses the **Conveyor** system — type-safe with Zod validation, organized as schema + handler + API per domain.
 
@@ -121,9 +127,11 @@ aurora4x-companion/
 ## Getting Started (User)
 
 ### Prerequisites
+
 - **Aurora 4X** C# version installed
 
 ### Setup
+
 1. Download the latest [companion app release](https://github.com/ZionLG/aurora4x-advisor/releases/latest) for your platform
 2. Download the latest C# bridge release
 3. Place `AuroraPatch.exe`, `0Harmony.dll`, and other root-level dependencies into your Aurora 4X installation directory (next to `Aurora.exe`)
@@ -151,11 +159,13 @@ Your Aurora installation/
 ```
 
 ### Linux (via Proton)
+
 Aurora runs through Steam Proton on Linux. The companion app runs natively. The bridge uses Fleck (raw TCP sockets) so WebSocket connections work across the Wine/Proton boundary.
 
 ## Getting Started (Developer)
 
 ### Prerequisites
+
 - **Node.js 18+** with npm
 - **Visual Studio 2022** (or MSBuild) with .NET Framework 4.8 targeting pack
 - **Aurora 4X** C# version installed
@@ -183,13 +193,13 @@ npm run dev          # Start with hot reload
 
 ## Development Commands
 
-| Command            | Description                         |
-|--------------------|-------------------------------------|
-| `npm run dev`      | Run with hot reload                 |
-| `npm run lint`     | Lint with ESLint                    |
-| `npm run format`   | Format with Prettier                |
-| `npm run build:win`| Package for Windows                 |
-| `npm run build:linux`| Package for Linux                 |
+| Command               | Description          |
+| --------------------- | -------------------- |
+| `npm run dev`         | Run with hot reload  |
+| `npm run lint`        | Lint with ESLint     |
+| `npm run format`      | Format with Prettier |
+| `npm run build:win`   | Package for Windows  |
+| `npm run build:linux` | Package for Linux    |
 
 ## Tech Stack
 

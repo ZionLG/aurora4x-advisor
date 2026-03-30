@@ -105,10 +105,12 @@ export function WelcomePage() {
         >
           <div className="flex items-center gap-2">
             <CircleDot className="cic-glow-pulse size-3 text-(--cic-cyan)" />
-            <span className="
-              text-[10px] font-semibold tracking-[0.25em] text-(--cic-cyan)
-              uppercase
-            ">
+            <span
+              className="
+                text-[10px] font-semibold tracking-[0.25em] text-(--cic-cyan)
+                uppercase
+              "
+            >
               Aurora 4X Companion
             </span>
           </div>
@@ -125,9 +127,9 @@ export function WelcomePage() {
           }}
         >
           {/* Scanline overlay */}
-          <div className="
-            cic-scanline pointer-events-none absolute inset-0 z-20
-          " />
+          <div
+            className="cic-scanline pointer-events-none absolute inset-0 z-20"
+          />
 
           <div className="relative z-10 space-y-1.5 p-5">
             {/* Boot sequence */}
@@ -177,15 +179,19 @@ export function WelcomePage() {
                       borderLeft: '2px solid var(--cic-amber)',
                     }}
                   >
-                    <p className="
-                      mb-1.5 text-[9px] font-semibold tracking-[0.15em]
-                      text-(--cic-amber) uppercase
-                    ">
+                    <p
+                      className="
+                        mb-1.5 text-[9px] font-semibold tracking-[0.15em]
+                        text-(--cic-amber) uppercase
+                      "
+                    >
                       First-Time Setup Required
                     </p>
-                    <p className="
-                      mb-3 text-[10px] leading-relaxed text-foreground/40
-                    ">
+                    <p
+                      className="
+                        mb-3 text-[10px] leading-relaxed text-foreground/40
+                      "
+                    >
                       Configure the path to your Aurora 4X database to begin. The companion reads this file to track
                       your game state.
                     </p>

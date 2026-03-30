@@ -8,14 +8,8 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table'
 import { useProductionRecap } from '@/app/hooks/data'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/app/components/ui/table'
+import type { RecapEntry } from '@/lib/recap/types'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/table'
 import {
   Factory,
   Loader2,
@@ -30,24 +24,163 @@ import {
   LayoutList,
   Building2,
   ArrowUpDown,
+  Settings2,
+  RefreshCw,
+  WifiOff,
+  Timer,
 } from 'lucide-react'
-
-interface RecapEntry {
-  id: string
-  type: 'research' | 'production' | 'ship' | 'shipyard' | 'training' | 'terraforming'
-  badge: string
-  name: string
-  system: string
-  colony: string
-  colonyId: number
-  remainingDays: number | null
-  annualRate: string
-  annualRateValue: number
-  paused: boolean
-  queued: boolean
-}
+import { Switch } from '@/app/components/ui/switch'
+import { useRecapSettingsStore, type RefreshInterval } from '@/app/stores/recap-settings-store'
+import { queryClient } from '@/app/lib/query-client'
 
 type ViewMode = 'recap' | 'colony'
+
+const INTERVAL_OPTIONS: { value: RefreshInterval; label: string }[] = [
+  { value: 5000, label: '5s' },
+  { value: 10000, label: '10s' },
+  { value: 30000, label: '30s' },
+  { value: 60000, label: '60s' },
+  { value: 0, label: 'Manual' },
+]
+
+const RECAP_TYPES = ['research', 'industrial', 'ships', 'shipyards', 'training', 'terraforming'] as const
+
+function RecapSettingsPanel({ onClose }: { onClose: () => void }) {
+  const {
+    refreshInterval,
+    forceOffline,
+    autoRefreshOnTick,
+    typeSettings,
+    setRefreshInterval,
+    setForceOffline,
+    setAutoRefreshOnTick,
+    setTypeAutoRefresh,
+  } = useRecapSettingsStore()
+
+  return (
+    <div
+      className="
+        absolute top-full right-0 z-50 mt-1 w-72 rounded-md border
+        border-(--cic-panel-edge) bg-(--cic-panel) shadow-lg
+      "
+    >
+      <div
+        className="
+          flex items-center justify-between border-b border-(--cic-panel-edge)
+          px-3 py-2
+        "
+      >
+        <span
+          className="
+            text-[9px] font-semibold tracking-wider text-foreground/50 uppercase
+          "
+        >
+          Data Settings
+        </span>
+        <button
+          onClick={onClose}
+          className="
+            text-[10px] text-muted-foreground/50
+            hover:text-foreground/70
+          "
+        >
+          Done
+        </button>
+      </div>
+
+      <div className="space-y-3 p-3">
+        {/* Refresh interval */}
+        <div>
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <Timer className="size-3 text-(--cic-cyan-dim)" />
+            <span className="text-[9px] font-medium text-foreground/50">Stale Time</span>
+          </div>
+          <div className="flex gap-1">
+            {INTERVAL_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setRefreshInterval(opt.value)}
+                className={`
+                  rounded-sm px-2 py-0.5 font-mono text-[8px] transition-all
+                  ${
+                    refreshInterval === opt.value
+                      ? `
+                        border border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
+                        text-(--cic-cyan)
+                      `
+                      : `
+                        border border-transparent text-muted-foreground/50
+                        hover:text-foreground/60
+                      `
+                  }
+                `}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Force offline */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <WifiOff className="size-3 text-(--cic-amber-dim)" />
+            <span className="text-[9px] font-medium text-foreground/50">Force Offline</span>
+          </div>
+          <Switch checked={forceOffline} onCheckedChange={setForceOffline} />
+        </div>
+
+        {/* Auto-refresh on tick */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <RefreshCw className="size-3 text-(--cic-green)" />
+            <span className="text-[9px] font-medium text-foreground/50">Auto-refresh on Tick</span>
+          </div>
+          <Switch checked={autoRefreshOnTick} onCheckedChange={setAutoRefreshOnTick} />
+        </div>
+
+        {/* Per-type toggles */}
+        <div>
+          <span
+            className="
+              mb-1.5 block text-[8px] tracking-wider text-muted-foreground/40
+              uppercase
+            "
+          >
+            Auto-refresh per Type
+          </span>
+          <div className="space-y-1">
+            {RECAP_TYPES.map((type) => (
+              <div key={type} className="flex items-center justify-between">
+                <span className="text-[9px] text-foreground/50 capitalize">{type}</span>
+                <Switch
+                  checked={typeSettings[type]?.autoRefresh ?? true}
+                  onCheckedChange={(v) => setTypeAutoRefresh(type, v)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Manual refresh */}
+        <button
+          onClick={() => {
+            queryClient.invalidateQueries({ queryKey: ['empire', 'recap'] })
+          }}
+          className="
+            flex w-full items-center justify-center gap-1.5 rounded-sm border
+            border-(--cic-cyan-dim)/30 px-2 py-1.5 text-[9px] font-semibold
+            text-(--cic-cyan-dim) transition-all
+            hover:bg-(--cic-cyan-glow) hover:text-(--cic-cyan)
+          "
+        >
+          <RefreshCw className="size-3" />
+          Refresh All Now
+        </button>
+      </div>
+    </div>
+  )
+}
 
 const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   research: { bg: '#dc2626', text: '#fff' },
@@ -121,13 +254,19 @@ function SummaryCards({ entries }: { entries: RecapEntry[] }) {
   return (
     <div className="flex items-stretch gap-2 overflow-x-auto pb-1">
       {/* Total */}
-      <div className="
-        min-w-[100px] shrink-0 rounded-sm border border-(--cic-panel-edge)
-        bg-(--cic-panel) px-3 py-2
-      ">
-        <div className="
-          text-[8px] tracking-wider text-muted-foreground/50 uppercase
-        ">Total</div>
+      <div
+        className="
+          min-w-[100px] shrink-0 rounded-sm border border-(--cic-panel-edge)
+          bg-(--cic-panel) px-3 py-2
+        "
+      >
+        <div
+          className="
+            text-[8px] tracking-wider text-muted-foreground/50 uppercase
+          "
+        >
+          Total
+        </div>
         <div className="text-lg font-bold text-foreground/80 tabular-nums">{entries.length}</div>
         <div className="text-[8px] text-muted-foreground/40">
           across {colonies} {colonies === 1 ? 'colony' : 'colonies'}
@@ -150,9 +289,10 @@ function SummaryCards({ entries }: { entries: RecapEntry[] }) {
           >
             <div className="flex items-center gap-1.5">
               <Icon className="size-3" style={{ color: colors.bg }} />
-              <span className="
-                text-[8px] font-semibold tracking-wider uppercase
-              " style={{ color: colors.bg }}>
+              <span
+                className="text-[8px] font-semibold tracking-wider uppercase"
+                style={{ color: colors.bg }}
+              >
                 {type}
               </span>
             </div>
@@ -216,10 +356,12 @@ function ColonyCard({ colony, entries }: { colony: string; entries: RecapEntry[]
   }, [entries])
 
   return (
-    <div className="
-      overflow-hidden rounded-md border border-(--cic-panel-edge)
-      bg-(--cic-panel)
-    ">
+    <div
+      className="
+        overflow-hidden rounded-md border border-(--cic-panel-edge)
+        bg-(--cic-panel)
+      "
+    >
       <button
         onClick={() => setOpen(!open)}
         className="
@@ -255,40 +397,50 @@ function ColonyCard({ colony, entries }: { colony: string; entries: RecapEntry[]
               </span>
             )
           })}
-          {soonest != null && (
-            <span className="font-mono text-[8px] text-(--cic-green)">~{Math.round(soonest)}d</span>
-          )}
+          {soonest != null && <span className="
+            font-mono text-[8px] text-(--cic-green)
+          ">~{Math.round(soonest)}d</span>}
         </div>
       </button>
       {open && (
         <Table>
           <TableHeader>
-            <TableRow className="
-              border-b border-(--cic-panel-edge)
-              hover:bg-transparent
-            ">
-              <TableHead className="
-                h-7 w-28 px-3 text-[8px] tracking-wider text-muted-foreground/60
-                uppercase
-              ">
+            <TableRow
+              className="
+                border-b border-(--cic-panel-edge)
+                hover:bg-transparent
+              "
+            >
+              <TableHead
+                className="
+                  h-7 w-28 px-3 text-[8px] tracking-wider
+                  text-muted-foreground/60 uppercase
+                "
+              >
                 Type
               </TableHead>
-              <TableHead className="
-                h-7 w-24 px-2 text-[8px] tracking-wider text-muted-foreground/60
-                uppercase
-              ">
+              <TableHead
+                className="
+                  h-7 w-24 px-2 text-[8px] tracking-wider
+                  text-muted-foreground/60 uppercase
+                "
+              >
                 Days
               </TableHead>
-              <TableHead className="
-                h-7 px-2 text-[8px] tracking-wider text-muted-foreground/60
-                uppercase
-              ">
+              <TableHead
+                className="
+                  h-7 px-2 text-[8px] tracking-wider text-muted-foreground/60
+                  uppercase
+                "
+              >
                 Name
               </TableHead>
-              <TableHead className="
-                h-7 w-36 px-2 text-[8px] tracking-wider text-muted-foreground/60
-                uppercase
-              ">
+              <TableHead
+                className="
+                  h-7 w-36 px-2 text-[8px] tracking-wider
+                  text-muted-foreground/60 uppercase
+                "
+              >
                 Annual Production
               </TableHead>
             </TableRow>
@@ -305,27 +457,31 @@ function ColonyCard({ colony, entries }: { colony: string; entries: RecapEntry[]
                 <TableCell className="px-3 py-1.5">
                   <TypeBadge badge={entry.badge} type={entry.type} />
                 </TableCell>
-                <TableCell className="
-                  px-2 py-1.5 font-mono text-[10px] tabular-nums
-                ">
+                <TableCell
+                  className="px-2 py-1.5 font-mono text-[10px] tabular-nums"
+                >
                   {formatDays(entry.remainingDays, entry.queued, entry.paused)}
                 </TableCell>
                 <TableCell className="px-2 py-1.5 whitespace-normal">
                   <span
                     className={`
                       text-[10px]
-                      ${entry.paused ? `text-muted-foreground/40` : `
-                        text-foreground/70
-                      `}
+                      ${
+                        entry.paused
+                          ? `text-muted-foreground/40`
+                          : `text-foreground/70`
+                      }
                     `}
                   >
                     {entry.name}
                   </span>
                 </TableCell>
                 <TableCell className="px-2 py-1.5">
-                  <span className="
-                    font-mono text-[10px] text-muted-foreground/50
-                  ">{entry.annualRate}</span>
+                  <span
+                    className="font-mono text-[10px] text-muted-foreground/50"
+                  >
+                    {entry.annualRate}
+                  </span>
                 </TableCell>
               </TableRow>
             ))}
@@ -374,12 +530,12 @@ const recapColumns: ColumnDef<RecapEntry>[] = [
         className={`
           text-[10px] whitespace-normal
           ${
-          row.original.paused
-            ? 'text-muted-foreground/40'
-            : row.original.queued
-              ? 'text-muted-foreground/50'
-              : 'text-foreground/70'
-        }
+            row.original.paused
+              ? 'text-muted-foreground/40'
+              : row.original.queued
+                ? 'text-muted-foreground/50'
+                : 'text-foreground/70'
+          }
         `}
       >
         {row.original.name}
@@ -402,11 +558,14 @@ export function ProductionPage() {
   const [activeTypes, setActiveTypes] = useState<Set<string>>(() => new Set(ALL_TYPES))
   const [viewMode, setViewMode] = useState<ViewMode>('recap')
   const [sorting, setSorting] = useState<SortingState>([{ id: 'remainingDays', desc: false }])
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const recapInterval = useRecapSettingsStore((s) => s.refreshInterval)
+  const forceOffline = useRecapSettingsStore((s) => s.forceOffline)
   const [filterSystems, setFilterSystems] = useState<Set<string> | null>(null)
   const [filterColonies, setFilterColonies] = useState<Set<string> | null>(null)
   const [locationFilterOpen, setLocationFilterOpen] = useState(false)
 
-  const entries = useMemo(() => (recapData ?? []) as RecapEntry[], [recapData])
+  const entries = useMemo(() => recapData ?? [], [recapData])
 
   // Available systems and colonies for filter badges
   const systems = useMemo(() => {
@@ -468,39 +627,45 @@ export function ProductionPage() {
   return (
     <div className="flex h-full flex-col bg-(--cic-void)">
       {/* Header */}
-      <div className="
-        flex shrink-0 items-center justify-between border-b
-        border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2.5
-      ">
+      <div
+        className="
+          flex shrink-0 items-center justify-between border-b
+          border-(--cic-panel-edge) bg-(--cic-panel) px-4 py-2.5
+        "
+      >
         <div className="flex items-center gap-3">
           <Factory className="size-4 text-(--cic-amber)" />
           <span className="text-xs font-semibold text-foreground/80">Production Command</span>
           <span className="font-mono text-[9px] text-muted-foreground">
             {filtered.length}/{entries.length} projects
           </span>
-          {isFetching && !isLoading && <Loader2 className="
-            size-3 animate-spin text-(--cic-cyan-dim)
-          " />}
+          {isFetching && !isLoading && (
+            <Loader2
+              className="size-3 animate-spin text-(--cic-cyan-dim)"
+            />
+          )}
         </div>
 
         {/* View toggle */}
-        <div className="
-          flex items-center gap-1 rounded-sm border border-(--cic-panel-edge)
-          bg-(--cic-void)/50 p-0.5
-        ">
+        <div
+          className="
+            flex items-center gap-1 rounded-sm border border-(--cic-panel-edge)
+            bg-(--cic-void)/50 p-0.5
+          "
+        >
           <button
             onClick={() => setViewMode('recap')}
             className={`
               flex items-center gap-1 rounded-sm px-2 py-1 text-[9px]
               transition-all
               ${
-              viewMode === 'recap'
-                ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
-                : `
-                  text-muted-foreground/50
-                  hover:text-muted-foreground/70
-                `
-            }
+                viewMode === 'recap'
+                  ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
+                  : `
+                    text-muted-foreground/50
+                    hover:text-muted-foreground/70
+                  `
+              }
             `}
           >
             <LayoutList className="size-3" />
@@ -512,26 +677,54 @@ export function ProductionPage() {
               flex items-center gap-1 rounded-sm px-2 py-1 text-[9px]
               transition-all
               ${
-              viewMode === 'colony'
-                ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
-                : `
-                  text-muted-foreground/50
-                  hover:text-muted-foreground/70
-                `
-            }
+                viewMode === 'colony'
+                  ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
+                  : `
+                    text-muted-foreground/50
+                    hover:text-muted-foreground/70
+                  `
+              }
             `}
           >
             <Building2 className="size-3" />
             By Colony
           </button>
         </div>
+
+        {/* Settings button */}
+        <div className="relative">
+          <button
+            onClick={() => setSettingsOpen(!settingsOpen)}
+            className={`
+              flex items-center gap-1 rounded-sm px-2 py-1 text-[9px]
+              transition-all
+              ${
+                settingsOpen
+                  ? 'bg-(--cic-cyan-glow) text-(--cic-cyan)'
+                  : forceOffline
+                    ? 'text-(--cic-amber)'
+                    : `
+                      text-muted-foreground/40
+                      hover:text-muted-foreground/60
+                    `
+              }
+            `}
+          >
+            <Settings2 className="size-3.5" />
+            {recapInterval === 0 && <span className="font-mono text-[7px]">Manual</span>}
+            {forceOffline && <WifiOff className="size-2.5" />}
+          </button>
+          {settingsOpen && <RecapSettingsPanel onClose={() => setSettingsOpen(false)} />}
+        </div>
       </div>
 
       {/* Filter bar */}
-      <div className="
-        flex shrink-0 items-center gap-2 overflow-x-auto border-b
-        border-(--cic-panel-edge) bg-(--cic-panel)/80 px-4 py-2
-      ">
+      <div
+        className="
+          flex shrink-0 items-center gap-2 overflow-x-auto border-b
+          border-(--cic-panel-edge) bg-(--cic-panel)/80 px-4 py-2
+        "
+      >
         {ALL_TYPES.map((type) => {
           const colors = TYPE_COLORS[type]
           const active = activeTypes.has(type)
@@ -567,25 +760,27 @@ export function ProductionPage() {
               flex items-center gap-1 rounded-sm border px-2 py-1 text-[9px]
               font-semibold tracking-wider uppercase transition-all
               ${
-              locationFilterOpen || activeLocationFilters > 0
-                ? `
-                  border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
-                  text-(--cic-cyan)
-                `
-                : `
-                  border-transparent text-muted-foreground/50
-                  hover:text-muted-foreground/70
-                `
-            }
+                locationFilterOpen || activeLocationFilters > 0
+                  ? `
+                    border-(--cic-cyan-dim)/30 bg-(--cic-cyan-glow)
+                    text-(--cic-cyan)
+                  `
+                  : `
+                    border-transparent text-muted-foreground/50
+                    hover:text-muted-foreground/70
+                  `
+              }
             `}
           >
             <Building2 className="size-3" />
             Location
             {activeLocationFilters > 0 && (
-              <span className="
-                ml-0.5 rounded-full bg-(--cic-cyan) px-1 text-[7px]
-                text-(--cic-void)
-              ">
+              <span
+                className="
+                  ml-0.5 rounded-full bg-(--cic-cyan) px-1 text-[7px]
+                  text-(--cic-void)
+                "
+              >
                 {activeLocationFilters}
               </span>
             )}
@@ -596,16 +791,16 @@ export function ProductionPage() {
               flex items-center gap-1 rounded-sm border px-2 py-1 text-[9px]
               font-semibold tracking-wider uppercase transition-all
               ${
-              showQueues
-                ? `
-                  border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
-                  text-(--cic-amber)
-                `
-                : `
-                  border-transparent text-muted-foreground/50
-                  hover:text-muted-foreground/70
-                `
-            }
+                showQueues
+                  ? `
+                    border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
+                    text-(--cic-amber)
+                  `
+                  : `
+                    border-transparent text-muted-foreground/50
+                    hover:text-muted-foreground/70
+                  `
+              }
             `}
           >
             <ListFilter className="size-3" />
@@ -616,15 +811,19 @@ export function ProductionPage() {
 
       {/* Location filter panel */}
       {locationFilterOpen && (
-        <div className="
-          shrink-0 space-y-2 border-b border-(--cic-panel-edge)
-          bg-(--cic-panel)/60 px-4 py-2
-        ">
+        <div
+          className="
+            shrink-0 space-y-2 border-b border-(--cic-panel-edge)
+            bg-(--cic-panel)/60 px-4 py-2
+          "
+        >
           <div className="flex items-center justify-between">
-            <span className="
-              text-[8px] font-semibold tracking-wider text-muted-foreground/50
-              uppercase
-            ">
+            <span
+              className="
+                text-[8px] font-semibold tracking-wider text-muted-foreground/50
+                uppercase
+              "
+            >
               Filter by Location
             </span>
             <button
@@ -663,16 +862,16 @@ export function ProductionPage() {
                       className={`
                         rounded-sm border px-2 py-0.5 text-[8px] transition-all
                         ${
-                        active
-                          ? `
-                            border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
-                            text-(--cic-cyan)
-                          `
-                          : `
-                            border-(--cic-panel-edge) text-muted-foreground/60
-                            hover:text-foreground/70
-                          `
-                      }
+                          active
+                            ? `
+                              border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                              text-(--cic-cyan)
+                            `
+                            : `
+                              border-(--cic-panel-edge) text-muted-foreground/60
+                              hover:text-foreground/70
+                            `
+                        }
                       `}
                     >
                       {sys}
@@ -691,9 +890,9 @@ export function ProductionPage() {
                 Colonies ({colonies.length})
                 {filterSystems && <span className="text-muted-foreground/40"> in selected systems</span>}
               </p>
-              <div className="
-                flex max-h-[100px] flex-wrap gap-1 overflow-y-auto
-              ">
+              <div
+                className="flex max-h-[100px] flex-wrap gap-1 overflow-y-auto"
+              >
                 {colonies.map(([col, info]) => {
                   const active = filterColonies?.has(col) ?? false
                   return (
@@ -711,16 +910,16 @@ export function ProductionPage() {
                       className={`
                         rounded-sm border px-2 py-0.5 text-[8px] transition-all
                         ${
-                        active
-                          ? `
-                            border-(--cic-amber-dim) bg-(--cic-amber-glow)
-                            text-(--cic-amber)
-                          `
-                          : `
-                            border-(--cic-panel-edge) text-muted-foreground/50
-                            hover:text-foreground/60
-                          `
-                      }
+                          active
+                            ? `
+                              border-(--cic-amber-dim) bg-(--cic-amber-glow)
+                              text-(--cic-amber)
+                            `
+                            : `
+                              border-(--cic-panel-edge) text-muted-foreground/50
+                              hover:text-foreground/60
+                            `
+                        }
                       `}
                     >
                       {col}
@@ -740,10 +939,12 @@ export function ProductionPage() {
           <Loader2 className="size-5 animate-spin text-(--cic-cyan-dim)" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="
-          flex flex-1 items-center justify-center text-[10px]
-          text-muted-foreground
-        ">
+        <div
+          className="
+            flex flex-1 items-center justify-center text-[10px]
+            text-muted-foreground
+          "
+        >
           No production data found
         </div>
       ) : (
@@ -759,10 +960,13 @@ export function ProductionPage() {
               <Table>
                 <TableHeader className="sticky top-0 z-10 bg-(--cic-panel)">
                   {table.getHeaderGroups().map((hg) => (
-                    <TableRow key={hg.id} className="
-                      border-b border-(--cic-panel-edge)
-                      hover:bg-transparent
-                    ">
+                    <TableRow
+                      key={hg.id}
+                      className="
+                        border-b border-(--cic-panel-edge)
+                        hover:bg-transparent
+                      "
+                    >
                       {hg.headers.map((header) => (
                         <TableHead
                           key={header.id}
@@ -770,34 +974,43 @@ export function ProductionPage() {
                             h-7 px-2 text-[8px] tracking-wider
                             text-muted-foreground/60 uppercase
                             ${
-                            header.id === 'type' ? 'w-28 pl-3' : header.id === 'remainingDays' ? `
-                              w-28
-                            ` : header.id === 'system' ? `w-20` : header.id === 'colony' ? `
-                              w-28
-                            ` : header.id === 'annualRate' ? `w-40` : ''
-                          }
-                            ${header.column.getCanSort() ? `
-                              cursor-pointer select-none
-                              hover:text-muted-foreground
-                            ` : ''}
+                              header.id === 'type'
+                                ? 'w-28 pl-3'
+                                : header.id === 'remainingDays'
+                                  ? `w-28`
+                                  : header.id === 'system'
+                                    ? `w-20`
+                                    : header.id === 'colony'
+                                      ? `w-28`
+                                      : header.id === 'annualRate'
+                                        ? `w-40`
+                                        : ''
+                            }
+                            ${
+                              header.column.getCanSort()
+                                ? `
+                                  cursor-pointer select-none
+                                  hover:text-muted-foreground
+                                `
+                                : ''
+                            }
                           `}
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           <div className="flex items-center gap-1">
                             {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanSort() && (
-                              header.column.getIsSorted() === 'asc' ? (
-                                <ChevronUp className="
-                                  size-2.5 text-(--cic-cyan)
-                                " />
+                            {header.column.getCanSort() &&
+                              (header.column.getIsSorted() === 'asc' ? (
+                                <ChevronUp
+                                  className="size-2.5 text-(--cic-cyan)"
+                                />
                               ) : header.column.getIsSorted() === 'desc' ? (
-                                <ChevronDown className="
-                                  size-2.5 text-(--cic-cyan)
-                                " />
+                                <ChevronDown
+                                  className="size-2.5 text-(--cic-cyan)"
+                                />
                               ) : (
                                 <ArrowUpDown className="size-2.5 opacity-30" />
-                              )
-                            )}
+                              ))}
                           </div>
                         </TableHead>
                       ))}
@@ -814,10 +1027,13 @@ export function ProductionPage() {
                       "
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className={`
-                          px-2 py-1.5
-                          ${cell.column.id === 'type' ? `pl-3` : ''}
-                        `}>
+                        <TableCell
+                          key={cell.id}
+                          className={`
+                            px-2 py-1.5
+                            ${cell.column.id === 'type' ? `pl-3` : ''}
+                          `}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}

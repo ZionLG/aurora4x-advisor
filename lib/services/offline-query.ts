@@ -58,8 +58,15 @@ export function getOfflinePath(): string | null {
  */
 export function getOfflineQuery(): QueryFn | null {
   if (!isOpen || !currentPath) return null
+  return makeDirectQuery(currentPath)
+}
 
-  const dbPath = currentPath
+/**
+ * Creates a QueryFn that reads directly from a SQLite DB file.
+ * Used by getOfflineQuery() and by forceOffline mode (which needs
+ * to read the DB file even when the bridge is connected).
+ */
+export function makeDirectQuery(dbPath: string): QueryFn {
   return <T = Record<string, unknown>>(sql: string): Promise<T[]> => {
     let db: Database.Database | null = null
     try {

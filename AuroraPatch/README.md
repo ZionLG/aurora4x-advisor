@@ -23,17 +23,20 @@ The Lib patch is a patch intended to provide services to other patches, a bit li
 WebSocket bridge that runs inside Aurora's process, serving live game data to the Electron frontend.
 
 **Architecture:**
+
 - `BridgeServer.cs` - WebSocket message router (Fleck), tick detection via TacticalMap.TextChanged
 - `Providers/` - Domain-specific data providers (SQL + real-time memory reader)
 - `MemoryReader.cs` - Reads game objects directly from memory via cached reflection
 
 **Data access modes:**
+
 1. **Memory reader** (real-time) - reads live GameState objects via reflection. No UI thread blocking. Used for fleets, ships, systems, stars, bodies.
 2. **SQL** (selective save) - refreshes only the save methods that write to the queried tables. The `query` endpoint auto-detects `FCT_*` table names in the SQL and selectively refreshes them.
 
 See [SAVE_METHOD_MAPPING.md](SAVE_METHOD_MAPPING.md) for the complete mapping of obfuscated save methods to SQL tables.
 
 **Building:**
+
 ```
 build-deploy.bat [Debug|Release]
 ```

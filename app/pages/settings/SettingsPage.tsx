@@ -56,10 +56,12 @@ function AiConnectionStatus() {
           </>
         ) : status.connected ? (
           <>
-            <div className="
-              size-1.5 rounded-full bg-(--cic-green)
-              shadow-[0_0_4px_var(--cic-green)]
-            " />
+            <div
+              className="
+                size-1.5 rounded-full bg-(--cic-green)
+                shadow-[0_0_4px_var(--cic-green)]
+              "
+            />
             <span className="font-mono text-[10px] text-(--cic-green)">
               Connected: {status.provider}
               {status.model && ` / ${status.model}`}
@@ -82,9 +84,13 @@ function AiConnectionStatus() {
         onClick={verify}
         disabled={checking}
       >
-        {checking ? <Loader2 className="size-3 animate-spin" /> : <RefreshCw className="
-          size-3
-        " />}
+        {checking ? (
+          <Loader2 className="size-3 animate-spin" />
+        ) : (
+          <RefreshCw
+            className="size-3"
+          />
+        )}
         {checking ? 'Verifying...' : 'Verify'}
       </Button>
     </div>
@@ -102,22 +108,36 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-4 flex items-center gap-3">
-      <div className="
-        flex size-8 items-center justify-center rounded-sm border
-        border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
-      ">
+      <div
+        className="
+          flex size-8 items-center justify-center rounded-sm border
+          border-(--cic-amber-dim)/30 bg-(--cic-amber-glow)
+        "
+      >
         <Icon className="size-4 text-(--cic-amber)" />
       </div>
       <div className="flex flex-1 items-center gap-2">
-        <span className="
-          text-xs font-semibold tracking-[0.2em] text-(--cic-amber) uppercase
-        ">{label}</span>
-        <div className="
-          h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
-        " />
-        {tag && <span className="
-          font-mono text-[10px] text-(--cic-amber-dim)/60 uppercase
-        ">{tag}</span>}
+        <span
+          className="
+            text-xs font-semibold tracking-[0.2em] text-(--cic-amber) uppercase
+          "
+        >
+          {label}
+        </span>
+        <div
+          className="
+            h-px flex-1 bg-linear-to-r from-(--cic-amber-dim)/40 to-transparent
+          "
+        />
+        {tag && (
+          <span
+            className="
+              font-mono text-[10px] text-(--cic-amber-dim)/60 uppercase
+            "
+          >
+            {tag}
+          </span>
+        )}
       </div>
     </div>
   )
@@ -141,9 +161,13 @@ function SettingRow({ children, className = '' }: { children: React.ReactNode; c
 function DataReadout({ label, value, mono = true }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <span className="
-        text-[10px] tracking-wider text-muted-foreground/60 uppercase
-      ">{label}</span>
+      <span
+        className="
+          text-[10px] tracking-wider text-muted-foreground/60 uppercase
+        "
+      >
+        {label}
+      </span>
       <div
         className={`
           mt-1 rounded-sm border border-(--cic-panel-edge) bg-(--cic-void) px-3
@@ -221,10 +245,12 @@ export function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="
-          flex animate-pulse items-center gap-2 font-mono text-xs
-          text-(--cic-cyan-dim)
-        ">
+        <div
+          className="
+            flex animate-pulse items-center gap-2 font-mono text-xs
+            text-(--cic-cyan-dim)
+          "
+        >
           <CircleDot className="size-3" />
           Loading configuration...
         </div>
@@ -235,10 +261,12 @@ export function SettingsPage() {
   return (
     <div className="h-full overflow-y-auto bg-(--cic-void)">
       {/* Header */}
-      <div className="
-        sticky top-0 z-10 border-b border-(--cic-panel-edge) bg-(--cic-panel)/95
-        backdrop-blur-sm
-      ">
+      <div
+        className="
+          sticky top-0 z-10 border-b border-(--cic-panel-edge)
+          bg-(--cic-panel)/95 backdrop-blur-sm
+        "
+      >
         <div className="flex items-center gap-3 px-5 py-3">
           <Button
             variant="ghost"
@@ -254,9 +282,12 @@ export function SettingsPage() {
           </Button>
           <div className="h-4 w-px bg-(--cic-panel-edge)" />
           <div className="flex items-center gap-2">
-            <span className="
-              text-xs font-semibold tracking-[0.15em] text-foreground uppercase
-            ">
+            <span
+              className="
+                text-xs font-semibold tracking-[0.15em] text-foreground
+                uppercase
+              "
+            >
               System Configuration
             </span>
             <ChevronRight className="size-3 text-muted-foreground/40" />
@@ -304,13 +335,15 @@ export function SettingsPage() {
               )}
             </div>
 
-            <div className="
-              mt-4 rounded-sm border-l-2 border-(--cic-amber-dim)/30
-              bg-(--cic-amber-glow) px-3 py-2
-            ">
+            <div
+              className="
+                mt-4 rounded-sm border-l-2 border-(--cic-amber-dim)/30
+                bg-(--cic-amber-glow) px-3 py-2
+              "
+            >
               <p className="text-[10px] leading-relaxed text-(--cic-amber-dim)">
-                Locate <span className="font-mono text-(--cic-amber)">AuroraDB.db</span> in your Aurora 4X
-                installation folder. The companion monitors this file for save events.
+                Locate <span className="font-mono text-(--cic-amber)">AuroraDB.db</span> in your Aurora 4X installation
+                folder. The companion monitors this file for save events.
               </p>
             </div>
           </SettingRow>
@@ -324,10 +357,14 @@ export function SettingsPage() {
             <SettingRow>
               <div className="space-y-4">
                 <div>
-                  <Label className="
-                    text-[10px] tracking-wider text-muted-foreground/60
-                    uppercase
-                  ">Provider</Label>
+                  <Label
+                    className="
+                      text-[10px] tracking-wider text-muted-foreground/60
+                      uppercase
+                    "
+                  >
+                    Provider
+                  </Label>
                   <Select
                     value={settings?.aiProvider ?? ''}
                     onValueChange={(value) => {
@@ -339,9 +376,9 @@ export function SettingsPage() {
                       })
                     }}
                   >
-                    <SelectTrigger className="
-                      mt-1 border-(--cic-panel-edge) bg-(--cic-void)
-                    ">
+                    <SelectTrigger
+                      className="mt-1 border-(--cic-panel-edge) bg-(--cic-void)"
+                    >
                       <SelectValue placeholder="Select a provider" />
                     </SelectTrigger>
                     <SelectContent>
@@ -356,10 +393,14 @@ export function SettingsPage() {
 
                 {selectedProvider?.requiresApiKey && (
                   <div>
-                    <Label className="
-                      text-[10px] tracking-wider text-muted-foreground/60
-                      uppercase
-                    ">API Key</Label>
+                    <Label
+                      className="
+                        text-[10px] tracking-wider text-muted-foreground/60
+                        uppercase
+                      "
+                    >
+                      API Key
+                    </Label>
                     <Input
                       type="password"
                       className="
@@ -383,10 +424,12 @@ export function SettingsPage() {
 
                 {selectedProvider?.requiresBaseUrl && (
                   <div>
-                    <Label className="
-                      text-[10px] tracking-wider text-muted-foreground/60
-                      uppercase
-                    ">
+                    <Label
+                      className="
+                        text-[10px] tracking-wider text-muted-foreground/60
+                        uppercase
+                      "
+                    >
                       Ollama Endpoint
                     </Label>
                     <Input
@@ -409,10 +452,14 @@ export function SettingsPage() {
                 )}
 
                 <div>
-                  <Label className="
-                    text-[10px] tracking-wider text-muted-foreground/60
-                    uppercase
-                  ">Model</Label>
+                  <Label
+                    className="
+                      text-[10px] tracking-wider text-muted-foreground/60
+                      uppercase
+                    "
+                  >
+                    Model
+                  </Label>
                   <Input
                     className="
                       mt-1 border-(--cic-panel-edge) bg-(--cic-void) text-xs

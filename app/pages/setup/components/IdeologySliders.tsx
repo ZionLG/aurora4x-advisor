@@ -8,11 +8,13 @@ interface IdeologySlidersProps {
 
 export function IdeologySliders({ ideology, onChange }: IdeologySlidersProps) {
   return (
-    <div className="
-      grid grid-cols-1 gap-x-8 gap-y-3 rounded-md border
-      border-(--cic-panel-edge) bg-(--cic-panel) p-4
-      lg:grid-cols-2
-    ">
+    <div
+      className="
+        grid grid-cols-1 gap-x-8 gap-y-3 rounded-md border
+        border-(--cic-panel-edge) bg-(--cic-panel) p-4
+        lg:grid-cols-2
+      "
+    >
       {IDEOLOGY_STATS.map(({ key, label, desc }) => (
         <div key={key}>
           <div className="mb-1.5 flex items-center justify-between">

@@ -10,10 +10,13 @@ function Tabs({ className, orientation = 'horizontal', ...props }: React.Compone
       data-slot="tabs"
       data-orientation={orientation}
       orientation={orientation}
-      className={cn(`
+      className={cn(
+        `
         group/tabs flex gap-2
         data-[orientation=horizontal]:flex-col
-      `, className)}
+      `,
+        className
+      )}
       {...props}
     />
   )
@@ -111,9 +114,18 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
 }
 
 function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>) {
-  return <TabsPrimitive.Content data-slot="tabs-content" className={cn(`
+  return (
+    <TabsPrimitive.Content
+      data-slot="tabs-content"
+      className={cn(
+        `
     flex-1 outline-none
-  `, className)} {...props} />
+  `,
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }

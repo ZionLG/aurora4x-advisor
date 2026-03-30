@@ -15,9 +15,14 @@ export function ComingSoonPage() {
         <div>
           <h2 className="text-sm font-semibold text-foreground/80">{mod?.name ?? 'Module'}</h2>
           {category && (
-            <p className="
-              mt-0.5 text-[9px] tracking-wider text-(--cic-amber-dim) uppercase
-            ">{category.label}</p>
+            <p
+              className="
+                mt-0.5 text-[9px] tracking-wider text-(--cic-amber-dim)
+                uppercase
+              "
+            >
+              {category.label}
+            </p>
           )}
         </div>
         <p className="max-w-xs text-[10px] text-muted-foreground">

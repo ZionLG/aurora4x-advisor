@@ -1,9 +1,7 @@
 import { handle } from '@/lib/main/shared'
 import { auroraBridge } from '@/lib/services/aurora-bridge'
 import { gameSession } from '@/lib/services/game-session'
-import { getOfflineQuery } from '@/lib/services/offline-query'
-import { loadSavedRoutes, addSavedRoute, removeSavedRoute, updateSavedRoute } from '@/lib/services/route-persistence'
-import { loadSavedFilters, saveSavedFilters } from '@/lib/services/filter-persistence'
+import { getOfflineQuery, makeDirectQuery } from '@/lib/services/offline-query'
 import * as compute from '@/lib/compute'
 import { formatGameDate } from '@/lib/compute/utils'
 
@@ -30,77 +28,7 @@ function getGameCtx(): compute.GameCtx {
 }
 
 export const registerEmpireHandlers = () => {
-  // Fleet & ship data
-  handle('empire:getFleets', async () => {
-    const ctx = getGameCtx()
-    return compute.getFleets(getQuery(), ctx)
-  })
-
-  handle('empire:getShips', async () => {
-    const ctx = getGameCtx()
-    return compute.getShips(getQuery(), ctx)
-  })
-
-  // Ship classes
-  handle('empire:getClasses', async () => {
-    const ctx = getGameCtx()
-    return compute.getShipClasses(getQuery(), ctx)
-  })
-
-  handle('empire:getClassDetail', async (classId: number) => {
-    const ctx = getGameCtx()
-    return compute.getShipClassDetail(getQuery(), ctx, classId)
-  })
-
-  // System / map (realtime — bridge only)
-  handle('empire:getBodies', async (systemId: number) => {
-    requireBridge()
-    return auroraBridge.getBodies(systemId)
-  })
-
-  handle('empire:getSystems', async () => {
-    requireBridge()
-    return auroraBridge.getKnownSystems()
-  })
-
-  handle('empire:getRealtimeFleets', async () => {
-    requireBridge()
-    return auroraBridge.getFleets()
-  })
-
-  // Economy
-  handle('empire:getMinerals', async () => {
-    const ctx = getGameCtx()
-    return compute.getMineralTotals(getQuery(), ctx)
-  })
-
-  handle('empire:getMineralHistory', async (resolution: string, populationId: number | null) => {
-    const ctx = getGameCtx()
-    return compute.getMineralHistory(getQuery(), ctx, resolution as compute.Resolution, populationId)
-  })
-
-  handle('empire:getMineralBreakdown', async (mineralId: number, resolution: string) => {
-    const ctx = getGameCtx()
-    return compute.getMineralBreakdown(getQuery(), ctx, mineralId, resolution as compute.Resolution)
-  })
-
-  handle('empire:getMineralColonies', async () => {
-    const ctx = getGameCtx()
-    return compute.getMineralColonies(getQuery(), ctx)
-  })
-
-  // Research
-  handle('empire:getResearch', async () => {
-    const ctx = getGameCtx()
-    return compute.getResearchOverview(getQuery(), ctx)
-  })
-
-  // Navigation
-  handle('empire:getWaypoints', async () => {
-    const ctx = getGameCtx()
-    return compute.getWaypoints(getQuery(), ctx)
-  })
-
+  // Game date (used by sidebar)
   handle('empire:getGameDate', async () => {
     // Try bridge title bar first (realtime)
     const titleBar = auroraBridge.lastTitleBarText
@@ -172,71 +100,175 @@ export const registerEmpireHandlers = () => {
     return null
   })
 
-  // Route planning
-  handle('empire:computeRoute', async (request) => {
+
+  // ── Production Recap (granular, provider-based) ──────────────────────
+
+  function createSqlProvider(forceOffline: boolean) {
+    let queryFn: compute.QueryFn
+    if (forceOffline) {
+      const offlineQuery = getOfflineQuery()
+      if (offlineQuery) {
+        queryFn = offlineQuery
+      } else {
+        const dbPath = auroraBridge.auroraDbPath
+        queryFn = dbPath ? makeDirectQuery(dbPath) : getQuery()
+      }
+    } else {
+      queryFn = getQuery()
+    }
     const ctx = getGameCtx()
-    return compute.computeRoute(getQuery(), ctx, request as compute.RouteRequest)
-  })
+    return new compute.SqlRecapProvider(queryFn, ctx.gameId, ctx.raceId)
+  }
 
-  handle('empire:computeFleetRoute', async (request) => {
+  /**
+   * Shared body data — bridge reads from Aurora's RAM, offline reads from DB file.
+   * Cached 30s with concurrent request deduplication (see get-bodies.ts).
+   */
+  async function getBodies(forceOffline: boolean): Promise<Record<number, compute.BodyData>> {
     const ctx = getGameCtx()
-    return compute.computeFleetRoute(getQuery(), ctx, request as compute.FleetRouteRequest)
-  })
+    let queryFn: compute.QueryFn
+    if (forceOffline) {
+      const offlineQuery = getOfflineQuery()
+      queryFn = offlineQuery ?? (auroraBridge.auroraDbPath ? makeDirectQuery(auroraBridge.auroraDbPath) : getQuery())
+    } else {
+      queryFn = getQuery()
+    }
+    return compute.fetchBodies({
+      bridgeConnected: auroraBridge.isConnected,
+      bridgeSend: auroraBridge.send.bind(auroraBridge),
+      query: queryFn,
+      gameId: ctx.gameId,
+      raceId: ctx.raceId,
+      forceOffline,
+    })
+  }
 
-  // Route persistence
-  handle('empire:saveRoute', async (route) => {
-    await addSavedRoute(route as Parameters<typeof addSavedRoute>[0])
-  })
+  // PopCaps: cached + deduplicated (6 handlers fire concurrently from composer)
+  let popCapsCache: { data: Map<number, compute.PopCap>; gameId: number; ts: number; offline: boolean } | null = null
+  let popCapsInflight: Promise<Map<number, compute.PopCap>> | null = null
+  const POPCAPS_TTL = 2000
 
-  handle('empire:loadRoutes', () => loadSavedRoutes())
-
-  handle('empire:removeRoute', async (id: string) => {
-    await removeSavedRoute(id)
-  })
-
-  handle('empire:updateRoute', async (id: string, patch) => {
-    await updateSavedRoute(id, patch as Parameters<typeof updateSavedRoute>[1])
-  })
-
-  // Fleet filters
-  handle('empire:loadFilters', () => loadSavedFilters())
-
-  handle('empire:saveFilters', async (filters) => {
-    await saveSavedFilters(filters as Parameters<typeof saveSavedFilters>[0])
-  })
-
-  // Production & shipyards
-  handle('empire:getProduction', async () => {
+  async function getCachedPopCaps(forceOffline: boolean): Promise<Map<number, compute.PopCap>> {
     const ctx = getGameCtx()
-    return compute.getProductionTasks(getQuery(), ctx)
-  })
+    const now = Date.now()
+    if (
+      popCapsCache &&
+      popCapsCache.gameId === ctx.gameId &&
+      popCapsCache.offline === forceOffline &&
+      now - popCapsCache.ts < POPCAPS_TTL
+    ) {
+      return popCapsCache.data
+    }
+    if (popCapsInflight) return popCapsInflight
 
-  handle('empire:getShipyards', async () => {
-    const ctx = getGameCtx()
-    return compute.getShipyards(getQuery(), ctx)
-  })
+    popCapsInflight = (async () => {
+      const sql = createSqlProvider(forceOffline)
+      const [pops, inst, eng, gov, sector, bodies] = await Promise.all([
+        sql.getPopulations(),
+        sql.getInstallationPower(),
+        sql.getEngineerPower(),
+        sql.getGovernorBonuses(),
+        sql.getSectorBonuses(),
+        getBodies(forceOffline),
+      ])
+      const data = compute.calculatePopCaps(pops, inst, eng, gov, sector, bodies)
+      popCapsCache = { data, gameId: ctx.gameId, ts: Date.now(), offline: forceOffline }
+      return data
+    })()
 
-  // Warnings
-  handle('empire:getWarnings', async () => {
-    const ctx = getGameCtx()
-    return compute.getWarnings(getQuery(), ctx)
-  })
+    try {
+      return await popCapsInflight
+    } finally {
+      popCapsInflight = null
+    }
+  }
 
-  // Habitability
-  handle('empire:getHabitability', async () => {
-    const ctx = getGameCtx()
-    return compute.getHabitability(getQuery(), ctx)
-  })
-
-  handle('empire:getSpeciesRequirements', async () => {
-    const ctx = getGameCtx()
-    return compute.getSpeciesRequirements(getQuery(), ctx)
-  })
-
-  // Production recap
   handle('empire:getProductionRecap', async () => {
-    const ctx = getGameCtx()
-    return compute.getProductionRecap(getQuery(), ctx)
+    // Monolithic — kept for compat
+    const provider = createSqlProvider(false)
+    const [pops, inst, eng, gov, sector, bodies] = await Promise.all([
+      provider.getPopulations(),
+      provider.getInstallationPower(),
+      provider.getEngineerPower(),
+      provider.getGovernorBonuses(),
+      provider.getSectorBonuses(),
+      getBodies(false),
+    ])
+    const caps = compute.calculatePopCaps(pops, inst, eng, gov, sector, bodies)
+    const [research, industrial, ships, shipyards, training, terraforming] = await Promise.all([
+      provider.getResearchProjects().then((p) => compute.calculateResearchEntries(p, caps)),
+      provider.getIndustrialProjects().then((p) => compute.calculateIndustrialEntries(p, caps)),
+      provider.getShipTasks().then((t) => compute.calculateShipEntries(t, caps)),
+      provider.getShipyardUpgrades().then((u) => compute.calculateShipyardEntries(u, caps)),
+      provider.getTrainingTasks().then((t) => compute.calculateTrainingEntries(t, caps)),
+      Promise.all([
+        provider.getTerraformingData(),
+        provider.getOrbitalTerraformers(),
+        provider.getGovernorTerraformBonuses(),
+      ]).then(([td, ot, gt]) => compute.calculateTerraformingEntries(td, ot, gt, bodies)),
+    ])
+    return [...research, ...industrial, ...ships, ...shipyards, ...training, ...terraforming].sort(
+      (a, b) => (a.remainingDays ?? Infinity) - (b.remainingDays ?? Infinity)
+    )
+  })
+
+  handle('empire:getBodyMap', async (forceOffline: boolean) => {
+    return getBodies(forceOffline)
+  })
+
+  handle('empire:getPopCapacities', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const result: Record<number, compute.PopCap> = {}
+    caps.forEach((v, k) => {
+      result[k] = v
+    })
+    return result
+  })
+
+  handle('empire:getRecapResearch', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const provider = createSqlProvider(forceOffline)
+    const projects = await provider.getResearchProjects()
+    return compute.calculateResearchEntries(projects, caps)
+  })
+
+  handle('empire:getRecapIndustrial', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const provider = createSqlProvider(forceOffline)
+    const projects = await provider.getIndustrialProjects()
+    return compute.calculateIndustrialEntries(projects, caps)
+  })
+
+  handle('empire:getRecapShips', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const provider = createSqlProvider(forceOffline)
+    const tasks = await provider.getShipTasks()
+    return compute.calculateShipEntries(tasks, caps)
+  })
+
+  handle('empire:getRecapShipyards', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const provider = createSqlProvider(forceOffline)
+    const upgrades = await provider.getShipyardUpgrades()
+    return compute.calculateShipyardEntries(upgrades, caps)
+  })
+
+  handle('empire:getRecapTraining', async (forceOffline: boolean) => {
+    const caps = await getCachedPopCaps(forceOffline)
+    const provider = createSqlProvider(forceOffline)
+    const tasks = await provider.getTrainingTasks()
+    return compute.calculateTrainingEntries(tasks, caps)
+  })
+
+  handle('empire:getRecapTerraforming', async (forceOffline: boolean) => {
+    const sql = createSqlProvider(forceOffline)
+    const [data, orbital, govTerraform, bodies] = await Promise.all([
+      sql.getTerraformingData(),
+      sql.getOrbitalTerraformers(),
+      sql.getGovernorTerraformBonuses(),
+      getBodies(forceOffline),
+    ])
+    return compute.calculateTerraformingEntries(data, orbital, govTerraform, bodies)
   })
 
   // Game log

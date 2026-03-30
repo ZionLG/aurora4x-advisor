@@ -1,5 +1,8 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSessionStore } from '@/app/stores/session-store'
+import type { RecapEntry, PopCap, BodyData } from '@/lib/recap/types'
+import { useRecapSettingsStore } from '@/app/stores/recap-settings-store'
 
 /** Fetch when a game is selected and we have any data source (bridge or offline) */
 function useEmpireEnabled(): boolean {
@@ -8,129 +11,7 @@ function useEmpireEnabled(): boolean {
   return !!game && (mode === 'bridge' || mode === 'offline')
 }
 
-/** Fetch only when bridge is connected (for realtime features) */
-function useBridgeEnabled(): boolean {
-  const game = useSessionStore((s) => s.currentGame)
-  const mode = useSessionStore((s) => s.connectionMode)
-  return !!game && mode === 'bridge'
-}
-
-export function useFleets() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'fleets'],
-    queryFn: () => window.conveyor.empire.getFleets(),
-    enabled,
-  })
-}
-
-export function useShips() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'ships'],
-    queryFn: () => window.conveyor.empire.getShips(),
-    enabled,
-  })
-}
-
-export function useClasses() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'classes'],
-    queryFn: () => window.conveyor.empire.getClasses(),
-    enabled,
-  })
-}
-
-export function useClassDetail(classId: number | null) {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'classDetail', classId],
-    queryFn: () => window.conveyor.empire.getClassDetail(classId!),
-    enabled: enabled && classId !== null,
-  })
-}
-
-export function useBodies(systemId: number | null) {
-  const enabled = useBridgeEnabled()
-  return useQuery({
-    queryKey: ['empire', 'bodies', systemId],
-    queryFn: () => window.conveyor.empire.getBodies(systemId!),
-    enabled: enabled && systemId !== null,
-  })
-}
-
-export function useSystems() {
-  const enabled = useBridgeEnabled()
-  return useQuery({
-    queryKey: ['empire', 'systems'],
-    queryFn: () => window.conveyor.empire.getSystems(),
-    enabled,
-  })
-}
-
-export function useRealtimeFleets() {
-  const enabled = useBridgeEnabled()
-  return useQuery({
-    queryKey: ['empire', 'realtimeFleets'],
-    queryFn: () => window.conveyor.empire.getRealtimeFleets(),
-    enabled,
-  })
-}
-
-export function useMinerals() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'minerals'],
-    queryFn: () => window.conveyor.empire.getMinerals(),
-    enabled,
-  })
-}
-
-export function useMineralHistory(resolution: string, populationId: number | null) {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'mineralHistory', resolution, populationId],
-    queryFn: () => window.conveyor.empire.getMineralHistory(resolution, populationId),
-    enabled,
-  })
-}
-
-export function useMineralBreakdown(mineralId: number | null, resolution: string) {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'mineralBreakdown', mineralId, resolution],
-    queryFn: () => window.conveyor.empire.getMineralBreakdown(mineralId!, resolution),
-    enabled: enabled && mineralId !== null,
-  })
-}
-
-export function useMineralColonies() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'mineralColonies'],
-    queryFn: () => window.conveyor.empire.getMineralColonies(),
-    enabled,
-  })
-}
-
-export function useResearch() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'research'],
-    queryFn: () => window.conveyor.empire.getResearch(),
-    enabled,
-  })
-}
-
-export function useWaypoints() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'waypoints'],
-    queryFn: () => window.conveyor.empire.getWaypoints(),
-    enabled,
-  })
-}
+// ── Game date (used by sidebar) ──────────────────────────────────────
 
 export function useGameDate() {
   const enabled = useEmpireEnabled()
@@ -141,74 +22,7 @@ export function useGameDate() {
   })
 }
 
-export function useRoutes() {
-  return useQuery({
-    queryKey: ['empire', 'routes'],
-    queryFn: () => window.conveyor.empire.loadRoutes(),
-  })
-}
-
-export function useFilters() {
-  return useQuery({
-    queryKey: ['empire', 'filters'],
-    queryFn: () => window.conveyor.empire.loadFilters(),
-  })
-}
-
-export function useProductionRecap() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'productionRecap'],
-    queryFn: () => window.conveyor.empire.getProductionRecap(),
-    enabled,
-    placeholderData: (prev) => prev,
-  })
-}
-
-export function useProduction() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'production'],
-    queryFn: () => window.conveyor.empire.getProduction(),
-    enabled,
-  })
-}
-
-export function useShipyards() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'shipyards'],
-    queryFn: () => window.conveyor.empire.getShipyards(),
-    enabled,
-  })
-}
-
-export function useWarnings() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'warnings'],
-    queryFn: () => window.conveyor.empire.getWarnings(),
-    enabled,
-  })
-}
-
-export function useHabitability() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'habitability'],
-    queryFn: () => window.conveyor.empire.getHabitability(),
-    enabled,
-  })
-}
-
-export function useSpeciesRequirements() {
-  const enabled = useEmpireEnabled()
-  return useQuery({
-    queryKey: ['empire', 'speciesRequirements'],
-    queryFn: () => window.conveyor.empire.getSpeciesRequirements(),
-    enabled,
-  })
-}
+// ── Game Log ─────────────────────────────────────────────────────────
 
 export function useGameLog(
   limit?: number,
@@ -233,4 +47,125 @@ export function useEventTypes() {
     queryFn: () => window.conveyor.empire.getEventTypes(),
     enabled,
   })
+}
+
+// ── Production Recap (granular, shared cache) ────────────────────────
+
+function useRecapStaleTime(baseStale: number): number | undefined {
+  const interval = useRecapSettingsStore((s) => s.refreshInterval)
+  if (interval === 0) return Infinity as unknown as undefined
+  return Math.max(interval, baseStale)
+}
+
+function useRecapForceOffline(): boolean {
+  return useRecapSettingsStore((s) => s.forceOffline)
+}
+
+function useRecapRefetchInterval(): number | false {
+  const interval = useRecapSettingsStore((s) => s.refreshInterval)
+  return interval === 0 ? false : interval // 0 = manual only, otherwise poll at interval
+}
+
+function useRecapTypeQuery<T>(type: string, queryFn: (forceOffline: boolean) => Promise<T>) {
+  const enabled = useEmpireEnabled()
+  const staleTime = useRecapStaleTime(10_000)
+  const refetchInterval = useRecapRefetchInterval()
+  const typeEnabled = useRecapSettingsStore((s) => s.typeSettings[type]?.autoRefresh ?? true)
+  const forceOffline = useRecapForceOffline()
+  return useQuery<T>({
+    queryKey: ['empire', 'recap', type, { forceOffline }],
+    queryFn: () => queryFn(forceOffline),
+    enabled: enabled && typeEnabled,
+    staleTime,
+    refetchInterval,
+    placeholderData: (prev: T | undefined) => prev,
+  })
+}
+
+export function useBodyMap() {
+  const enabled = useEmpireEnabled()
+  const staleTime = useRecapStaleTime(60_000)
+  const forceOffline = useRecapForceOffline()
+  return useQuery<Record<number, BodyData>>({
+    queryKey: ['empire', 'recap', 'bodyMap', { forceOffline }],
+    queryFn: () => window.conveyor.empire.getBodyMap(forceOffline),
+    enabled,
+    staleTime,
+  })
+}
+
+export function usePopulationCapacities() {
+  const enabled = useEmpireEnabled()
+  const staleTime = useRecapStaleTime(30_000)
+  const forceOffline = useRecapForceOffline()
+  return useQuery<Record<number, PopCap>>({
+    queryKey: ['empire', 'recap', 'popCapacities', { forceOffline }],
+    queryFn: () => window.conveyor.empire.getPopCapacities(forceOffline),
+    enabled,
+    staleTime,
+    placeholderData: (prev) => prev,
+  })
+}
+
+export function useRecapResearch() {
+  return useRecapTypeQuery<RecapEntry[]>('research', (fo) => window.conveyor.empire.getRecapResearch(fo))
+}
+
+export function useRecapIndustrial() {
+  return useRecapTypeQuery<RecapEntry[]>('industrial', (fo) => window.conveyor.empire.getRecapIndustrial(fo))
+}
+
+export function useRecapShips() {
+  return useRecapTypeQuery<RecapEntry[]>('ships', (fo) => window.conveyor.empire.getRecapShips(fo))
+}
+
+export function useRecapShipyards() {
+  return useRecapTypeQuery<RecapEntry[]>('shipyards', (fo) => window.conveyor.empire.getRecapShipyards(fo))
+}
+
+export function useRecapTraining() {
+  return useRecapTypeQuery<RecapEntry[]>('training', (fo) => window.conveyor.empire.getRecapTraining(fo))
+}
+
+export function useRecapTerraforming() {
+  return useRecapTypeQuery<RecapEntry[]>('terraforming', (fo) => window.conveyor.empire.getRecapTerraforming(fo))
+}
+
+/** Composer hook — combines all recap types into a sorted list */
+export function useProductionRecap() {
+  const research = useRecapResearch()
+  const industrial = useRecapIndustrial()
+  const ships = useRecapShips()
+  const shipyards = useRecapShipyards()
+  const training = useRecapTraining()
+  const terraforming = useRecapTerraforming()
+
+  const isLoading =
+    research.isLoading ||
+    industrial.isLoading ||
+    ships.isLoading ||
+    shipyards.isLoading ||
+    training.isLoading ||
+    terraforming.isLoading
+  const isFetching =
+    research.isFetching ||
+    industrial.isFetching ||
+    ships.isFetching ||
+    shipyards.isFetching ||
+    training.isFetching ||
+    terraforming.isFetching
+
+  const data = useMemo<RecapEntry[]>(() => {
+    const all: RecapEntry[] = [
+      ...(research.data ?? []),
+      ...(industrial.data ?? []),
+      ...(ships.data ?? []),
+      ...(shipyards.data ?? []),
+      ...(training.data ?? []),
+      ...(terraforming.data ?? []),
+    ]
+    return all.sort((a, b) => (a.remainingDays ?? Infinity) - (b.remainingDays ?? Infinity))
+  }, [research.data, industrial.data, ships.data, shipyards.data, training.data, terraforming.data])
+
+  return { data, isLoading, isFetching }
 }

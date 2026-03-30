@@ -62,17 +62,20 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
 
   return (
     <Form {...form}>
-      <form onChange={form.handleSubmit(pushUpdate, () => {})} className="
-        space-y-4 p-4
-      ">
+      <form
+        onChange={form.handleSubmit(pushUpdate, () => {})}
+        className="space-y-4 p-4"
+      >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="
-                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
-              ">
+              <FormLabel
+                className="
+                  text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+                "
+              >
                 Profile Name
               </FormLabel>
               <FormControl>
@@ -94,9 +97,11 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="
-                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
-              ">
+              <FormLabel
+                className="
+                  text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+                "
+              >
                 Short Description
               </FormLabel>
               <FormControl>
@@ -118,9 +123,11 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="flavor"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="
-                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
-              ">
+              <FormLabel
+                className="
+                  text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+                "
+              >
                 Personality & Flavor
               </FormLabel>
               <p className="mb-1 text-[8px] text-muted-foreground">
@@ -150,9 +157,11 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="keywords"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="
-                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
-              ">
+              <FormLabel
+                className="
+                  text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+                "
+              >
                 Keywords <span className="text-muted-foreground/70">(comma-separated)</span>
               </FormLabel>
               <FormControl>
@@ -173,9 +182,11 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
           name="archetypeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="
-                text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
-              ">
+              <FormLabel
+                className="
+                  text-[8px] tracking-wider text-(--cic-amber-dim) uppercase
+                "
+              >
                 Archetype
               </FormLabel>
               <div className="flex flex-wrap gap-1">
@@ -186,16 +197,16 @@ export function CustomProfileForm({ archetypes, onUpdate, ideology }: CustomProf
                     className={`
                       h-5 cursor-pointer px-2 py-0.5 text-[8px] transition-all
                       ${
-                      selectedArchetype === arch.id
-                        ? `
-                          border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
-                          text-(--cic-cyan)
-                        `
-                        : `
-                          border-(--cic-panel-edge) text-foreground/30
-                          hover:text-foreground/60
-                        `
-                    }
+                        selectedArchetype === arch.id
+                          ? `
+                            border-(--cic-cyan-dim) bg-(--cic-cyan-glow)
+                            text-(--cic-cyan)
+                          `
+                          : `
+                            border-(--cic-panel-edge) text-foreground/30
+                            hover:text-foreground/60
+                          `
+                      }
                     `}
                     onClick={() => {
                       field.onChange(arch.id)

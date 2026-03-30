@@ -79,10 +79,10 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             className={`
               overflow-hidden rounded-md border bg-(--cic-panel)
               ${
-              activeTagCount === 0 ? 'border-(--cic-red)/30' : `
-                border-(--cic-panel-edge)
-              `
-            }
+                activeTagCount === 0
+                  ? 'border-(--cic-red)/30'
+                  : `border-(--cic-panel-edge)`
+              }
             `}
             style={{
               animationDelay: `${idx * 50}ms`,
@@ -95,10 +95,12 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             />
 
             {/* Department header bar */}
-            <div className="
-              flex items-center justify-between border-b
-              border-(--cic-panel-edge) bg-(--cic-void)/60 px-3 py-2
-            ">
+            <div
+              className="
+                flex items-center justify-between border-b
+                border-(--cic-panel-edge) bg-(--cic-void)/60 px-3 py-2
+              "
+            >
               <div className="flex items-center gap-2.5">
                 <Landmark
                   className="size-3 transition-colors duration-200"
@@ -109,17 +111,21 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
               </div>
               <div className="flex items-center gap-2">
                 {activeTagCount > 0 ? (
-                  <span className="
-                    rounded-sm bg-(--cic-cyan-glow) px-1.5 py-px font-mono
-                    text-[7px] text-(--cic-cyan-dim)
-                  ">
+                  <span
+                    className="
+                      rounded-sm bg-(--cic-cyan-glow) px-1.5 py-px font-mono
+                      text-[7px] text-(--cic-cyan-dim)
+                    "
+                  >
                     {activeTagCount} {activeTagCount === 1 ? 'domain' : 'domains'}
                   </span>
                 ) : (
-                  <span className="
-                    rounded-sm bg-(--cic-red)/10 px-1.5 py-px font-mono
-                    text-[7px] text-(--cic-red)
-                  ">
+                  <span
+                    className="
+                      rounded-sm bg-(--cic-red)/10 px-1.5 py-px font-mono
+                      text-[7px] text-(--cic-red)
+                    "
+                  >
                     No domains
                   </span>
                 )}
@@ -139,10 +145,14 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
             <div className="space-y-3 p-4">
               {/* Domain tags */}
               <div>
-                <p className="
-                  mb-1.5 text-[7px] tracking-wider text-muted-foreground
-                  uppercase
-                ">Domain Assignments</p>
+                <p
+                  className="
+                    mb-1.5 text-[7px] tracking-wider text-muted-foreground
+                    uppercase
+                  "
+                >
+                  Domain Assignments
+                </p>
                 <div className="flex flex-wrap gap-1.5">
                   {EVENT_TAGS.map((tag) => {
                     const active = ministry.tags.includes(tag.id)
@@ -157,20 +167,21 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
                           h-7 gap-1.5 py-0.5 pr-2.5 pl-2 text-[9px]
                           transition-all duration-150
                           ${
-                          active
-                            ? 'cursor-pointer'
-                            : taken
-                              ? `
-                                cursor-not-allowed border-(--cic-panel-edge)/40
-                                text-muted-foreground/40
-                              `
-                              : `
-                                cursor-pointer border-(--cic-panel-edge)
-                                text-foreground/30
-                                hover:border-foreground/20
-                                hover:text-foreground/60
-                              `
-                        }
+                            active
+                              ? 'cursor-pointer'
+                              : taken
+                                ? `
+                                  cursor-not-allowed
+                                  border-(--cic-panel-edge)/40
+                                  text-muted-foreground/40
+                                `
+                                : `
+                                  cursor-pointer border-(--cic-panel-edge)
+                                  text-foreground/30
+                                  hover:border-foreground/20
+                                  hover:text-foreground/60
+                                `
+                          }
                         `}
                         style={
                           active
@@ -203,9 +214,12 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
 
               {/* Description */}
               <div>
-                <p className="
-                  mb-1 text-[7px] tracking-wider text-muted-foreground uppercase
-                ">
+                <p
+                  className="
+                    mb-1 text-[7px] tracking-wider text-muted-foreground
+                    uppercase
+                  "
+                >
                   Mandate <span className="text-muted-foreground/60">(optional)</span>
                 </p>
                 <textarea
@@ -228,20 +242,26 @@ export function MinistryEditor({ ministries, onChange }: MinistryEditorProps) {
       })}
 
       {/* Add ministry — command panel */}
-      <div className="
-        overflow-hidden rounded-md border border-dashed
-        border-(--cic-panel-edge) bg-(--cic-panel)
-      ">
+      <div
+        className="
+          overflow-hidden rounded-md border border-dashed
+          border-(--cic-panel-edge) bg-(--cic-panel)
+        "
+      >
         {/* Header strip */}
-        <div className="
-          flex items-center gap-2 border-b border-(--cic-panel-edge)/50
-          bg-(--cic-void)/40 px-3 py-1.5
-        ">
+        <div
+          className="
+            flex items-center gap-2 border-b border-(--cic-panel-edge)/50
+            bg-(--cic-void)/40 px-3 py-1.5
+          "
+        >
           <Plus className="size-2.5 text-(--cic-amber-dim)/60" />
-          <span className="
-            text-[7px] font-semibold tracking-wider text-muted-foreground/50
-            uppercase
-          ">
+          <span
+            className="
+              text-[7px] font-semibold tracking-wider text-muted-foreground/50
+              uppercase
+            "
+          >
             Establish New Ministry
           </span>
         </div>

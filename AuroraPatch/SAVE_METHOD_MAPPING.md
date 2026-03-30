@@ -35,126 +35,139 @@ last tick, the save is skipped entirely.
 ## Mapped methods (66 methods, write to tables)
 
 ### Research
-| Method | Tables |
-|--------|--------|
-| `kc` | FCT_ResearchProject |
-| `kk` | FCT_RaceTech |
-| `km` | FCT_TechSystem |
-| `i2` | FCT_TechProgressionRace |
-| `k0` | FCT_DesignPhilosophy, FCT_DesignPhilosophyTechProgressionCategories |
+
+| Method | Tables                                                              |
+| ------ | ------------------------------------------------------------------- |
+| `kc`   | FCT_ResearchProject                                                 |
+| `kk`   | FCT_RaceTech                                                        |
+| `km`   | FCT_TechSystem                                                      |
+| `i2`   | FCT_TechProgressionRace                                             |
+| `k0`   | FCT_DesignPhilosophy, FCT_DesignPhilosophyTechProgressionCategories |
 
 ### Fleets & Orders
-| Method | Tables |
-|--------|--------|
-| `jh` | FCT_Fleet, FCT_FleetHistory, FCT_FleetStandingOrder, FCT_FleetConditionalOrder |
-| `jf` | FCT_SubFleets |
-| `i9` | FCT_MoveOrders |
-| `ja` | FCT_MoveOrderTemplate |
-| `jg` | FCT_StandingOrderTemplate, FCT_StandingOrderTemplateOrder |
-| `iz` | FCT_OrderTemplate |
-| `ip` | FCT_Squadron |
+
+| Method | Tables                                                                         |
+| ------ | ------------------------------------------------------------------------------ |
+| `jh`   | FCT_Fleet, FCT_FleetHistory, FCT_FleetStandingOrder, FCT_FleetConditionalOrder |
+| `jf`   | FCT_SubFleets                                                                  |
+| `i9`   | FCT_MoveOrders                                                                 |
+| `ja`   | FCT_MoveOrderTemplate                                                          |
+| `jg`   | FCT_StandingOrderTemplate, FCT_StandingOrderTemplateOrder                      |
+| `iz`   | FCT_OrderTemplate                                                              |
+| `ip`   | FCT_Squadron                                                                   |
 
 ### Ships & Classes
-| Method | Tables |
-|--------|--------|
-| `js` | FCT_Ship, FCT_ShipWeapon, FCT_DamagedComponent, FCT_ShipHistory, FCT_WeaponAssignment, FCT_DecoyAssignment, FCT_FireControlAssignment, FCT_MissileAssignment, FCT_ArmourDamage, FCT_ShipMeasurement |
-| `jj` | FCT_ShipCargo |
-| `jz` | FCT_DamageControlQueue |
-| `jm` | FCT_ShipClass, FCT_ClassMaterials, FCT_ClassOrdnanceTemplate, FCT_ClassComponent, FCT_ClassSC, FCT_ClassGroundTemplates |
-| `kn` | FCT_ShipDesignComponents |
-| `kp` | FCT_ShipComponentTemplate |
-| `jx` | FCT_MissileType |
-| `j0` | FCT_HullDescription |
+
+| Method | Tables                                                                                                                                                                                              |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `js`   | FCT_Ship, FCT_ShipWeapon, FCT_DamagedComponent, FCT_ShipHistory, FCT_WeaponAssignment, FCT_DecoyAssignment, FCT_FireControlAssignment, FCT_MissileAssignment, FCT_ArmourDamage, FCT_ShipMeasurement |
+| `jj`   | FCT_ShipCargo                                                                                                                                                                                       |
+| `jz`   | FCT_DamageControlQueue                                                                                                                                                                              |
+| `jm`   | FCT_ShipClass, FCT_ClassMaterials, FCT_ClassOrdnanceTemplate, FCT_ClassComponent, FCT_ClassSC, FCT_ClassGroundTemplates                                                                             |
+| `kn`   | FCT_ShipDesignComponents                                                                                                                                                                            |
+| `kp`   | FCT_ShipComponentTemplate                                                                                                                                                                           |
+| `jx`   | FCT_MissileType                                                                                                                                                                                     |
+| `j0`   | FCT_HullDescription                                                                                                                                                                                 |
 
 ### Systems & Stars
-| Method | Tables |
-|--------|--------|
-| `im` | FCT_System |
-| `ix` | FCT_Star |
-| `iy` | FCT_JumpPoint |
-| `i5` | FCT_LagrangePoint |
-| `jn` | FCT_SystemBodyName |
-| `jy` | FCT_AtmosphericGas |
+
+| Method | Tables             |
+| ------ | ------------------ |
+| `im`   | FCT_System         |
+| `ix`   | FCT_Star           |
+| `iy`   | FCT_JumpPoint      |
+| `i5`   | FCT_LagrangePoint  |
+| `jn`   | FCT_SystemBodyName |
+| `jy`   | FCT_AtmosphericGas |
 
 ### Minerals & Economy
-| Method | Tables |
-|--------|--------|
-| `jl` | FCT_MineralDeposit |
-| `j5` | FCT_WealthData |
-| `j6` | FCT_RaceMineralData |
-| `i6` | FCT_PopTradeBalance |
-| `i4` | FCT_MassDriverPackets |
+
+| Method | Tables                |
+| ------ | --------------------- |
+| `jl`   | FCT_MineralDeposit    |
+| `j5`   | FCT_WealthData        |
+| `j6`   | FCT_RaceMineralData   |
+| `i6`   | FCT_PopTradeBalance   |
+| `i4`   | FCT_MassDriverPackets |
 
 ### Population & Industry
-| Method | Tables |
-|--------|--------|
-| `jk` | FCT_Population, FCT_PopulationWeapon, FCT_PopComponent, FCT_PopMDChanges, FCT_PopInstallationDemand |
-| `ji` | FCT_PopulationInstallations |
-| `jv` | FCT_IndustrialProjects |
-| `j2` | FCT_Shipyard |
-| `j3` | FCT_ShipyardTask |
+
+| Method | Tables                                                                                              |
+| ------ | --------------------------------------------------------------------------------------------------- |
+| `jk`   | FCT_Population, FCT_PopulationWeapon, FCT_PopComponent, FCT_PopMDChanges, FCT_PopInstallationDemand |
+| `ji`   | FCT_PopulationInstallations                                                                         |
+| `jv`   | FCT_IndustrialProjects                                                                              |
+| `j2`   | FCT_Shipyard                                                                                        |
+| `j3`   | FCT_ShipyardTask                                                                                    |
 
 ### Commanders
-| Method | Tables |
-|--------|--------|
-| `j1` | FCT_Commander, FCT_CommanderHistory, FCT_CommanderMedal, FCT_CommanderMeasurement, FCT_CommanderBonuses, FCT_CommanderTraits |
+
+| Method | Tables                                                                                                                       |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `j1`   | FCT_Commander, FCT_CommanderHistory, FCT_CommanderMedal, FCT_CommanderMeasurement, FCT_CommanderBonuses, FCT_CommanderTraits |
 
 ### Race & Game
-| Method | Tables |
-|--------|--------|
-| `a5` | FCT_Game |
-| `a6` | FCT_Race, FCT_ResearchQueue, FCT_RaceNameThemes, FCT_WindowPosition, FCT_RaceOperationalGroupElements, FCT_HullNumber, FCT_WealthHistory |
-| `j4` | FCT_Species, FCT_KnownSpecies |
+
+| Method | Tables                                                                                                                                   |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `a5`   | FCT_Game                                                                                                                                 |
+| `a6`   | FCT_Race, FCT_ResearchQueue, FCT_RaceNameThemes, FCT_WindowPosition, FCT_RaceOperationalGroupElements, FCT_HullNumber, FCT_WealthHistory |
+| `j4`   | FCT_Species, FCT_KnownSpecies                                                                                                            |
 
 ### Surveys
-| Method | Tables |
-|--------|--------|
-| `kz` | FCT_RaceSysSurvey, FCT_RaceJumpPointSurvey |
-| `iw` | FCT_SurveyLocation, FCT_RaceSurveyLocation |
+
+| Method | Tables                                     |
+| ------ | ------------------------------------------ |
+| `kz`   | FCT_RaceSysSurvey, FCT_RaceJumpPointSurvey |
+| `iw`   | FCT_SurveyLocation, FCT_RaceSurveyLocation |
 
 ### Ground Units
-| Method | Tables |
-|--------|--------|
-| `ir` | FCT_GroundUnitFormationElement, FCT_GroundUnitFormationElementTemplates, FCT_STODetected |
-| `is` | FCT_GroundUnitFormationTemplate |
-| `it` | FCT_GroundUnitFormation |
-| `iu` | FCT_GroundUnitClass, FCT_GroundUnitCapability |
-| `ka` | FCT_GroundUnitTraining |
-| `kb` | FCT_GroundUnitTrainingQueue |
+
+| Method | Tables                                                                                   |
+| ------ | ---------------------------------------------------------------------------------------- |
+| `ir`   | FCT_GroundUnitFormationElement, FCT_GroundUnitFormationElementTemplates, FCT_STODetected |
+| `is`   | FCT_GroundUnitFormationTemplate                                                          |
+| `it`   | FCT_GroundUnitFormation                                                                  |
+| `iu`   | FCT_GroundUnitClass, FCT_GroundUnitCapability                                            |
+| `ka`   | FCT_GroundUnitTraining                                                                   |
+| `kb`   | FCT_GroundUnitTrainingQueue                                                              |
 
 ### Aliens
-| Method | Tables |
-|--------|--------|
-| `ke` | FCT_AlienRace, FCT_AlienRaceSpecies, FCT_AlienSystem |
-| `kf` | FCT_AlienClass, FCT_AlienClassSensor, FCT_AlienClassWeapon, FCT_AlienClassTech |
-| `kg` | FCT_AlienRaceSensor |
-| `kh` | FCT_AlienShip |
-| `ki` | FCT_AlienGroundUnitClass |
-| `kj` | FCT_AlienPopulation |
+
+| Method | Tables                                                                         |
+| ------ | ------------------------------------------------------------------------------ |
+| `ke`   | FCT_AlienRace, FCT_AlienRaceSpecies, FCT_AlienSystem                           |
+| `kf`   | FCT_AlienClass, FCT_AlienClassSensor, FCT_AlienClassWeapon, FCT_AlienClassTech |
+| `kg`   | FCT_AlienRaceSensor                                                            |
+| `kh`   | FCT_AlienShip                                                                  |
+| `ki`   | FCT_AlienGroundUnitClass                                                       |
+| `kj`   | FCT_AlienPopulation                                                            |
 
 ### Shipping
-| Method | Tables |
-|--------|--------|
-| `i7` | FCT_ShippingWealthData |
-| `j7` | FCT_ShippingLines |
+
+| Method | Tables                 |
+| ------ | ---------------------- |
+| `i7`   | FCT_ShippingWealthData |
+| `j7`   | FCT_ShippingLines      |
 
 ### Misc
-| Method | Tables |
-|--------|--------|
-| `kd` | FCT_SectorCommand |
-| `ko` | FCT_Increments |
-| `ks` | FCT_GameLog |
-| `kt` | FCT_EventColour |
-| `kw` | FCT_OrganizationNode |
-| `kx` | FCT_Ranks |
-| `ky` | FCT_HideEvents |
-| `iq` | FCT_WindowPosition |
-| `in` | FCT_RaceMedals |
-| `io` | FCT_MedalConditionAssignment |
-| `jp` | FCT_AncientConstruct |
-| `jr` | FCT_RuinRace |
-| `ju` | FCT_Wrecks, FCT_WreckTech, FCT_WreckComponents |
-| `j8` | FCT_NavalAdminCommand |
+
+| Method | Tables                                         |
+| ------ | ---------------------------------------------- |
+| `kd`   | FCT_SectorCommand                              |
+| `ko`   | FCT_Increments                                 |
+| `ks`   | FCT_GameLog                                    |
+| `kt`   | FCT_EventColour                                |
+| `kw`   | FCT_OrganizationNode                           |
+| `kx`   | FCT_Ranks                                      |
+| `ky`   | FCT_HideEvents                                 |
+| `iq`   | FCT_WindowPosition                             |
+| `in`   | FCT_RaceMedals                                 |
+| `io`   | FCT_MedalConditionAssignment                   |
+| `jp`   | FCT_AncientConstruct                           |
+| `jr`   | FCT_RuinRace                                   |
+| `ju`   | FCT_Wrecks, FCT_WreckTech, FCT_WreckComponents |
+| `j8`   | FCT_NavalAdminCommand                          |
 
 ## Unmapped methods (17 methods, no tables detected)
 
@@ -162,27 +175,27 @@ These methods produced no INSERT, UPDATE, or DELETE triggers during testing.
 They may activate during specific game states (combat, diplomacy, etc.) or
 may be unused/dead code.
 
-| Method | Notes |
-|--------|-------|
-| `kl` | Unknown - no writes detected |
-| `kq` | Unknown - no writes detected |
-| `kr` | Unknown - no writes detected |
-| `ku` | Unknown - no writes detected |
-| `kv` | Unknown - no writes detected |
-| `iv` | Unknown - no writes detected |
-| `i0` | Unknown - no writes detected |
-| `i1` | Unknown - no writes detected |
-| `i3` | Unknown - no writes detected |
-| `i8` | Unknown - no writes detected |
-| `jb` | Unknown - no writes detected |
-| `jc` | Unknown - no writes detected |
-| `jd` | Unknown - no writes detected |
-| `je` | Unknown - no writes detected |
-| `jo` | Unknown - no writes detected |
-| `jq` | Unknown - no writes detected |
-| `jt` | Unknown - no writes detected |
-| `jw` | Unknown - no writes detected |
-| `j9` | Unknown - no writes detected |
+| Method | Notes                        |
+| ------ | ---------------------------- |
+| `kl`   | Unknown - no writes detected |
+| `kq`   | Unknown - no writes detected |
+| `kr`   | Unknown - no writes detected |
+| `ku`   | Unknown - no writes detected |
+| `kv`   | Unknown - no writes detected |
+| `iv`   | Unknown - no writes detected |
+| `i0`   | Unknown - no writes detected |
+| `i1`   | Unknown - no writes detected |
+| `i3`   | Unknown - no writes detected |
+| `i8`   | Unknown - no writes detected |
+| `jb`   | Unknown - no writes detected |
+| `jc`   | Unknown - no writes detected |
+| `jd`   | Unknown - no writes detected |
+| `je`   | Unknown - no writes detected |
+| `jo`   | Unknown - no writes detected |
+| `jq`   | Unknown - no writes detected |
+| `jt`   | Unknown - no writes detected |
+| `jw`   | Unknown - no writes detected |
+| `j9`   | Unknown - no writes detected |
 
 To investigate these, try `rediscoverMapping` after triggering different game events
 (combat, first contact, ground invasions, etc.) and compare the output.

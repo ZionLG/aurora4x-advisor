@@ -58,21 +58,13 @@ const ProductionPage = lazy(() =>
 // System pages
 const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then((m) => ({ default: m.GameLogPage })))
 
-// Planning pages (migrated from tabs to full pages)
-const FleetPage = lazy(() => import('@/app/pages/planning/tabs/FleetTab').then((m) => ({ default: m.FleetTab })))
-const MineralsPage = lazy(() =>
-  import('@/app/pages/planning/tabs/MineralsTab').then((m) => ({ default: m.MineralsTab }))
-)
-const ResearchPage = lazy(() =>
-  import('@/app/pages/planning/tabs/ResearchTab').then((m) => ({ default: m.ResearchTab }))
-)
-const ShipyardPage = lazy(() =>
-  import('@/app/pages/planning/tabs/ShipyardTab').then((m) => ({ default: m.ShipyardTab }))
-)
-const RoutesPage = lazy(() => import('@/app/pages/planning/tabs/RoutesTab').then((m) => ({ default: m.RoutesTab })))
-const OverviewPage = lazy(() =>
-  import('@/app/pages/planning/tabs/OverviewTab').then((m) => ({ default: m.OverviewTab }))
-)
+// Planning pages — disabled until properly migrated with body map support
+// const FleetPage = lazy(() => import('@/app/pages/planning/tabs/FleetTab').then((m) => ({ default: m.FleetTab })))
+// const MineralsPage = lazy(() => import('@/app/pages/planning/tabs/MineralsTab').then((m) => ({ default: m.MineralsTab })))
+// const ResearchPage = lazy(() => import('@/app/pages/planning/tabs/ResearchTab').then((m) => ({ default: m.ResearchTab })))
+// const ShipyardPage = lazy(() => import('@/app/pages/planning/tabs/ShipyardTab').then((m) => ({ default: m.ShipyardTab })))
+// const RoutesPage = lazy(() => import('@/app/pages/planning/tabs/RoutesTab').then((m) => ({ default: m.RoutesTab })))
+// const OverviewPage = lazy(() => import('@/app/pages/planning/tabs/OverviewTab').then((m) => ({ default: m.OverviewTab })))
 
 // Placeholder for coming-soon modules
 const ComingSoonPage = lazy(() =>
@@ -125,12 +117,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'strategic',
     icon: BarChart3,
     route: '/strategic/analytics',
-    component: OverviewPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['economy', 'military', 'diplomacy'],
     order: 1,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'diplomacy',
@@ -153,12 +145,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'military',
     icon: Ship,
     route: '/military/fleet',
-    component: FleetPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['military', 'fleet'],
     order: 0,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'ship-design',
@@ -166,11 +158,11 @@ export const MODULES: ModuleDefinition[] = [
     category: 'military',
     icon: PenTool,
     route: '/military/ship-design',
-    component: ShipyardPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     order: 1,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'combat-sim',
@@ -214,11 +206,11 @@ export const MODULES: ModuleDefinition[] = [
     category: 'military',
     icon: Map,
     route: '/military/routes',
-    component: RoutesPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     order: 5,
-    status: 'active',
+    status: 'coming-soon',
   },
 
   // ── Economy ─────────────────────────────────────
@@ -241,12 +233,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'economy',
     icon: Gem,
     route: '/economy/minerals',
-    component: MineralsPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['minerals'],
     order: 1,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'colonies',
@@ -280,12 +272,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'science',
     icon: FlaskConical,
     route: '/science/research',
-    component: ResearchPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['research'],
     order: 0,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'habitability',
