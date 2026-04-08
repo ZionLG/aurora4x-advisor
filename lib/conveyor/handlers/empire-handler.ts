@@ -283,6 +283,8 @@ export const registerEmpireHandlers = () => {
       queryFn = getQuery()
     }
     const provider = new SqlWarningsProvider(queryFn, ctx.gameId, ctx.raceId)
+    const gameTimeRows = await queryFn<{ GameTime: number }>(`SELECT GameTime FROM FCT_Game WHERE GameID = ${ctx.gameId}`)
+    const gameTime = gameTimeRows[0]?.GameTime ?? 0
     const [
       stockpilingCivilianMinerals, selfSustainingDestinations,
       freeLabs, freeCapacity, deadResearch, lowEfficiency, governorless, mismatchedResearch,
@@ -323,6 +325,7 @@ export const registerEmpireHandlers = () => {
       provider.getIntruders(),
     ])
     return calculateWarnings({
+      gameTime,
       stockpilingCivilianMinerals, selfSustainingDestinations,
       freeLabs, freeCapacity, deadResearch, lowEfficiency, governorless, mismatchedResearch,
       wastedMining, wastedTerraform, obsoleteShipyards,

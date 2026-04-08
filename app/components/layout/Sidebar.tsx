@@ -214,44 +214,65 @@ export function Sidebar() {
       {/* Module categories */}
       <ScrollArea className="min-h-0 flex-1">
         <div className="px-2 pb-2">
-          {CATEGORY_LIST.map((cat) => {
-            const modules = modulesByCategory[cat.id] ?? []
-            if (modules.length === 0) return null
-            const isOpen = openCategories.has(cat.id)
-            const Icon = cat.icon
-            return (
-              <div key={cat.id} className="mb-1">
-                {/* Category header */}
-                <button
-                  onClick={() => toggleCategory(cat.id)}
-                  className="
-                    flex w-full items-center gap-1.5 rounded-sm px-2 py-1.5
-                    text-[9px] font-semibold tracking-[0.12em]
-                    text-(--cic-amber-dim) uppercase transition-colors
-                    hover:bg-(--cic-amber-glow) hover:text-(--cic-amber)
-                  "
-                >
-                  <Icon className="size-3" />
-                  <span className="flex-1 text-left">{cat.label}</span>
-                  {isOpen ? (
-                    <ChevronDown className="size-2.5" />
-                  ) : (
-                    <ChevronRight
-                      className="size-2.5"
-                    />
+          {(() => {
+            const activeCategories: typeof CATEGORY_LIST = []
+            const soonCategories: typeof CATEGORY_LIST = []
+            for (const cat of CATEGORY_LIST) {
+              const modules = modulesByCategory[cat.id] ?? []
+              if (modules.length === 0) continue
+              const allSoon = modules.every((m) => m.status === 'coming-soon')
+              if (allSoon) soonCategories.push(cat)
+              else activeCategories.push(cat)
+            }
+            return [...activeCategories, ...soonCategories].map((cat) => {
+              const modules = modulesByCategory[cat.id] ?? []
+              const allSoon = modules.every((m) => m.status === 'coming-soon')
+              const isOpen = openCategories.has(cat.id)
+              const Icon = cat.icon
+              return (
+                <div key={cat.id} className="mb-1">
+                  <button
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`
+                      flex w-full items-center gap-1.5 rounded-sm px-2 py-1.5
+                      text-[9px] font-semibold tracking-[0.12em] uppercase
+                      transition-colors
+                      ${allSoon
+                        ? `
+                          text-muted-foreground/25
+                          hover:bg-foreground/3 hover:text-muted-foreground/40
+                        `
+                        : `
+                          text-(--cic-amber-dim)
+                          hover:bg-(--cic-amber-glow) hover:text-(--cic-amber)
+                        `}
+                    `}
+                  >
+                    <Icon className="size-3" />
+                    <span className="flex-1 text-left">{cat.label}</span>
+                    {allSoon && (
+                      <span className="
+                        text-[6px] font-normal tracking-normal
+                        text-muted-foreground/20
+                      ">SOON</span>
+                    )}
+                    {isOpen ? (
+                      <ChevronDown className="size-2.5" />
+                    ) : (
+                      <ChevronRight className="size-2.5" />
+                    )}
+                  </button>
+                  {isOpen && (
+                    <div className="mt-0.5 ml-2 space-y-0.5">
+                      {modules.map((mod) => (
+                        <ModuleLink key={mod.id} mod={mod} />
+                      ))}
+                    </div>
                   )}
-                </button>
-                {/* Module links */}
-                {isOpen && (
-                  <div className="mt-0.5 ml-2 space-y-0.5">
-                    {modules.map((mod) => (
-                      <ModuleLink key={mod.id} mod={mod} />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                </div>
+              )
+            })
+          })()}
         </div>
 
         {/* Campaigns */}
@@ -443,7 +464,7 @@ function ModuleLink({ mod }: { mod: ModuleDefinition }) {
             : isActive
               ? 'bg-[var(--cic-cyan-glow)] text-[var(--cic-cyan)] border border-[var(--cic-cyan-dim)]/20'
               : 'text-foreground/50 hover:bg-[var(--cic-cyan-glow)] hover:text-foreground/70 border border-transparent'
-        } ${mod.status === 'coming-soon' ? 'opacity-50' : ''}`
+        } ${mod.status === 'coming-soon' ? 'opacity-30' : ''}`
       }
     >
       <mod.icon className="size-3 shrink-0" />

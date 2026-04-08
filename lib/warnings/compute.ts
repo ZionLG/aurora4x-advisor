@@ -67,6 +67,7 @@ export function calculateWarnings(data: {
   commanderlessAdmins: CommanderlessAdminData[]
   commanderlessSectors: CommanderlessSectorData[]
   // Exploration / Contacts
+  gameTime: number
   activeLifepods: ActiveLifepodData[]
   knownWrecks: KnownWreckData[]
   unexploitedConstructs: UnexploitedConstructData[]
@@ -381,14 +382,26 @@ export function calculateWarnings(data: {
     })
   }
 
-  for (const { lifepodId, shipName, crew, systemName } of data.activeLifepods) {
+  // Lifepods expire after 2 weeks (1,209,600 seconds)
+  const TWO_WEEKS = 14 * 86400
+  for (const { lifepodId, shipName, crew, systemName, creationTime } of data.activeLifepods) {
+    let remaining = TWO_WEEKS - (data.gameTime - creationTime)
+    if (remaining < 0) remaining = 0
+    const days = Math.floor(remaining / 86400)
+    remaining -= days * 86400
+    const hours = Math.floor(remaining / 3600)
+    remaining -= hours * 3600
+    const minutes = Math.floor(remaining / 60)
+    const parts = [days > 0 && `${days}d`, hours > 0 && `${hours}h`, minutes > 0 && `${minutes}m`].filter(Boolean).join(' ')
+    const timeStr = parts || 'Expired'
+
     warnings.push({
       id: `lifepod-${lifepodId}`,
       category: 'others',
       type: 'Active Lifepod',
       severity: 'high',
-      title: `${systemName} — ${shipName}`,
-      detail: `${crew} crew.`,
+      title: `${systemName} — ${shipName} — ${crew} People`,
+      detail: `Time remaining: ${timeStr}`,
       system: systemName,
     })
   }

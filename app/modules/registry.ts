@@ -116,7 +116,7 @@ export const MODULES: ModuleDefinition[] = [
     requiresGame: true,
     requiresBridge: false,
     order: 0,
-    status: 'active',
+    status: 'coming-soon',
   },
   {
     id: 'analytics',
