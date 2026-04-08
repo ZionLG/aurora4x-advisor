@@ -202,7 +202,7 @@ export function WelcomePage() {
                         text-(--cic-amber) transition-all
                         hover:border-(--cic-amber)/60 hover:bg-(--cic-amber)/20
                       "
-                      onClick={() => navigate('/settings')}
+                      onClick={() => navigate('/system/settings')}
                     >
                       Configure Database Path
                     </Button>
