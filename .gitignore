@@ -15,3 +15,5 @@ AuroraPatch/**/*.user
 AuroraPatch/**/*.suo
 
 RELEASE_*.md
+
+.octocode/

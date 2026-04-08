@@ -168,8 +168,9 @@ last tick, the save is skipped entirely.
 | `jr`   | FCT_RuinRace                                   |
 | `ju`   | FCT_Wrecks, FCT_WreckTech, FCT_WreckComponents |
 | `j8`   | FCT_NavalAdminCommand                          |
+| `j9`   | FCT_Lifepods                                   |
 
-## Unmapped methods (17 methods, no tables detected)
+## Unmapped methods (16 methods, no tables detected)
 
 These methods produced no INSERT, UPDATE, or DELETE triggers during testing.
 They may activate during specific game states (combat, diplomacy, etc.) or
@@ -195,8 +196,6 @@ may be unused/dead code.
 | `jq`   | Unknown - no writes detected |
 | `jt`   | Unknown - no writes detected |
 | `jw`   | Unknown - no writes detected |
-| `j9`   | Unknown - no writes detected |
-
 To investigate these, try `rediscoverMapping` after triggering different game events
 (combat, first contact, ground invasions, etc.) and compare the output.
 

@@ -156,6 +156,7 @@ namespace Lib
                     { "jr", new[] { "FCT_RuinRace" } },
                     { "ju", new[] { "FCT_Wrecks", "FCT_WreckTech", "FCT_WreckComponents" } },
                     { "j8", new[] { "FCT_NavalAdminCommand" } },
+                    { "j9", new[] { "FCT_Lifepods" } },
                 }
             },
 

@@ -4,7 +4,13 @@
       "Bash(npx tsc:*)",
       "Bash(npx eslint:*)",
       "Bash(cmd.exe //c \"C:\\\\Programming\\\\aurora4x-companion\\\\AuroraPatch\\\\build-deploy.bat Debug\" 2>&1)",
-      "mcp__aurora-4x-mcp__query"
+      "mcp__aurora-4x-mcp__query",
+      "mcp__octocode__localViewStructure",
+      "mcp__octocode__localGetFileContent",
+      "mcp__octocode__localSearchCode",
+      "Bash(node -e ':*)",
+      "Bash(xargs grep:*)",
+      "Bash(cmd //c build-deploy.bat Debug)"
     ]
   }
 }
