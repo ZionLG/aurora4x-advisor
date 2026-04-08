@@ -6,6 +6,7 @@ export { useGovernmentSync } from './use-government-sync'
 // Domain data hooks
 export {
   useGameDate,
+  useWarnings,
   useGameLog,
   useEventTypes,
   useBodyMap,

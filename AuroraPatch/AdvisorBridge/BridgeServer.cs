@@ -262,6 +262,12 @@ namespace AdvisorBridge
                     response = HandleFullQuery(request);
                     break;
 
+                // Mark all tables as stale — forces re-save on next query
+                case "markstale":
+                    _db.MarkAllStale();
+                    response = Handle(request, () => "ok");
+                    break;
+
                 // Fleets & Ships — real-time memory reader
                 case "getfleets":
                     response = Handle(request, () => _fleets.GetFleets());

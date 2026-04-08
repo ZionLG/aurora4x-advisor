@@ -170,6 +170,11 @@ class AuroraBridge {
     return this.send('query.full', { Sql: sql }, timeoutMs) as Promise<T[]>
   }
 
+  /** Mark all table caches as stale — forces re-save on next query. */
+  async markStale(): Promise<void> {
+    await this.send('markstale', null)
+  }
+
   async executeAction(action: ActionRequest): Promise<unknown> {
     return this.send('action', action)
   }

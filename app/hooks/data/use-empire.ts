@@ -39,6 +39,23 @@ export function useGameDate() {
   })
 }
 
+// ── Warnings ─────────────────────────────────────────────────────────
+
+export function useWarnings() {
+  const enabled = useEmpireEnabled()
+  const staleTime = useRecapStaleTime(30_000)
+  const refetchInterval = useRecapRefetchInterval()
+  const forceOffline = useRecapForceOffline()
+  return useQuery({
+    queryKey: ['empire', 'warnings', { forceOffline }],
+    queryFn: () => window.conveyor.empire.getWarnings(forceOffline),
+    enabled,
+    staleTime,
+    refetchInterval,
+    placeholderData: (prev) => prev,
+  })
+}
+
 // ── Game Log ─────────────────────────────────────────────────────────
 
 export function useGameLog(

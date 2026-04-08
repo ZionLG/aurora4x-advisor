@@ -4,6 +4,7 @@ import { gameSession } from '@/lib/services/game-session'
 import { getOfflineQuery, makeDirectQuery } from '@/lib/services/offline-query'
 import * as compute from '@/lib/compute'
 import { formatGameDate } from '@/lib/compute/utils'
+import { SqlWarningsProvider, calculateWarnings } from '@/lib/warnings'
 
 /**
  * Returns the active QueryFn — either offline (direct SQLite) or bridge (WebSocket).
@@ -271,6 +272,68 @@ export const registerEmpireHandlers = () => {
     return compute.calculateTerraformingEntries(data, orbital, govTerraform, bodies)
   })
 
+  // Warnings
+  handle('empire:getWarnings', async (forceOffline: boolean) => {
+    const ctx = getGameCtx()
+    let queryFn: compute.QueryFn
+    if (forceOffline) {
+      const offlineQuery = getOfflineQuery()
+      queryFn = offlineQuery ?? (auroraBridge.auroraDbPath ? makeDirectQuery(auroraBridge.auroraDbPath) : getQuery())
+    } else {
+      queryFn = getQuery()
+    }
+    const provider = new SqlWarningsProvider(queryFn, ctx.gameId, ctx.raceId)
+    const [
+      stockpilingCivilianMinerals, selfSustainingDestinations,
+      freeLabs, freeCapacity, deadResearch, lowEfficiency, governorless, mismatchedResearch,
+      wastedMining, wastedTerraform, obsoleteShipyards,
+      damagedShips, armorDamagedShips, lowMoraleShips, lowMaintenanceShips,
+      misconfiguredSupplyClasses, misconfiguredTankerClasses, obsoleteShips,
+      fullyTrainedShips, activeFireControls, transportNoShuttleClasses,
+      commanderlessAdmins, commanderlessSectors,
+      activeLifepods, knownWrecks, unexploitedConstructs, dangerousRifts, intruders,
+    ] = await Promise.all([
+      provider.getStockpilingCivilianMinerals(),
+      provider.getSelfSustainingDestinations(),
+      provider.getFreeLabs(),
+      provider.getFreeCapacity(),
+      provider.getDeadResearch(),
+      provider.getLowEfficiency(),
+      provider.getGovernorless(),
+      provider.getMismatchedResearch(),
+      provider.getWastedMining(),
+      provider.getWastedTerraform(),
+      provider.getObsoleteShipyards(),
+      provider.getDamagedShips(),
+      provider.getArmorDamagedShips(),
+      provider.getLowMoraleShips(),
+      provider.getLowMaintenanceShips(),
+      provider.getMisconfiguredSupplyClasses(),
+      provider.getMisconfiguredTankerClasses(),
+      provider.getObsoleteShips(),
+      provider.getFullyTrainedShips(),
+      provider.getActiveFireControls(),
+      provider.getTransportNoShuttleClasses(),
+      provider.getCommanderlessAdmins(),
+      provider.getCommanderlessSectors(),
+      provider.getActiveLifepods(),
+      provider.getKnownWrecks(),
+      provider.getUnexploitedConstructs(),
+      provider.getDangerousRifts(),
+      provider.getIntruders(),
+    ])
+    return calculateWarnings({
+      stockpilingCivilianMinerals, selfSustainingDestinations,
+      freeLabs, freeCapacity, deadResearch, lowEfficiency, governorless, mismatchedResearch,
+      wastedMining, wastedTerraform, obsoleteShipyards,
+      damagedShips, armorDamagedShips, lowMoraleShips, lowMaintenanceShips,
+      misconfiguredSupplyClasses, misconfiguredTankerClasses, obsoleteShips,
+      fullyTrainedShips, activeFireControls, transportNoShuttleClasses,
+      commanderlessAdmins, commanderlessSectors,
+      activeLifepods, knownWrecks, unexploitedConstructs, dangerousRifts, intruders,
+    })
+  })
+
   // Game log
   handle(
     'empire:getGameLog',
@@ -311,6 +374,12 @@ export const registerEmpireHandlers = () => {
   handle('empire:rediscoverMapping', async () => {
     requireBridge()
     return auroraBridge.send('rediscovermapping', null)
+  })
+
+  handle('empire:markStale', async () => {
+    if (auroraBridge.isConnected) {
+      await auroraBridge.markStale()
+    }
   })
 
   handle('empire:dumpBodyRaw', async (systemBodyId: number) => {

@@ -75,12 +75,12 @@ export const empireIpcSchema = {
   'empire:getProduction': { args: z.tuple([]), return: z.any() },
   'empire:getShipyards': { args: z.tuple([]), return: z.any() },
 
-  // Warnings
-  'empire:getWarnings': { args: z.tuple([]), return: z.any() },
-
   // Habitability
   'empire:getHabitability': { args: z.tuple([]), return: z.any() },
   'empire:getSpeciesRequirements': { args: z.tuple([]), return: z.any() },
+
+  // Warnings
+  'empire:getWarnings': { args: z.tuple([z.boolean()]), return: z.any() },
 
   // Game log
   'empire:getGameLog': {
@@ -99,6 +99,7 @@ export const empireIpcSchema = {
   // Bridge diagnostics
   'empire:getTableMapping': { args: z.tuple([]), return: z.any() },
   'empire:rediscoverMapping': { args: z.tuple([]), return: z.any() },
+  'empire:markStale': { args: z.tuple([]), return: z.any() },
   'empire:dumpBodyRaw': { args: z.tuple([z.number()]), return: z.any() },
 
   // Memory explorer (dev tools)

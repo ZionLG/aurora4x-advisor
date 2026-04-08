@@ -48,9 +48,6 @@ export class EmpireApi extends ConveyorApi {
   getProduction = () => this.invoke('empire:getProduction')
   getShipyards = () => this.invoke('empire:getShipyards')
 
-  // Warnings
-  getWarnings = () => this.invoke('empire:getWarnings')
-
   // Habitability
   getHabitability = () => this.invoke('empire:getHabitability')
   getSpeciesRequirements = () => this.invoke('empire:getSpeciesRequirements')
@@ -68,6 +65,9 @@ export class EmpireApi extends ConveyorApi {
   getRecapTraining = (forceOffline?: boolean) => this.invoke('empire:getRecapTraining', forceOffline ?? false)
   getRecapTerraforming = (forceOffline?: boolean) => this.invoke('empire:getRecapTerraforming', forceOffline ?? false)
 
+  // Warnings
+  getWarnings = (forceOffline?: boolean) => this.invoke('empire:getWarnings', forceOffline ?? false)
+
   // Game log
   getGameLog = (
     limit?: number,
@@ -82,6 +82,7 @@ export class EmpireApi extends ConveyorApi {
   // Bridge diagnostics
   getTableMapping = () => this.invoke('empire:getTableMapping')
   rediscoverMapping = () => this.invoke('empire:rediscoverMapping')
+  markStale = () => this.invoke('empire:markStale')
   dumpBodyRaw = (systemBodyId: number) => this.invoke('empire:dumpBodyRaw', systemBodyId)
 
   // Raw SQL (dev tools)

@@ -111,7 +111,10 @@ function DataSettingsPanel({ invalidateKey, onClose }: { invalidateKey: string[]
 
         {/* Manual refresh */}
         <button
-          onClick={() => queryClient.invalidateQueries({ queryKey: invalidateKey })}
+          onClick={async () => {
+            await window.conveyor.empire.markStale().catch(() => {})
+            queryClient.invalidateQueries({ queryKey: invalidateKey, refetchType: 'all' })
+          }}
           className="flex w-full items-center justify-center gap-1.5 rounded border border-[var(--cic-cyan-dim)]/30 px-2 py-1.5 text-[9px] font-semibold text-[var(--cic-cyan-dim)] transition-all hover:bg-[var(--cic-cyan-glow)] hover:text-[var(--cic-cyan)]"
         >
           <RefreshCw className="h-3 w-3" />

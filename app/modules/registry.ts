@@ -22,6 +22,7 @@ import {
   Atom,
   Map,
   ScrollText,
+  AlertTriangle,
   Settings,
   Wrench,
   Plus,
@@ -57,6 +58,7 @@ const ProductionPage = lazy(() =>
 
 // System pages
 const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then((m) => ({ default: m.GameLogPage })))
+const WarningsPage = lazy(() => import('@/app/pages/system/WarningsPage').then((m) => ({ default: m.WarningsPage })))
 
 // Planning pages — disabled until properly migrated with body map support
 // const FleetPage = lazy(() => import('@/app/pages/planning/tabs/FleetTab').then((m) => ({ default: m.FleetTab })))
@@ -366,6 +368,18 @@ export const MODULES: ModuleDefinition[] = [
     requiresGame: true,
     requiresBridge: false,
     order: 1,
+    status: 'active',
+  },
+  {
+    id: 'warnings',
+    name: 'Warnings',
+    category: 'system',
+    icon: AlertTriangle,
+    route: '/system/warnings',
+    component: WarningsPage,
+    requiresGame: true,
+    requiresBridge: false,
+    order: 2,
     status: 'active',
   },
   {
