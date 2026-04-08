@@ -78,6 +78,7 @@ export class EmpireApi extends ConveyorApi {
     forceOffline?: boolean
   ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden, forceOffline)
   getEventTypes = () => this.invoke('empire:getEventTypes')
+  getMinerals = (forceOffline?: boolean) => this.invoke('empire:getMinerals', forceOffline ?? false)
   getTechTree = (forceOffline?: boolean) => this.invoke('empire:getTechTree', forceOffline ?? false)
 
   // Bridge diagnostics

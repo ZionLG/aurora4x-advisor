@@ -55,6 +55,9 @@ const SettingsPage = lazy(() => import('@/app/pages/settings/SettingsPage').then
 const ProductionPage = lazy(() =>
   import('@/app/pages/economy/ProductionPage').then((m) => ({ default: m.ProductionPage }))
 )
+const MineralsPage = lazy(() =>
+  import('@/app/pages/economy/MineralsPage').then((m) => ({ default: m.MineralsPage }))
+)
 
 // Science pages
 const TechTreePage = lazy(() =>
@@ -236,16 +239,16 @@ export const MODULES: ModuleDefinition[] = [
   },
   {
     id: 'minerals',
-    name: 'Minerals & Mining',
+    name: 'Minerals',
     category: 'economy',
     icon: Gem,
     route: '/economy/minerals',
-    component: ComingSoonPage,
+    component: MineralsPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['minerals'],
     order: 1,
-    status: 'coming-soon',
+    status: 'active',
   },
   {
     id: 'colonies',

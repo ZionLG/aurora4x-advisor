@@ -357,6 +357,15 @@ export const registerEmpireHandlers = () => {
     return compute.getUsedEventTypes(getQuery(), ctx)
   })
 
+  // Minerals — always reads from disk DB (FCT_SystemBody and FCT_SystemBodySurveys have no bridge save methods)
+  handle('empire:getMinerals', async (_forceOffline: boolean) => {
+    const { fetchMinerals } = await import('@/lib/minerals/query')
+    const ctx = getGameCtx()
+    const offlineQuery = getOfflineQuery()
+    const queryFn = offlineQuery ?? (auroraBridge.auroraDbPath ? makeDirectQuery(auroraBridge.auroraDbPath) : getQuery())
+    return fetchMinerals(queryFn, ctx.gameId, ctx.raceId)
+  })
+
   // Tech tree
   handle('empire:getTechTree', async (forceOffline: boolean) => {
     const { fetchTechTree } = await import('@/lib/tech-tree/query')

@@ -89,6 +89,20 @@ export function useEventTypes() {
   })
 }
 
+// ── Minerals ─────────────────────────────────────────────────────────
+
+export function useMinerals() {
+  const enabled = useEmpireEnabled()
+  const forceOffline = useRecapForceOffline()
+  return useQuery({
+    queryKey: ['empire', 'minerals', { forceOffline }],
+    queryFn: () => window.conveyor.empire.getMinerals(forceOffline),
+    enabled,
+    staleTime: 120_000,
+    placeholderData: (prev) => prev,
+  })
+}
+
 // ── Tech Tree ────────────────────────────────────────────────────────
 
 export function useTechTree() {
