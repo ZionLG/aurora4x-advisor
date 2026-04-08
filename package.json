@@ -1,6 +1,6 @@
 {
   "name": "aurora4x-companion",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Tactical companion and advisor for Aurora 4X",
   "main": "./out/main/main.js",
   "license": "MIT",
