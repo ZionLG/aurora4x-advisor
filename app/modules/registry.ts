@@ -56,6 +56,11 @@ const ProductionPage = lazy(() =>
   import('@/app/pages/economy/ProductionPage').then((m) => ({ default: m.ProductionPage }))
 )
 
+// Science pages
+const TechTreePage = lazy(() =>
+  import('@/app/pages/science/TechTreePage').then((m) => ({ default: m.TechTreePage }))
+)
+
 // System pages
 const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then((m) => ({ default: m.GameLogPage })))
 const WarningsPage = lazy(() => import('@/app/pages/system/WarningsPage').then((m) => ({ default: m.WarningsPage })))
@@ -270,16 +275,16 @@ export const MODULES: ModuleDefinition[] = [
   // ── Science ─────────────────────────────────────
   {
     id: 'research',
-    name: 'Research',
+    name: 'Tech Tree',
     category: 'science',
     icon: FlaskConical,
     route: '/science/research',
-    component: ComingSoonPage,
+    component: TechTreePage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['research'],
     order: 0,
-    status: 'coming-soon',
+    status: 'active',
   },
   {
     id: 'habitability',

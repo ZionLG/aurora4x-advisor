@@ -354,6 +354,20 @@ export const registerEmpireHandlers = () => {
     return compute.getUsedEventTypes(getQuery(), ctx)
   })
 
+  // Tech tree
+  handle('empire:getTechTree', async (forceOffline: boolean) => {
+    const { fetchTechTree } = await import('@/lib/tech-tree/query')
+    const ctx = getGameCtx()
+    let queryFn: compute.QueryFn
+    if (forceOffline) {
+      const offlineQuery = getOfflineQuery()
+      queryFn = offlineQuery ?? (auroraBridge.auroraDbPath ? makeDirectQuery(auroraBridge.auroraDbPath) : getQuery())
+    } else {
+      queryFn = getQuery()
+    }
+    return fetchTechTree(queryFn, ctx.gameId, ctx.raceId)
+  })
+
   // Raw SQL query (works offline)
   handle('empire:query', async (sql: string) => {
     return getQuery()(sql)

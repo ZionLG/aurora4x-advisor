@@ -35,13 +35,6 @@ namespace Lib
         // Freshness tracking
         private readonly HashSet<string> _freshTables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        // Static tables: populated once on first full save, never re-saved on tick.
-        // These contain game definitions that don't change during gameplay.
-        private static readonly HashSet<string> StaticTables = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "FCT_TechSystem",               // Tech tree definitions (what techs exist)
-        };
-
         // =====================================================================
         // Hardcoded mapping: obfuscated method name -> tables it writes to.
         // Keyed by Aurora.exe checksum since method names change between versions.
@@ -397,8 +390,7 @@ namespace Lib
 
         private void RefreshForTables(string[] tables)
         {
-            // Skip static tables — they're populated on first full save and never change
-            var staleTables = tables.Where(t => !_freshTables.Contains(t) && !StaticTables.Contains(t)).ToArray();
+            var staleTables = tables.Where(t => !_freshTables.Contains(t)).ToArray();
             if (staleTables.Length == 0) return;
 
             var methodsNeeded = new HashSet<MethodInfo>();
@@ -727,6 +719,80 @@ namespace Lib
             return tables;
         }
 
+        /// <summary>
+        /// Copy DIM_* tables from disk into the in-memory DB.
+        /// These are static lookup tables with no save method.
+        /// </summary>
+        private void CopyDiskOnlyTables()
+        {
+            try
+            {
+                int copied = 0;
+                using (var diskConn = new SQLiteConnection("Data Source=AuroraDB.db;Version=3;New=False;Compress=True;"))
+                {
+                    diskConn.Open();
+
+                    var dimCmd = diskConn.CreateCommand();
+                    dimCmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'DIM_%'";
+                    var tables = new List<string>();
+                    using (var reader = dimCmd.ExecuteReader())
+                    {
+                        while (reader.Read()) tables.Add(reader.GetString(0));
+                    }
+
+                    foreach (var tableName in tables)
+                    {
+                        try
+                        {
+                            var readCmd = diskConn.CreateCommand();
+                            readCmd.CommandText = $"SELECT * FROM [{tableName}]";
+                            using (var adapter = new SQLiteDataAdapter(readCmd))
+                            {
+                                var ds = new DataSet();
+                                adapter.Fill(ds, tableName);
+                                var table = ds.Tables[tableName];
+                                if (table == null || table.Rows.Count == 0) continue;
+
+                                var cols = new List<string>();
+                                for (int i = 0; i < table.Columns.Count; i++)
+                                    cols.Add($"[{table.Columns[i].ColumnName}]");
+                                var colList = string.Join(",", cols);
+
+                                foreach (DataRow row in table.Rows)
+                                {
+                                    var vals = new List<string>();
+                                    for (int i = 0; i < table.Columns.Count; i++)
+                                    {
+                                        var val = row[i];
+                                        if (val is DBNull) vals.Add("NULL");
+                                        else if (val is string s) vals.Add($"'{s.Replace("'", "''")}'");
+                                        else if (val is bool b) vals.Add(b ? "1" : "0");
+                                        else vals.Add(val.ToString());
+                                    }
+                                    var insertCmd = Connection.CreateCommand();
+                                    insertCmd.CommandText = $"INSERT OR REPLACE INTO [{tableName}] ({colList}) VALUES ({string.Join(",", vals)})";
+                                    insertCmd.ExecuteNonQuery();
+                                }
+
+                                copied++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Lib.LogError($"Failed to copy table {tableName}: {ex.Message}");
+                        }
+                    }
+
+                    diskConn.Close();
+                }
+                Lib.LogInfo($"Copied {copied} disk-only tables to in-memory DB");
+            }
+            catch (Exception ex)
+            {
+                Lib.LogError($"Failed to copy disk-only tables: {ex.Message}");
+            }
+        }
+
         private void GenerateDatabase()
         {
             var commands = new List<string>();
@@ -853,78 +919,7 @@ namespace Lib
                 catch { }
             }
 
-            // Copy DIM_* (dimension/reference) tables from on-disk DB into memory.
-            // These are static lookup tables with no save method — they never change during gameplay.
-            // Without this, any SQL JOIN on DIM_* tables returns empty results.
-            try
-            {
-                int dimTablesCopied = 0;
-                using (var diskConn = new SQLiteConnection("Data Source=AuroraDB.db;Version=3;New=False;Compress=True;"))
-                {
-                    diskConn.Open();
-
-                    // Find all DIM_* tables
-                    var dimCmd = diskConn.CreateCommand();
-                    dimCmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'DIM_%'";
-                    var dimTables = new List<string>();
-                    using (var reader = dimCmd.ExecuteReader())
-                    {
-                        while (reader.Read()) dimTables.Add(reader.GetString(0));
-                    }
-
-                    foreach (var tableName in dimTables)
-                    {
-                        try
-                        {
-                            // Read all rows from disk
-                            var readCmd = diskConn.CreateCommand();
-                            readCmd.CommandText = $"SELECT * FROM [{tableName}]";
-                            using (var adapter = new SQLiteDataAdapter(readCmd))
-                            {
-                                var ds = new DataSet();
-                                adapter.Fill(ds, tableName);
-                                var table = ds.Tables[tableName];
-                                if (table == null || table.Rows.Count == 0) continue;
-
-                                // Build INSERT statements for in-memory DB
-                                var cols = new List<string>();
-                                for (int i = 0; i < table.Columns.Count; i++)
-                                    cols.Add($"[{table.Columns[i].ColumnName}]");
-                                var colList = string.Join(",", cols);
-
-                                foreach (DataRow row in table.Rows)
-                                {
-                                    var vals = new List<string>();
-                                    for (int i = 0; i < table.Columns.Count; i++)
-                                    {
-                                        var val = row[i];
-                                        if (val is DBNull) vals.Add("NULL");
-                                        else if (val is string s) vals.Add($"'{s.Replace("'", "''")}'");
-                                        else if (val is bool b) vals.Add(b ? "1" : "0");
-                                        else vals.Add(val.ToString());
-                                    }
-                                    var insertCmd = Connection.CreateCommand();
-                                    insertCmd.CommandText = $"INSERT OR IGNORE INTO [{tableName}] ({colList}) VALUES ({string.Join(",", vals)})";
-                                    insertCmd.ExecuteNonQuery();
-                                }
-
-                                dimTablesCopied++;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Lib.LogError($"Failed to copy DIM table {tableName}: {ex.Message}");
-                        }
-                    }
-
-                    diskConn.Close();
-                }
-                Lib.LogInfo($"Copied {dimTablesCopied} DIM_* tables from disk to in-memory DB");
-            }
-            catch (Exception ex)
-            {
-                Lib.LogError($"Failed to copy DIM tables: {ex.Message}");
-            }
+            CopyDiskOnlyTables();
 
             Lib.LogInfo($"In-memory DB ready: {commands.Count} schema objects, {indexes.Length} indexes added");
         }

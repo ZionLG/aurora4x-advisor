@@ -89,6 +89,20 @@ export function useEventTypes() {
   })
 }
 
+// ── Tech Tree ────────────────────────────────────────────────────────
+
+export function useTechTree() {
+  const enabled = useEmpireEnabled()
+  const forceOffline = useRecapForceOffline()
+  return useQuery({
+    queryKey: ['empire', 'techTree', { forceOffline }],
+    queryFn: () => window.conveyor.empire.getTechTree(forceOffline),
+    enabled,
+    staleTime: 120_000,
+    placeholderData: (prev) => prev,
+  })
+}
+
 // ── Production Recap (granular, shared cache) ────────────────────────
 
 function useRecapTypeQuery<T>(type: string, queryFn: (forceOffline: boolean) => Promise<T>) {
