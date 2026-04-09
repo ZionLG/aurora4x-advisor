@@ -357,6 +357,15 @@ export const registerEmpireHandlers = () => {
     return compute.getUsedEventTypes(getQuery(), ctx)
   })
 
+  // Habitability — always reads from disk DB (FCT_SystemBody has no bridge save method)
+  handle('empire:getHabitability', async (_forceOffline: boolean, speciesId: number, terraformers: number) => {
+    const { fetchHabitability } = await import('@/lib/habitability/query')
+    const ctx = getGameCtx()
+    const offlineQuery = getOfflineQuery()
+    const queryFn = offlineQuery ?? (auroraBridge.auroraDbPath ? makeDirectQuery(auroraBridge.auroraDbPath) : getQuery())
+    return fetchHabitability(queryFn, ctx.gameId, ctx.raceId, speciesId, terraformers)
+  })
+
   // Minerals — always reads from disk DB (FCT_SystemBody and FCT_SystemBodySurveys have no bridge save methods)
   handle('empire:getMinerals', async (_forceOffline: boolean) => {
     const { fetchMinerals } = await import('@/lib/minerals/query')

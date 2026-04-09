@@ -96,6 +96,9 @@ export const empireIpcSchema = {
   },
   'empire:getEventTypes': { args: z.tuple([]), return: z.any() },
 
+  // Habitability
+  'empire:getHabitability': { args: z.tuple([z.boolean(), z.number(), z.number()]), return: z.any() },
+
   // Minerals
   'empire:getMinerals': { args: z.tuple([z.boolean()]), return: z.any() },
 

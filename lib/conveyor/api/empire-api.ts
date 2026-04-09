@@ -78,6 +78,7 @@ export class EmpireApi extends ConveyorApi {
     forceOffline?: boolean
   ) => this.invoke('empire:getGameLog', limit, offset, eventTypes, onlyCustomized, showHidden, forceOffline)
   getEventTypes = () => this.invoke('empire:getEventTypes')
+  getHabitability = (forceOffline: boolean, speciesId: number, terraformers: number) => this.invoke('empire:getHabitability', forceOffline, speciesId, terraformers)
   getMinerals = (forceOffline?: boolean) => this.invoke('empire:getMinerals', forceOffline ?? false)
   getTechTree = (forceOffline?: boolean) => this.invoke('empire:getTechTree', forceOffline ?? false)
 

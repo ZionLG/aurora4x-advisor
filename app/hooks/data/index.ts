@@ -18,6 +18,7 @@ export {
   useRecapTraining,
   useRecapTerraforming,
   useProductionRecap,
+  useHabitability,
   useMinerals,
   useTechTree,
 } from './use-empire'

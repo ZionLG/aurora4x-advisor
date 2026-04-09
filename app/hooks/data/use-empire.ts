@@ -89,6 +89,20 @@ export function useEventTypes() {
   })
 }
 
+// ── Habitability ─────────────────────────────────────────────────────
+
+export function useHabitability(speciesId: number, terraformers = 10) {
+  const enabled = useEmpireEnabled()
+  const forceOffline = useRecapForceOffline()
+  return useQuery({
+    queryKey: ['empire', 'habitability', speciesId, terraformers, { forceOffline }],
+    queryFn: () => window.conveyor.empire.getHabitability(forceOffline, speciesId, terraformers),
+    enabled,
+    staleTime: 120_000,
+    placeholderData: (prev) => prev,
+  })
+}
+
 // ── Minerals ─────────────────────────────────────────────────────────
 
 export function useMinerals() {

@@ -63,6 +63,9 @@ const MineralsPage = lazy(() =>
 const TechTreePage = lazy(() =>
   import('@/app/pages/science/TechTreePage').then((m) => ({ default: m.TechTreePage }))
 )
+const HabitabilityPage = lazy(() =>
+  import('@/app/pages/science/HabitabilityPage').then((m) => ({ default: m.HabitabilityPage }))
+)
 
 // System pages
 const GameLogPage = lazy(() => import('@/app/pages/system/GameLogPage').then((m) => ({ default: m.GameLogPage })))
@@ -115,7 +118,7 @@ export const MODULES: ModuleDefinition[] = [
     category: 'strategic',
     icon: Landmark,
     route: '/strategic/government',
-    component: GovernmentPage,
+    component: ComingSoonPage,
     requiresGame: true,
     requiresBridge: false,
     order: 0,
@@ -295,12 +298,12 @@ export const MODULES: ModuleDefinition[] = [
     category: 'science',
     icon: Thermometer,
     route: '/science/habitability',
-    component: ComingSoonPage,
+    component: HabitabilityPage,
     requiresGame: true,
     requiresBridge: false,
     alertTags: ['exploration'],
     order: 1,
-    status: 'coming-soon',
+    status: 'active',
   },
   {
     id: 'species',
