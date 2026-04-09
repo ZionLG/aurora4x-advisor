@@ -267,5 +267,5 @@ Source-available, free to use, modify, and distribute. This is a companion tool 
 
 - Steve Walmsley for creating Aurora 4X
 - The [AuroraPatch](https://github.com/Aurora-Modders/AuroraPatch) project for the Harmony patching framework
-- [Aurora Electrons](https://github.com/UserNamesAreTaken/Aurora-Electrons) — reference implementation for production recap, warnings, tech tree, minerals, habitability (terraforming solver), and game log
+- [Aurora Electrons](https://github.com/rubybrowncoat/Aurora-Electrons) — reference implementation for production recap, warnings, tech tree, minerals, habitability (terraforming solver), and game log
 - The Aurora 4X modding community
