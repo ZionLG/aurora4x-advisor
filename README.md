@@ -2,7 +2,7 @@
 
 A tactical companion app for [Aurora 4X](https://aurora4x.com/). Connects to a running Aurora instance via a C# Harmony patch, providing real-time empire management, production tracking, warnings, tech browsing, mineral scouting, and terraforming analysis — all while Aurora remains your primary interface.
 
-> **Note:** The bridge patch reads game state via reflection and in-memory SQLite — it does not modify game data or automate gameplay.
+> **Note:** Starting from Aurora 3.0, Steve (the developer of Aurora) is planning to add code to stop AuroraPatch (one of the dependencies of this repo). The only version this app has been tested on is 2.7.1. This repo will not be developed further.
 
 ## Features
 
